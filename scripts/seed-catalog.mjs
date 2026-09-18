@@ -38,8 +38,31 @@ const CATEGORIES = [
   { key: 'maso', name: 'MASOTERAPIA Y BIENESTAR', icon: 'fa-spa', order: 1 },
   { key: 'mani', name: 'MANICURE', icon: 'fa-hand-sparkles', order: 2 },
   { key: 'terapias', name: 'TERAPIAS COMPLEMENTARIAS Y BIENESTAR ENERGÉTICO', icon: 'fa-yin-yang', order: 3 },
-  { key: 'adicionales', name: 'SERVICIOS ADICIONALES MANICURE', icon: 'fa-gem', order: 4 },
-  { key: 'promos', name: 'PROMOCIONES', icon: 'fa-star', order: 5, isSale: true },
+  { key: 'promos', name: 'PROMOCIONES', icon: 'fa-star', order: 4, isSale: true },
+];
+
+// Los "SERVICIOS ADICIONALES MANICURE" de AgendaPro no son servicios que se
+// agenden solos: son decoración que se suma a un esmaltado. Aquí cuelgan de
+// cada servicio de manicure como adicionales opcionales, ordenados de lo más
+// simple a lo más elaborado y con los apliques al final. Cada uno suma su
+// precio Y sus minutos a la cita.
+const MANI_ADDONS = [
+  { name: 'Diseño simple (por uña)', duration: 5, price: 500 },
+  { name: 'Diseño medio (por uña)', duration: 10, price: 1000 },
+  { name: 'Diseño complejo', duration: 15, price: 1500 },
+  { name: 'Ojo de gato', duration: 5, price: 1000 },
+  { name: 'Degradé / francesa', duration: 15, price: 4000 },
+  { name: 'Pedrería', duration: 10, price: 1500 },
+  { name: 'Decoración 3D', duration: 15, price: 3000 },
+];
+const maniAddons = (...excluir) => MANI_ADDONS.filter((a) => !excluir.includes(a.name));
+
+// La categoría y los 7 servicios sueltos que cargaban las corridas anteriores.
+// No se borran (hay citas viejas que los referencian por id): se desactivan.
+const RETIRED_CATEGORIES = ['SERVICIOS ADICIONALES MANICURE'];
+const RETIRED_SERVICES = [
+  'PEDRERÍA', 'DISEÑO SIMPLE', 'DISEÑO MEDIO', 'DISEÑO COMPLEJO',
+  'DECORACIÓN 3D', 'DISEÑO OJO DE GATO', 'DISEÑO DEGRADE/FRANCESA',
 ];
 
 const SERVICES = [
@@ -68,15 +91,15 @@ const SERVICES = [
   // ---- MANICURE ----
   { cat: 'mani', name: 'LIMPIEZA DE UÑAS', duration: 45, price: 13000,
     description: '✨Servicio enfocado en limpiar, dar forma y retirar cuidadosamente el exceso de cutícula, dejando las uñas prolijas, saludables y con una apariencia limpia y cuidada.✨' },
-  { cat: 'mani', name: 'ESMALTADO PERMANENTE UNICOLOR', duration: 60, price: 14990,
+  { cat: 'mani', name: 'ESMALTADO PERMANENTE UNICOLOR', duration: 60, price: 14990, addons: maniAddons(),
     description: '✨Aplicación de un tono de esmalte de larga duración con acabado brillante y uniforme, ideal para mantener las uñas impecables por más tiempo. Incluye base rubber, color y top coat.✨' },
-  { cat: 'mani', name: 'ESMALTADO PERMANENTE FRANCESA/DEGRADE', duration: 75, price: 19990,
+  { cat: 'mani', name: 'ESMALTADO PERMANENTE FRANCESA/DEGRADE', duration: 75, price: 19990, addons: maniAddons('Degradé / francesa'),
     description: '✨Técnicas de esmaltado que aportan un acabado delicado y elegante, ya sea con la clásica punta francesa o con una transición suave de tonos en efecto degradé.✨' },
-  { cat: 'mani', name: 'KAPPING DE POLYGEL/BUILDER GEL', duration: 90, price: 22000,
+  { cat: 'mani', name: 'KAPPING DE POLYGEL/BUILDER GEL', duration: 90, price: 22000, addons: maniAddons(),
     description: '✨Técnica que refuerza la uña natural con una capa de builder gel o polygel, aportando mayor resistencia, protección y una apariencia prolija sin necesidad de alargarla.✨' },
-  { cat: 'mani', name: 'EXTENSIÓN SOFT GEL', duration: 120, price: 25990,
+  { cat: 'mani', name: 'EXTENSIÓN SOFT GEL', duration: 120, price: 25990, addons: maniAddons(),
     description: '✨Técnica de alargamiento de uñas mediante tips de gel flexible, logrando un acabado natural, liviano y resistente con la forma y largo deseado.✨' },
-  { cat: 'mani', name: 'EXTENSIÓN DE POLYGEL', duration: 120, price: 28990,
+  { cat: 'mani', name: 'EXTENSIÓN DE POLYGEL', duration: 120, price: 28990, addons: maniAddons(),
     description: '✨Alargamiento de uñas que combina resistencia y flexibilidad, con una pasta que une gel y acrílico para crear la forma y largo deseado con un acabado firme, prolijo y natural.✨' },
   { cat: 'mani', name: 'RETIRO POLYGEL/BUILDER GEL', duration: 45, price: 10000,
     description: '✨Proceso cuidadoso para remover el producto de las uñas de forma segura, protegiendo la uña natural y dejándola limpia y preparada para un nuevo servicio.✨' },
@@ -97,26 +120,10 @@ const SERVICES = [
   { cat: 'terapias', name: 'REIKI', duration: 60, price: 29990,
     description: '✨ Un espacio para reconectar contigo y encontrar equilibrio interior. Reiki es una terapia energética suave que promueve la relajación profunda, armonizando cuerpo, mente y emociones.' },
 
-  // ---- SERVICIOS ADICIONALES MANICURE ----
-  { cat: 'adicionales', name: 'PEDRERÍA', duration: 10, price: 1500,
-    description: '✨Decoración de uñas con pequeñas piedras o cristales, ideal para aportar brillo y un detalle elegante y personalizado al diseño.✨' },
-  { cat: 'adicionales', name: 'DISEÑO SIMPLE', duration: 5, price: 500,
-    description: '✨Decoración sencilla sobre una o más uñas, con detalles minimalistas como líneas, puntos, figuras o pequeños diseños para complementar el esmaltado.✨ Valor por uña.' },
-  { cat: 'adicionales', name: 'DISEÑO MEDIO', duration: 10, price: 1000,
-    description: '✨Decoración de complejidad intermedia sobre una o más uñas, con combinaciones de colores, líneas, puntos, figuras, degradados o detalles decorativos.✨ Valor por uña.' },
-  { cat: 'adicionales', name: 'DISEÑO COMPLEJO', duration: 15, price: 1500,
-    description: '✨Decoración elaborada que puede incluir trazos detallados, combinaciones de técnicas, figuras, relieves o múltiples elementos para un resultado más artístico y personalizado.✨' },
-  { cat: 'adicionales', name: 'DECORACIÓN 3D', duration: 15, price: 3000,
-    description: '✨Diseño en relieve realizado sobre la uña, utilizando distintos materiales para crear detalles con volumen y un acabado llamativo y personalizado.✨' },
-  { cat: 'adicionales', name: 'DISEÑO OJO DE GATO', duration: 5, price: 1000,
-    description: '✨Técnica de esmaltado magnético que crea un reflejo luminoso y profundo sobre la uña, logrando un acabado elegante y llamativo que cambia según la luz.✨' },
-  { cat: 'adicionales', name: 'DISEÑO DEGRADE/FRANCESA', duration: 15, price: 4000,
-    description: '✨Técnicas de esmaltado que aportan un acabado delicado y elegante, ya sea con la clásica punta francesa o con una transición suave de tonos en efecto degradé.✨' },
-
   // ---- PROMOCIONES ----
   // DURACIÓN ESTIMADA: AgendaPro publica este paquete sin duración. Los 75 min
   // salen del esmaltado unicolor (60) más el perfilado. Ajústala en el panel.
-  { cat: 'promos', name: 'ESMALTADO + PERFILADO', duration: 75, price: 21990,
+  { cat: 'promos', name: 'ESMALTADO + PERFILADO', duration: 75, price: 21990, addons: maniAddons(),
     description: 'Paquete de servicios: esmaltado permanente unicolor más perfilado de uñas.' },
 ];
 
@@ -162,6 +169,7 @@ async function main() {
     const id = prev || db.ref('categories').push().key;
     catIds[c.key] = id;
     updates[`categories/${id}`] = {
+      ...(prev ? existingCats[prev] : {}),
       name: c.name, icon: c.icon, order: c.order, active: true, isSale: !!c.isSale,
     };
     plan.push(`${prev ? 'actualiza' : 'crea     '} categoría  ${c.name}`);
@@ -172,15 +180,35 @@ async function main() {
     const prev = findBy(existingSvcs, s.name);
     const id = prev || db.ref('services').push().key;
     updates[`services/${id}`] = {
+      // Se parte del registro que ya está: si no, una segunda corrida borraría
+      // la foto de portada y la miniatura que se subieron desde el panel.
+      ...(prev ? existingSvcs[prev] : {}),
       name: s.name,
       duration: s.duration,
       price: s.price,
       description: s.description,
       active: true,
       categoryId: catIds[s.cat],
-      addons: null,
+      addons: s.addons && s.addons.length ? s.addons : null,
     };
-    plan.push(`${prev ? 'actualiza' : 'crea     '} servicio   ${s.name}`);
+    const nAdd = s.addons ? s.addons.length : 0;
+    plan.push(`${prev ? 'actualiza' : 'crea     '} servicio   ${s.name}${nAdd ? `  (+${nAdd} adicionales)` : ''}`);
+  }
+
+  // --- lo que dejó de ofrecerse: se desactiva, no se borra ---
+  for (const name of RETIRED_CATEGORIES) {
+    const id = findBy(existingCats, name);
+    if (id && existingCats[id].active !== false) {
+      updates[`categories/${id}/active`] = false;
+      plan.push(`desactiva categoría  ${name}`);
+    }
+  }
+  for (const name of RETIRED_SERVICES) {
+    const id = findBy(existingSvcs, name);
+    if (id && existingSvcs[id].active !== false) {
+      updates[`services/${id}/active`] = false;
+      plan.push(`desactiva servicio   ${name}`);
+    }
   }
 
   // --- configuración (solo lo que falte) ---

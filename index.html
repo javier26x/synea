@@ -11,7 +11,7 @@
     <title>Synea Studio Spa — Reserva tu Hora</title>
     <link rel="icon" href="/icons/logo.png" type="image/png">
     <link rel="manifest" href="/manifest.webmanifest">
-    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png?v=1">
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png?v=2">
     <meta name="apple-mobile-web-app-title" content="Synea">
     <meta name="description"
         content="Agenda tu hora en Synea Studio Spa, Puerto Montt. Masoterapia, manicure, terapias complementarias y bienestar energético.">
@@ -979,11 +979,20 @@
         }
 
         /* SERVICE CARDS */
+        /* Tres tarjetas por fila en escritorio: con auto-fill se colaban 4 o 5
+           en pantallas anchas y la portada quedaba minúscula. */
         .services-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 18px;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 22px;
             margin-top: 24px
+        }
+
+        @media(max-width:1040px) {
+            .services-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 18px
+            }
         }
 
         .category-section {
@@ -1529,7 +1538,11 @@
             cursor: pointer;
             position: relative;
             touch-action: manipulation;
-            -webkit-user-select: none
+            -webkit-user-select: none;
+            /* Columna: así el precio queda pegado abajo y todas las tarjetas de
+               una fila terminan a la misma altura aunque el texto sea distinto. */
+            display: flex;
+            flex-direction: column
         }
 
         .service-card:hover {
@@ -1562,11 +1575,21 @@
             z-index: 3
         }
 
+        /* Portada con proporción fija: da igual el ancho de la columna, todas
+           las fotos se ven iguales y la grilla queda pareja. */
         .service-card-image {
-            height: 150px;
+            aspect-ratio: 16 / 9;
             background-size: cover;
             background-position: center;
-            position: relative
+            background-color: var(--ivory-dark);
+            position: relative;
+            flex-shrink: 0;
+            overflow: hidden;
+            transition: transform .6s cubic-bezier(.4, 0, .2, 1)
+        }
+
+        .service-card:hover .service-card-image {
+            transform: scale(1.04)
         }
 
         .service-card-image::after {
@@ -1579,22 +1602,94 @@
             background: linear-gradient(to top, var(--white), transparent)
         }
 
+        /* Sin foto propia: portada de marca, en el mismo lenguaje que el modal
+           de detalle (degradado suave con el icono dentro de un medallón claro).
+           Es mejor que un banco de imágenes que no corresponde al negocio. */
+        .svc-cover {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image: linear-gradient(135deg, rgba(47, 93, 80, .16), rgba(176, 139, 87, .16))
+        }
+
+        .svc-cover::after {
+            display: none
+        }
+
+        .svc-cover::before {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .62)
+        }
+
+        .svc-cover i {
+            position: relative;
+            z-index: 1;
+            color: var(--jade)
+        }
+
+        .service-card-image.svc-cover::before {
+            width: 84px;
+            height: 84px
+        }
+
+        .service-card-image.svc-cover i {
+            font-size: 34px
+        }
+
+        .extra-card-image.svc-cover::before {
+            width: 52px;
+            height: 52px
+        }
+
+        .extra-card-image.svc-cover i {
+            font-size: 21px
+        }
+
+        .svc-cover--mani {
+            background-image: linear-gradient(135deg, rgba(176, 139, 87, .26), rgba(47, 93, 80, .1))
+        }
+
+        .svc-cover--mani i {
+            color: var(--bronze-text, #8a6a3e)
+        }
+
+        .svc-cover--terapia {
+            background-image: linear-gradient(135deg, rgba(123, 167, 149, .34), rgba(47, 93, 80, .14))
+        }
+
+        .svc-cover--promo {
+            background-image: linear-gradient(135deg, rgba(201, 160, 99, .34), rgba(47, 93, 80, .18))
+        }
+
         .service-card-body {
-            padding: 20px
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex: 1
         }
 
         .service-card h4 {
             color: var(--charcoal);
             margin-bottom: 8px;
             font-size: 17px;
-            font-family: 'Cormorant Garamond', serif
+            font-family: 'Cormorant Garamond', serif;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden
         }
 
         .service-card p {
             color: var(--warm-gray);
             font-size: 13px;
             line-height: 1.5;
-            margin-bottom: 14px
+            margin-bottom: 14px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden
         }
 
         .service-info {
@@ -1602,7 +1697,8 @@
             justify-content: space-between;
             align-items: center;
             padding-top: 14px;
-            border-top: 1px solid rgba(35, 48, 44, .06)
+            border-top: 1px solid rgba(35, 48, 44, .06);
+            margin-top: auto
         }
 
         .service-duration {
@@ -1983,6 +2079,12 @@
             flex: 2
         }
 
+        .addon-row .addon-duration {
+            flex: 1;
+            max-width: 90px;
+            text-align: right
+        }
+
         .addon-row .addon-price {
             flex: 1;
             max-width: 120px;
@@ -2009,6 +2111,18 @@
         }
 
         @media(max-width:500px) {
+            .addon-row {
+                flex-wrap: wrap
+            }
+
+            .addon-row .addon-name {
+                flex: 1 0 100%
+            }
+
+            .addon-row .addon-duration {
+                max-width: 80px
+            }
+
             .addon-row .addon-price {
                 max-width: 100px
             }
@@ -2083,6 +2197,13 @@
             font-size: 14px;
             color: var(--charcoal);
             line-height: 1.3
+        }
+
+        .preview-addon-option .addon-label .addon-dur {
+            display: block;
+            font-size: 11.5px;
+            color: var(--warm-gray);
+            margin-top: 2px
         }
 
         .preview-addon-option .addon-price-tag {
@@ -2439,91 +2560,6 @@
         .reminder-banner .reminder-text small {
             color: var(--warm-gray);
             font-size: 12px
-        }
-
-        /* SERVICE IMAGES */
-        /* Peinado Social / Fiesta */
-        .svc-img-0 {
-            background-image: url('https://i.ibb.co/xqzV8C67/Whats-App-Image-2026-03-04-at-15-12-34.jpg')
-        }
-
-        /* Maquillaje Social / Fiesta */
-        .svc-img-1 {
-            background-image: url('https://i.ibb.co/vvv7xK90/Whats-App-Image-2026-03-04-at-15-12-33-3.jpg')
-        }
-
-        /* Maquillaje + Pestañas Postizas */
-        .svc-img-2 {
-            background-image: url('https://i.ibb.co/d4mXjzmc/Whats-App-Image-2026-03-04-at-15-12-33-2.jpg')
-        }
-
-        /* Clase Automaquillaje */
-        .svc-img-3 {
-            background-image: url('https://i.ibb.co/yBysyw2p/Whats-App-Image-2026-03-04-at-15-12-33-1.jpg')
-        }
-
-        /* Masaje Sueco */
-        .svc-img-4 {
-            background-image: url('https://i.ibb.co/7d8Y6V2k/Whats-App-Image-2026-03-04-at-15-12-33.jpg')
-        }
-
-        /* Masaje Drenaje Linfático */
-        .svc-img-5 {
-            background-image: url('https://images.unsplash.com/photo-1519823551278-64ac92734fb1?w=600&q=80')
-        }
-
-        /* Lifting / Ondulado Pestañas */
-        .svc-img-6 {
-            background-image: url('https://images.unsplash.com/photo-1583001931096-959e9a1a6223?w=600&q=80')
-        }
-
-        /* Laminado de Cejas */
-        .svc-img-7 {
-            background-image: url('https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?w=600&q=80')
-        }
-
-        /* Perfilado de Cejas */
-        .svc-img-8 {
-            background-image: url('https://images.unsplash.com/photo-1562322140-8baeececf3df?w=600&q=80')
-        }
-
-        /* Hidratación Facial */
-        .svc-img-9 {
-            background-image: url('https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=600&q=80')
-        }
-
-        /* Spa de Manos */
-        .svc-img-10 {
-            background-image: url('https://images.unsplash.com/photo-1604654894610-df63bc536371?w=600&q=80')
-        }
-
-        /* Limpieza Profunda Tradicional */
-        .svc-img-11 {
-            background-image: url('https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?w=600&q=80')
-        }
-
-        /* HydraFacial */
-        .svc-img-12 {
-            background-image: url('https://images.unsplash.com/photo-1552693673-1bf958298935?w=600&q=80')
-        }
-
-        /* Limpieza Espalda */
-        .svc-img-13 {
-            background-image: url('https://images.unsplash.com/photo-1600334129128-685c5582fd35?w=600&q=80')
-        }
-
-        /* Dermaplaning */
-        .svc-img-14 {
-            background-image: url('https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?w=600&q=80')
-        }
-
-        /* Peeling Químico */
-        .svc-img-15 {
-            background-image: url('https://images.unsplash.com/photo-1596178060671-7a80dc8059ea?w=600&q=80')
-        }
-
-        .svc-img-default {
-            background-image: url('https://images.unsplash.com/photo-1596704017254-9b121068fb31?w=600&q=80')
         }
 
         /* ========== ADMIN FOOTER LINK ========== */
@@ -3599,8 +3635,10 @@
                 gap: 14px
             }
 
+            /* En una sola columna la tarjeta es ancha: una portada 16:9 quedaría
+               altísima, así que ahí la proporción se achata. */
             .service-card-image {
-                height: 130px
+                aspect-ratio: 21 / 9
             }
 
             .service-card-body {
@@ -5704,8 +5742,8 @@
                 <div id="addonsList" style="display:flex;flex-direction:column;gap:8px;margin-bottom:8px"></div>
                 <button type="button" class="btn btn-secondary" style="width:100%;justify-content:center"
                     onclick="addAddonRow()"><i class="fas fa-plus"></i> Agregar adicional</button>
-                <small style="color:var(--warm-gray);display:block;margin-top:6px">Ej: Dermaplaning +$10.000, Tocado
-                    +$15.000</small>
+                <small style="color:var(--warm-gray);display:block;margin-top:6px">Nombre · minutos que suma · precio que
+                    suma. Ej: Diseño simple (por uña) · 5 min · $500</small>
             </div>
             <button class="btn btn-success confirm-btn" onclick="saveService()"><i class="fas fa-save"></i>
                 Guardar</button>
@@ -6015,6 +6053,18 @@
             if (has('corte', 'barba', 'cabello', 'peinado')) return 'fa-scissors';
             if (has('maquilla', 'makeup')) return 'fa-brush';
             return 'fa-gem';
+        }
+
+        // Portada de marca para los servicios que todavía no tienen foto propia.
+        // Un degradado por familia de servicio: manicure en bronce, terapias en
+        // jade claro, promociones en dorado y masoterapia en el jade principal.
+        function getServiceCoverClass(name, isSale) {
+            if (isSale) return 'svc-cover--promo';
+            const n = (name || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+            const has = (...w) => w.some(x => n.includes(x));
+            if (has('esmaltado', 'unas', 'manicure', 'kapping', 'polygel', 'soft gel', 'extension', 'perfilado', 'reparacion', 'garantia', 'retiro', 'pedreria', 'diseno', 'decoracion', 'ojo de gato', 'pedicure')) return 'svc-cover--mani';
+            if (has('reiki', 'gemoterapia', 'flores de bach', 'acompanamiento', 'terapeutico', 'terapia', 'energetic')) return 'svc-cover--terapia';
+            return '';
         }
 
         // ==================== SECURITY HELPERS ====================
@@ -7823,12 +7873,14 @@
         function renderAddonsEditor(addons) {
             const list = document.getElementById('addonsList'); if (!list) return;
             list.innerHTML = '';
-            (addons || []).forEach(a => addAddonRow(a.name || '', a.price != null ? a.price : 0));
+            (addons || []).forEach(a => addAddonRow(a.name || '', a.price != null ? a.price : 0, a.duration != null ? a.duration : 0));
         }
-        function addAddonRow(name = '', price = 0) {
+        // La duración del adicional se suma al tiempo que la cita ocupa en la
+        // agenda: un diseño de 15 min tiene que caber, no solo cobrarse.
+        function addAddonRow(name = '', price = 0, duration = 0) {
             const list = document.getElementById('addonsList'); if (!list) return;
             const row = document.createElement('div'); row.className = 'addon-row';
-            row.innerHTML = `<input type="text" class="addon-name" placeholder="Nombre del adicional" value="${escAttr(name)}" maxlength="80"><input type="number" class="addon-price" placeholder="0" min="0" max="10000000" value="${price || 0}"><button type="button" class="remove-btn" onclick="this.parentElement.remove()" title="Quitar"><i class="fas fa-trash"></i></button>`;
+            row.innerHTML = `<input type="text" class="addon-name" placeholder="Nombre del adicional" value="${escAttr(name)}" maxlength="80"><input type="number" class="addon-duration" placeholder="min" min="0" max="600" step="5" value="${duration || 0}" title="Minutos que suma a la cita"><input type="number" class="addon-price" placeholder="$" min="0" max="10000000" value="${price || 0}" title="Precio que suma a la reserva"><button type="button" class="remove-btn" onclick="this.parentElement.remove()" title="Quitar"><i class="fas fa-trash"></i></button>`;
             list.appendChild(row);
         }
         function collectAddonsFromEditor() {
@@ -7837,7 +7889,8 @@
             rows.forEach(r => {
                 const name = (r.querySelector('.addon-name').value || '').trim().slice(0, 80);
                 const price = parseInt(r.querySelector('.addon-price').value) || 0;
-                if (name) addons.push({ name, price: Math.max(0, Math.min(price, 10000000)) });
+                const duration = parseInt(r.querySelector('.addon-duration').value) || 0;
+                if (name) addons.push({ name, price: Math.max(0, Math.min(price, 10000000)), duration: Math.max(0, Math.min(duration, 600)) });
             });
             return addons;
         }
@@ -7858,7 +7911,7 @@
             while ((m = regex.exec(addonsText)) !== null) {
                 let name = m[1].trim().replace(/^[\s\,\.\-y]+/i, '').replace(/[\s\,\.]+$/, '');
                 const price = parseInt(m[2].replace(/\./g, '')) || 0;
-                if (name && name.length <= 80 && price > 0) found.push({ name, price });
+                if (name && name.length <= 80 && price > 0) found.push({ name, price, duration: 0 });
             }
             if (!found.length) { toast('No se detectaron adicionales con formato "+$precio"', 'info'); return }
             // Append to existing addons
@@ -7921,8 +7974,6 @@
             const thumbSrc = s.thumbUrl || s.imageUrl;
             if (thumbSrc) {
                 thumb = `<div style="width:72px;height:72px;border-radius:var(--radius-sm);background-image:url('${escAttr(thumbSrc)}');background-size:cover;background-position:center;flex-shrink:0"></div>`;
-            } else if (i < 16) {
-                thumb = `<div class="svc-img-${i}" style="width:72px;height:72px;border-radius:var(--radius-sm);background-size:cover;background-position:center;flex-shrink:0"></div>`;
             } else {
                 thumb = `<div style="width:72px;height:72px;background:var(--ivory);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;color:var(--jade);font-size:24px;flex-shrink:0"><i class="fas ${getServiceIcon(s.name)}"></i></div>`;
             }
@@ -8301,10 +8352,16 @@
         let extraServices = [];
 
         function bookingServices() { return selectedService ? [selectedService, ...extraServices] : []; }
+        // Adicionales marcados para el servicio principal (los de un servicio
+        // extra viajan dentro del propio extra, en x.addons).
+        function currentAddons() { return Array.isArray(window.currentBookingAddons) ? window.currentBookingAddons : []; }
+        const addonsDuration = (list) => (Array.isArray(list) ? list : []).reduce((sum, a) => sum + (parseInt(a.duration) || 0), 0);
         function bookingDuration() {
             const base = bookingServices().reduce((sum, s) => sum + (parseInt(s.duration) || 0), 0);
+            // Los adicionales también ocupan silla: un diseño complejo son 15 min.
+            const extra = addonsDuration(currentAddons()) + extraServices.reduce((sum, x) => sum + addonsDuration(x.addons), 0);
             const gap = parseInt(config.bufferMinutes) || 0;
-            return Math.max(base + gap, 15);
+            return Math.max(base + extra + gap, 15);
         }
         const extraAddonsTotal = (x) => (Array.isArray(x.addons) ? x.addons : []).reduce((sum, a) => sum + (a.price || 0), 0);
         function bookingServicesPrice() { return (selectedService ? (selectedService.price || 0) : 0) + extraServices.reduce((sum, x) => sum + (x.price || 0) + extraAddonsTotal(x), 0); }
@@ -8326,10 +8383,11 @@
             document.getElementById('extraServiceAddonsHead').innerHTML = `<div style="display:flex;align-items:center;gap:14px">
                 ${thumb ? `<div style="width:56px;height:56px;border-radius:var(--radius-sm);background-image:url('${escAttr(thumb)}');background-size:cover;background-position:center;flex-shrink:0"></div>` : ''}
                 <div style="min-width:0"><div style="font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--charcoal)">${escHtml(sv.name)}</div>
-                <div style="font-size:12.5px;color:var(--warm-gray)"><i class="fas fa-clock" style="margin-right:4px"></i>${sv.duration} min · <span class="service-price">$${(sv.price || 0).toLocaleString('es-CL')}</span></div></div></div>`;
+                <div style="font-size:12.5px;color:var(--warm-gray)"><i class="fas fa-clock" style="margin-right:4px"></i><span id="extraPickDur">${sv.duration}</span> min · <span class="service-price">$${(sv.price || 0).toLocaleString('es-CL')}</span></div></div></div>`;
             document.getElementById('extraServiceAddonsList').innerHTML = sv.addons.map((a, i) => {
                 const priceLbl = a.price > 0 ? `+$${a.price.toLocaleString('es-CL')}` : 'Gratis';
-                return `<div class="preview-addon-option" data-extra-addon="${i}" onclick="toggleExtraAddon(${i})" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleExtraAddon(${i})}"><div class="addon-check"><i class="fas fa-check"></i></div><div class="addon-label">${escHtml(a.name)}</div><div class="addon-price-tag ${a.price > 0 ? '' : 'free'}">${priceLbl}</div></div>`;
+                const durLbl = a.duration > 0 ? `<span class="addon-dur"><i class="fas fa-clock"></i> +${a.duration} min</span>` : '';
+                return `<div class="preview-addon-option" data-extra-addon="${i}" onclick="toggleExtraAddon(${i})" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleExtraAddon(${i})}"><div class="addon-check"><i class="fas fa-check"></i></div><div class="addon-label">${escHtml(a.name)}${durLbl}</div><div class="addon-price-tag ${a.price > 0 ? '' : 'free'}">${priceLbl}</div></div>`;
             }).join('');
             updateExtraAddonsTotal();
             document.getElementById('extraServiceList').style.display = 'none';
@@ -8343,8 +8401,11 @@
         }
         function updateExtraAddonsTotal() {
             const sv = allServices.find(x => x.id === extraPickId); if (!sv) return;
-            const t = (sv.price || 0) + [...extraPickAddons].reduce((sum, i) => sum + ((sv.addons[i] && sv.addons[i].price) || 0), 0);
+            const picked = [...extraPickAddons].map(i => sv.addons[i]).filter(Boolean);
+            const t = (sv.price || 0) + picked.reduce((sum, a) => sum + (a.price || 0), 0);
             document.getElementById('extraServiceAddonsTotal').textContent = '$' + t.toLocaleString('es-CL');
+            const dur = document.getElementById('extraPickDur');
+            if (dur) dur.textContent = (parseInt(sv.duration) || 0) + addonsDuration(picked);
         }
         function backExtraPicker() {
             extraPickId = null;
@@ -8353,7 +8414,7 @@
         }
         function confirmExtraService() {
             const sv = allServices.find(x => x.id === extraPickId); if (!sv) return;
-            const addons = [...extraPickAddons].filter(i => sv.addons[i]).map(i => ({ name: sv.addons[i].name, price: sv.addons[i].price || 0 }));
+            const addons = [...extraPickAddons].filter(i => sv.addons[i]).map(i => ({ name: sv.addons[i].name, price: sv.addons[i].price || 0, duration: sv.addons[i].duration || 0 }));
             addExtraService(sv.id, addons);
         }
 
@@ -8393,10 +8454,11 @@
                     if (!puede(sv)) return '';
                     total++;
                     const thumbSrc = sv.thumbUrl || sv.imageUrl;
-                    const imgStyle = thumbSrc ? `style="background-image:url('${escAttr(thumbSrc)}')"` : '';
-                    const imgClass = thumbSrc ? 'extra-card-image' : `extra-card-image svc-img-${i < 16 ? i : 'default'}`;
+                    const cover = thumbSrc
+                        ? `<div class="extra-card-image" style="background-image:url('${escAttr(thumbSrc)}')"></div>`
+                        : `<div class="extra-card-image svc-cover ${getServiceCoverClass(sv.name, cat.isSale)}"><i class="fas ${getServiceIcon(sv.name)}"></i></div>`;
                     return `<button type="button" class="extra-card" onclick="pickExtraService('${sv.id}')">
-                        <div class="${imgClass}" ${imgStyle}></div>
+                        ${cover}
                         <div class="extra-card-body">
                             <h5><i class="fas ${getServiceIcon(sv.name)}"></i> ${escHtml(sv.name)}</h5>
                             <div class="extra-card-info"><span><i class="fas fa-clock"></i> ${sv.duration} min</span><span class="service-price">$${(sv.price || 0).toLocaleString('es-CL')}</span></div>${Array.isArray(sv.addons) && sv.addons.length ? `<div style="font-size:11px;color:var(--bronze-text);margin-top:5px"><i class="fas fa-sparkles"></i> ${sv.addons.length} adicional${sv.addons.length > 1 ? 'es' : ''}</div>` : ''}
@@ -8542,7 +8604,7 @@
 
         function renderTodayAppointments() { const c = document.getElementById('todayAppointments'), t = dateToStr(new Date()), ta = allAppointments.filter(a => a.date === t && a.status !== 'cancelled').sort((a, b) => a.time.localeCompare(b.time)); if (!ta.length) { c.innerHTML = '<div class="empty-state"><i class="fas fa-calendar-check"></i><p>No hay citas para hoy</p></div>'; return } c.innerHTML = ta.map(a => renderAppointmentItem(a)).join('') }
 
-        function renderAppointmentItem(apt) { const svc = allServices.find(s => s.id === apt.serviceId), sc = `status-${apt.status}`, st = { pending: 'Pendiente', confirmed: 'Confirmada', completed: 'Completada', cancelled: 'Cancelada' }, si = { pending: 'fa-hourglass-half', confirmed: 'fa-check-circle', completed: 'fa-star', cancelled: 'fa-times-circle' }; const addonsHtml = Array.isArray(apt.addons) && apt.addons.length ? `<div style="margin-top:6px;padding-top:6px;border-top:1px dashed rgba(35,48,44,.1)"><i class="fas fa-sparkles" style="color:var(--bronze);margin-right:4px"></i><strong style="font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--jade)">Adicionales:</strong> ${apt.addons.map(a => `<span class="addon-tag"><i class="fas fa-check" style="font-size:9px"></i> ${escHtml(a.name)}${a.price > 0 ? ` · +$${a.price.toLocaleString('es-CL')}` : ''}</span>`).join('')}${apt.totalPrice ? `<div style="margin-top:4px;font-size:13px;color:var(--charcoal)"><strong>Total:</strong> <span style="color:var(--jade);font-weight:700">$${apt.totalPrice.toLocaleString('es-CL')}</span></div>` : ''}</div>` : ''; const canReschedule = apt.status === 'pending' || apt.status === 'confirmed'; const rescheduleBtn = canReschedule ? `<button class="btn btn-secondary" onclick="openRescheduleModal('${apt.id}')"><i class="fas fa-calendar-pen"></i> Reagendar</button>` : ''; const waBtn = waNumber(apt.clientPhone) ? `<a class="btn btn-success" href="https://wa.me/${waNumber(apt.clientPhone)}?text=${encodeURIComponent('Hola ' + ((apt.clientName || '').split(' ')[0] || '') + '! Te escribimos de Synea Studio Spa por tu hora ✨')}" target="_blank" rel="noopener" title="Escribir por WhatsApp"><i class="fab fa-whatsapp"></i></a>` : ''; return `<div class="appointment-item"><div class="appointment-header"><div class="appointment-time"><i class="fas fa-clock" style="color:var(--bronze);font-size:14px"></i> ${escHtml(apt.time)}</div><span class="appointment-status ${sc}"><i class="fas ${si[apt.status]}"></i> ${st[apt.status] || escHtml(apt.status)}</span>${apt.locationCity ? `<span class="trip-chip" style="margin-left:6px"><i class="fas fa-plane-departure" style="font-size:9px"></i> ${escHtml(apt.locationCity)}</span>` : ''}${apt.giftCode ? `<span class="gc-chip ${apt.giftStatus === 'redeemed' ? 'activa' : 'vencida'}" style="margin-left:6px" title="${apt.giftStatus === 'redeemed' ? 'Canje válido: no cobrar' : 'Revisar esta giftcard'}"><i class="fas fa-gift" style="font-size:9px"></i> ${escHtml(apt.giftCode)}</span>` : ''}${apt.paymentType && !apt.giftCode ? `<span class="gc-chip activa" style="margin-left:6px" title="Ya pagada: no se cobra en esta visita"><i class="fas fa-circle-check" style="font-size:9px"></i> ${escHtml(PAY_LABELS[apt.paymentType] || 'Pagada')}${apt.membershipSession ? ' · sesión ' + apt.membershipSession : ''}</span>` : ''}</div><div class="appointment-details"><div><i class="fas fa-user"></i> <strong>Cliente:</strong> ${escHtml(apt.clientName)}</div><div><i class="fas fa-gem"></i> <strong>Servicio:</strong> ${svc ? escHtml(svc.name) : 'N/A'}${Array.isArray(apt.extraServices) && apt.extraServices.length ? apt.extraServices.map(x => ` <span class="extra-chip" style="padding:2px 10px;font-size:11.5px">+ ${escHtml(x.name)}${Array.isArray(x.addons) && x.addons.length ? ` <span style="font-weight:500;color:var(--warm-gray)">· ${x.addons.map(a => escHtml(a.name)).join(', ')}</span>` : ''}</span>`).join('') : ''}${apt.totalDuration ? ` <span style="color:var(--warm-gray);font-size:12.5px">· ${apt.totalDuration} min</span>` : ''}</div><div><i class="fas fa-phone"></i> <strong>Tel:</strong> <a href="tel:${escAttr((apt.clientPhone || '').replace(/[^\d+]/g, ''))}" style="color:var(--charcoal);text-decoration:none">${escHtml(apt.clientPhone)}</a></div>${apt.clientEmail ? `<div><i class="fas fa-envelope"></i> ${escHtml(apt.clientEmail)}</div>` : ''}${apt.comments ? `<div><i class="fas fa-comment"></i> ${escHtml(apt.comments)}</div>` : ''}${addonsHtml}</div><div class="appointment-actions">${waBtn}<button class="btn btn-secondary" onclick="resendApptMail('${apt.id}')" title="Reenviar el correo de la cita a la clienta"><i class="fas fa-envelope"></i></button><button class="btn btn-secondary" onclick="changePaymentType('${apt.id}')" title="Forma de pago (membresía, giftcard, cortesía)"><i class="fas fa-cash-register"></i></button><button class="btn btn-ghost" onclick="deleteAppointment('${apt.id}')" title="Eliminar la cita del registro" style="color:var(--danger);border-color:rgba(196,86,86,.3)"><i class="fas fa-trash"></i></button>${apt.status === 'pending' ? `<button class="btn btn-success" onclick="updateAppointmentStatus('${apt.id}','confirmed')"><i class="fas fa-check"></i> Confirmar</button><button class="btn btn-primary" onclick="updateAppointmentStatus('${apt.id}','completed')" title="Marcar como realizada"><i class="fas fa-star"></i> Completar</button>${rescheduleBtn}<button class="btn btn-danger" onclick="cancelAppointment('${apt.id}')"><i class="fas fa-times"></i> Cancelar</button>` : ''}${apt.status === 'confirmed' ? `<button class="btn btn-primary" onclick="updateAppointmentStatus('${apt.id}','completed')"><i class="fas fa-star"></i> Completar</button>${rescheduleBtn}<button class="btn btn-danger" onclick="cancelAppointment('${apt.id}')"><i class="fas fa-times"></i> Cancelar</button>` : ''}</div></div>` }
+        function renderAppointmentItem(apt) { const svc = allServices.find(s => s.id === apt.serviceId), sc = `status-${apt.status}`, st = { pending: 'Pendiente', confirmed: 'Confirmada', completed: 'Completada', cancelled: 'Cancelada' }, si = { pending: 'fa-hourglass-half', confirmed: 'fa-check-circle', completed: 'fa-star', cancelled: 'fa-times-circle' }; const addonsHtml = Array.isArray(apt.addons) && apt.addons.length ? `<div style="margin-top:6px;padding-top:6px;border-top:1px dashed rgba(35,48,44,.1)"><i class="fas fa-sparkles" style="color:var(--bronze);margin-right:4px"></i><strong style="font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--jade)">Adicionales:</strong> ${apt.addons.map(a => `<span class="addon-tag"><i class="fas fa-check" style="font-size:9px"></i> ${escHtml(a.name)}${a.duration > 0 ? ` · +${a.duration} min` : ''}${a.price > 0 ? ` · +$${a.price.toLocaleString('es-CL')}` : ''}</span>`).join('')}${apt.totalPrice ? `<div style="margin-top:4px;font-size:13px;color:var(--charcoal)"><strong>Total:</strong> <span style="color:var(--jade);font-weight:700">$${apt.totalPrice.toLocaleString('es-CL')}</span></div>` : ''}</div>` : ''; const canReschedule = apt.status === 'pending' || apt.status === 'confirmed'; const rescheduleBtn = canReschedule ? `<button class="btn btn-secondary" onclick="openRescheduleModal('${apt.id}')"><i class="fas fa-calendar-pen"></i> Reagendar</button>` : ''; const waBtn = waNumber(apt.clientPhone) ? `<a class="btn btn-success" href="https://wa.me/${waNumber(apt.clientPhone)}?text=${encodeURIComponent('Hola ' + ((apt.clientName || '').split(' ')[0] || '') + '! Te escribimos de Synea Studio Spa por tu hora ✨')}" target="_blank" rel="noopener" title="Escribir por WhatsApp"><i class="fab fa-whatsapp"></i></a>` : ''; return `<div class="appointment-item"><div class="appointment-header"><div class="appointment-time"><i class="fas fa-clock" style="color:var(--bronze);font-size:14px"></i> ${escHtml(apt.time)}</div><span class="appointment-status ${sc}"><i class="fas ${si[apt.status]}"></i> ${st[apt.status] || escHtml(apt.status)}</span>${apt.locationCity ? `<span class="trip-chip" style="margin-left:6px"><i class="fas fa-plane-departure" style="font-size:9px"></i> ${escHtml(apt.locationCity)}</span>` : ''}${apt.giftCode ? `<span class="gc-chip ${apt.giftStatus === 'redeemed' ? 'activa' : 'vencida'}" style="margin-left:6px" title="${apt.giftStatus === 'redeemed' ? 'Canje válido: no cobrar' : 'Revisar esta giftcard'}"><i class="fas fa-gift" style="font-size:9px"></i> ${escHtml(apt.giftCode)}</span>` : ''}${apt.paymentType && !apt.giftCode ? `<span class="gc-chip activa" style="margin-left:6px" title="Ya pagada: no se cobra en esta visita"><i class="fas fa-circle-check" style="font-size:9px"></i> ${escHtml(PAY_LABELS[apt.paymentType] || 'Pagada')}${apt.membershipSession ? ' · sesión ' + apt.membershipSession : ''}</span>` : ''}</div><div class="appointment-details"><div><i class="fas fa-user"></i> <strong>Cliente:</strong> ${escHtml(apt.clientName)}</div><div><i class="fas fa-gem"></i> <strong>Servicio:</strong> ${svc ? escHtml(svc.name) : 'N/A'}${Array.isArray(apt.extraServices) && apt.extraServices.length ? apt.extraServices.map(x => ` <span class="extra-chip" style="padding:2px 10px;font-size:11.5px">+ ${escHtml(x.name)}${Array.isArray(x.addons) && x.addons.length ? ` <span style="font-weight:500;color:var(--warm-gray)">· ${x.addons.map(a => escHtml(a.name)).join(', ')}</span>` : ''}</span>`).join('') : ''}${apt.totalDuration ? ` <span style="color:var(--warm-gray);font-size:12.5px">· ${apt.totalDuration} min</span>` : ''}</div><div><i class="fas fa-phone"></i> <strong>Tel:</strong> <a href="tel:${escAttr((apt.clientPhone || '').replace(/[^\d+]/g, ''))}" style="color:var(--charcoal);text-decoration:none">${escHtml(apt.clientPhone)}</a></div>${apt.clientEmail ? `<div><i class="fas fa-envelope"></i> ${escHtml(apt.clientEmail)}</div>` : ''}${apt.comments ? `<div><i class="fas fa-comment"></i> ${escHtml(apt.comments)}</div>` : ''}${addonsHtml}</div><div class="appointment-actions">${waBtn}<button class="btn btn-secondary" onclick="resendApptMail('${apt.id}')" title="Reenviar el correo de la cita a la clienta"><i class="fas fa-envelope"></i></button><button class="btn btn-secondary" onclick="changePaymentType('${apt.id}')" title="Forma de pago (membresía, giftcard, cortesía)"><i class="fas fa-cash-register"></i></button><button class="btn btn-ghost" onclick="deleteAppointment('${apt.id}')" title="Eliminar la cita del registro" style="color:var(--danger);border-color:rgba(196,86,86,.3)"><i class="fas fa-trash"></i></button>${apt.status === 'pending' ? `<button class="btn btn-success" onclick="updateAppointmentStatus('${apt.id}','confirmed')"><i class="fas fa-check"></i> Confirmar</button><button class="btn btn-primary" onclick="updateAppointmentStatus('${apt.id}','completed')" title="Marcar como realizada"><i class="fas fa-star"></i> Completar</button>${rescheduleBtn}<button class="btn btn-danger" onclick="cancelAppointment('${apt.id}')"><i class="fas fa-times"></i> Cancelar</button>` : ''}${apt.status === 'confirmed' ? `<button class="btn btn-primary" onclick="updateAppointmentStatus('${apt.id}','completed')"><i class="fas fa-star"></i> Completar</button>${rescheduleBtn}<button class="btn btn-danger" onclick="cancelAppointment('${apt.id}')"><i class="fas fa-times"></i> Cancelar</button>` : ''}</div></div>` }
 
         // Elimina la cita del registro. A diferencia de "Cancelar", no avisa a
         // la clienta: sirve para borrar pruebas o cargas equivocadas.
@@ -8893,12 +8955,14 @@
         // ==================== CLIENT BOOKING ====================
         function renderServiceCard(s, i, opts) {
             const thumbSrc = s.thumbUrl || s.imageUrl;
-            const imgStyle = thumbSrc ? `style="background-image:url('${escAttr(thumbSrc)}')"` : ''
-            const imgClass = thumbSrc ? 'service-card-image' : `service-card-image svc-img-${i < 16 ? i : 'default'}`;
             const isSale = !!(opts && opts.isSale);
+            // Con foto propia manda la foto; sin ella, portada de marca con el icono.
+            const cover = thumbSrc
+                ? `<div class="service-card-image" style="background-image:url('${escAttr(thumbSrc)}')"></div>`
+                : `<div class="service-card-image svc-cover ${getServiceCoverClass(s.name, isSale)}"><i class="fas ${getServiceIcon(s.name)}"></i></div>`;
             const ribbon = ''; // Opción B: la sección destacada ya distingue; las tarjetas quedan limpias (solo la línea dorada superior del CSS).
             const iconColor = isSale ? 'var(--sale-bronze-deep)' : 'var(--jade)';
-            return `<div class="service-card" onclick="openServicePreview('${s.id}')" data-aos="fade-up" data-aos-delay="${Math.min(i * 60, 400)}">${ribbon}<div class="${imgClass}" ${imgStyle}></div><div class="service-card-body"><h4><i class="fas ${getServiceIcon(s.name)}" style="color:${iconColor};margin-right:6px;font-size:14px"></i> ${escHtml(s.name)}</h4>${s.description ? `<p>${escHtml(s.description)}</p>` : ''}<div class="service-info"><span class="service-duration"><i class="fas fa-clock"></i> ${s.duration} min</span><span class="service-price">${fmtPrice(s.price)}</span></div></div></div>`;
+            return `<div class="service-card" onclick="openServicePreview('${s.id}')" data-aos="fade-up" data-aos-delay="${Math.min(i * 60, 400)}">${ribbon}${cover}<div class="service-card-body"><h4><i class="fas ${getServiceIcon(s.name)}" style="color:${iconColor};margin-right:6px;font-size:14px"></i> ${escHtml(s.name)}</h4>${s.description ? `<p>${escHtml(s.description)}</p>` : ''}<div class="service-info"><span class="service-duration"><i class="fas fa-clock"></i> ${s.duration} min</span><span class="service-price">${fmtPrice(s.price)}</span></div></div></div>`;
         }
 
         function loadClientServices() {
@@ -9035,7 +9099,7 @@
             document.getElementById('servicePreviewName').textContent = s.name;
             // Meta (duration + price)
             const durTxt = formatDuration(s.duration);
-            document.getElementById('servicePreviewMeta').innerHTML = `<span class="pill"><i class="fas fa-clock"></i> ${durTxt}</span><span class="pill price"><i class="fas fa-tag"></i> ${fmtPrice(s.price)}</span>`;
+            document.getElementById('servicePreviewMeta').innerHTML = `<span class="pill" id="servicePreviewDurPill"><i class="fas fa-clock"></i> ${durTxt}</span><span class="pill price"><i class="fas fa-tag"></i> ${fmtPrice(s.price)}</span>`;
             // Description
             const descEl = document.getElementById('servicePreviewDescription');
             if (s.description && s.description.trim()) {
@@ -9053,7 +9117,8 @@
                 addonsList.innerHTML = s.addons.map((a, i) => {
                     const priceLbl = a.price > 0 ? `+$${a.price.toLocaleString('es-CL')}` : 'Gratis';
                     const freeClass = a.price > 0 ? '' : 'free';
-                    return `<div class="preview-addon-option" data-addon-idx="${i}" onclick="togglePreviewAddon(${i})" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();togglePreviewAddon(${i})}"><div class="addon-check"><i class="fas fa-check"></i></div><div class="addon-label">${escHtml(a.name)}</div><div class="addon-price-tag ${freeClass}">${priceLbl}</div></div>`;
+                    const durLbl = a.duration > 0 ? `<span class="addon-dur"><i class="fas fa-clock"></i> +${a.duration} min</span>` : '';
+                    return `<div class="preview-addon-option" data-addon-idx="${i}" onclick="togglePreviewAddon(${i})" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();togglePreviewAddon(${i})}"><div class="addon-check"><i class="fas fa-check"></i></div><div class="addon-label">${escHtml(a.name)}${durLbl}</div><div class="addon-price-tag ${freeClass}">${priceLbl}</div></div>`;
                 }).join('');
                 addonsWrap.style.display = 'block';
                 totalWrap.style.display = 'flex';
@@ -9082,11 +9147,18 @@
 
         function updatePreviewTotal() {
             const s = allServices.find(x => x.id === previewServiceId); if (!s) return;
-            let total = s.price || 0;
+            let total = s.price || 0, mins = parseInt(s.duration) || 0;
             if (Array.isArray(s.addons)) {
-                previewSelectedAddons.forEach(idx => { if (s.addons[idx]) total += (s.addons[idx].price || 0) });
+                previewSelectedAddons.forEach(idx => {
+                    const a = s.addons[idx]; if (!a) return;
+                    total += (a.price || 0);
+                    mins += parseInt(a.duration) || 0;
+                });
             }
             document.getElementById('servicePreviewTotalValue').textContent = '$' + total.toLocaleString('es-CL');
+            // La píldora de duración sigue a los adicionales marcados
+            const pill = document.getElementById('servicePreviewDurPill');
+            if (pill) pill.innerHTML = `<i class="fas fa-clock"></i> ${formatDuration(mins)}`;
         }
 
         function closeServicePreview() {
@@ -9220,7 +9292,7 @@
             const selectedAddons = [];
             if (s && Array.isArray(s.addons)) {
                 previewSelectedAddons.forEach(idx => {
-                    if (s.addons[idx]) selectedAddons.push({ name: s.addons[idx].name, price: s.addons[idx].price || 0 });
+                    if (s.addons[idx]) selectedAddons.push({ name: s.addons[idx].name, price: s.addons[idx].price || 0, duration: s.addons[idx].duration || 0 });
                 });
             }
             window.pendingBookingAddons = selectedAddons;
@@ -9263,8 +9335,8 @@
             if (!ss) return;
             const summaryThumb = selectedService.thumbUrl || selectedService.imageUrl;
             const thumb = summaryThumb ? `<div style="width:64px;height:64px;border-radius:var(--radius-sm);background-image:url('${escAttr(summaryThumb)}');background-size:cover;background-position:center;flex-shrink:0"></div>` : `<div style="width:64px;height:64px;background:var(--white);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;color:var(--jade);font-size:24px;flex-shrink:0"><i class="fas ${getServiceIcon(selectedService.name)}"></i></div>`;
-            const addonTags = selectedAddons.length ? `<div style="margin-top:10px;padding-top:10px;border-top:1px dashed rgba(35,48,44,.12)"><div style="font-size:11px;color:var(--warm-gray);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;font-weight:600"><i class="fas fa-sparkles" style="color:var(--bronze)"></i> Adicionales</div>${selectedAddons.map(a => `<span class="addon-tag"><i class="fas fa-check" style="font-size:9px"></i> ${escHtml(a.name)}${a.price > 0 ? ` · +$${a.price.toLocaleString('es-CL')}` : ''}</span>`).join('')}</div>` : '';
-            ss.innerHTML = `<div style="padding:18px 22px;background:linear-gradient(135deg,var(--ivory) 0%,rgba(47,93,80,.04) 100%);border-radius:var(--radius-md);border:1.5px solid rgba(47,93,80,.12)"><div style="display:flex;align-items:center;gap:16px">${thumb}<div style="flex:1;min-width:0"><div style="font-size:11px;color:var(--jade);text-transform:uppercase;letter-spacing:.5px;font-weight:600;margin-bottom:2px">Servicio seleccionado</div><h3 style="font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--charcoal);margin-bottom:4px;overflow:hidden;text-overflow:ellipsis">${escHtml(selectedService.name)}</h3><div style="display:flex;gap:14px;align-items:center;font-size:13px;flex-wrap:wrap"><span style="color:var(--warm-gray)"><i class="fas fa-clock" style="color:var(--bronze);margin-right:4px"></i>${bookingDuration()} min${extraServices.length ? ' en total' : ''}</span><span class="service-price" style="font-size:17px">$${totalPrice.toLocaleString('es-CL')}</span></div></div></div>${extraServices.length ? `<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;padding-top:12px;border-top:1px dashed rgba(35,48,44,.12)">${extraServices.map(e => `<span class="extra-chip" style="flex-direction:column;align-items:flex-start;border-radius:14px;padding:7px 8px 7px 13px"><span style="display:flex;align-items:center;gap:7px">${escHtml(e.name)} · $${((e.price || 0) + extraAddonsTotal(e)).toLocaleString('es-CL')}<button type="button" onclick="removeExtraService('${e.id}')" title="Quitar"><i class="fas fa-times"></i></button></span>${Array.isArray(e.addons) && e.addons.length ? `<span style="font-size:11px;font-weight:500;color:var(--warm-gray)"><i class="fas fa-sparkles" style="color:var(--bronze-text)"></i> ${e.addons.map(a => escHtml(a.name)).join(', ')}</span>` : ''}</span>`).join('')}</div>` : ''}<button type="button" class="btn btn-ghost" onclick="openExtraPicker()" style="width:100%;justify-content:center;margin-top:12px;font-size:13.5px"><i class="fas fa-plus"></i> Agregar otro servicio</button>${addonTags}</div>`;
+            const addonTags = selectedAddons.length ? `<div style="margin-top:10px;padding-top:10px;border-top:1px dashed rgba(35,48,44,.12)"><div style="font-size:11px;color:var(--warm-gray);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;font-weight:600"><i class="fas fa-sparkles" style="color:var(--bronze)"></i> Adicionales</div>${selectedAddons.map(a => `<span class="addon-tag"><i class="fas fa-check" style="font-size:9px"></i> ${escHtml(a.name)}${a.duration > 0 ? ` · +${a.duration} min` : ''}${a.price > 0 ? ` · +$${a.price.toLocaleString('es-CL')}` : ''}</span>`).join('')}</div>` : '';
+            ss.innerHTML =`<div style="padding:18px 22px;background:linear-gradient(135deg,var(--ivory) 0%,rgba(47,93,80,.04) 100%);border-radius:var(--radius-md);border:1.5px solid rgba(47,93,80,.12)"><div style="display:flex;align-items:center;gap:16px">${thumb}<div style="flex:1;min-width:0"><div style="font-size:11px;color:var(--jade);text-transform:uppercase;letter-spacing:.5px;font-weight:600;margin-bottom:2px">Servicio seleccionado</div><h3 style="font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--charcoal);margin-bottom:4px;overflow:hidden;text-overflow:ellipsis">${escHtml(selectedService.name)}</h3><div style="display:flex;gap:14px;align-items:center;font-size:13px;flex-wrap:wrap"><span style="color:var(--warm-gray)"><i class="fas fa-clock" style="color:var(--bronze);margin-right:4px"></i>${bookingDuration()} min${extraServices.length ? ' en total' : ''}</span><span class="service-price" style="font-size:17px">$${totalPrice.toLocaleString('es-CL')}</span></div></div></div>${extraServices.length ? `<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;padding-top:12px;border-top:1px dashed rgba(35,48,44,.12)">${extraServices.map(e => `<span class="extra-chip" style="flex-direction:column;align-items:flex-start;border-radius:14px;padding:7px 8px 7px 13px"><span style="display:flex;align-items:center;gap:7px">${escHtml(e.name)} · $${((e.price || 0) + extraAddonsTotal(e)).toLocaleString('es-CL')}<button type="button" onclick="removeExtraService('${e.id}')" title="Quitar"><i class="fas fa-times"></i></button></span>${Array.isArray(e.addons) && e.addons.length ? `<span style="font-size:11px;font-weight:500;color:var(--warm-gray)"><i class="fas fa-sparkles" style="color:var(--bronze-text)"></i> ${e.addons.map(a => escHtml(a.name)).join(', ')}</span>` : ''}</span>`).join('')}</div>` : ''}<button type="button" class="btn btn-ghost" onclick="openExtraPicker()" style="width:100%;justify-content:center;margin-top:12px;font-size:13.5px"><i class="fas fa-plus"></i> Agregar otro servicio</button>${addonTags}</div>`;
         }
 
         // Si el mes visible del calendario no tiene ningún día con cupo, avanza
@@ -9669,7 +9741,7 @@
                 // automáticamente al crearse la cita. Ver functions/index.js.
                 btn.innerHTML = origHTML; btn.disabled = false; btn.style.opacity = '1';
                 const fd = new Date(selectedDate + 'T12:00:00').toLocaleDateString('es-CL', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-                const addonsSummary = bookingAddons.length ? `<div style="margin-top:8px;padding-top:8px;border-top:1px dashed rgba(35,48,44,.12)"><div style="font-size:11px;color:var(--jade);text-transform:uppercase;letter-spacing:.5px;font-weight:600;margin-bottom:4px"><i class="fas fa-sparkles" style="color:var(--bronze)"></i> Adicionales</div>${bookingAddons.map(a => `<div style="padding:2px 0;font-size:13px"><i class="fas fa-plus" style="color:var(--jade);font-size:10px;width:16px"></i> ${escHtml(a.name)}${a.price > 0 ? ` · +$${a.price.toLocaleString('es-CL')}` : ''}</div>`).join('')}</div>` : '';
+                const addonsSummary = bookingAddons.length ? `<div style="margin-top:8px;padding-top:8px;border-top:1px dashed rgba(35,48,44,.12)"><div style="font-size:11px;color:var(--jade);text-transform:uppercase;letter-spacing:.5px;font-weight:600;margin-bottom:4px"><i class="fas fa-sparkles" style="color:var(--bronze)"></i> Adicionales</div>${bookingAddons.map(a => `<div style="padding:2px 0;font-size:13px"><i class="fas fa-plus" style="color:var(--jade);font-size:10px;width:16px"></i> ${escHtml(a.name)}${a.duration > 0 ? ` · +${a.duration} min` : ''}${a.price > 0 ? ` · +${a.price.toLocaleString('es-CL')}` : ''}</div>`).join('')}</div>` : '';
                 document.getElementById('bookingSummary').innerHTML = `<div style="font-size:14px;color:var(--charcoal);line-height:2"><div><i class="fas fa-gem" style="color:var(--jade);width:20px"></i> <strong>${escHtml(selectedService.name)}</strong></div>${extrasLines()}<div><i class="fas fa-calendar" style="color:var(--bronze);width:20px"></i> ${fd}</div><div><i class="fas fa-clock" style="color:var(--bronze);width:20px"></i> ${selectedTime} hrs · ${apt.totalDuration || selectedService.duration} min</div>${giftRedeem ? `<div><i class="fas fa-gift" style="color:var(--bronze-text);width:20px"></i> <strong>Pagado con giftcard</strong> ${escHtml(giftRedeem.code)}</div>` : `<div><i class="fas fa-tag" style="color:var(--success);width:20px"></i> $${finalPrice.toLocaleString('es-CL')}</div>`}${_trip ? `<div style="margin-top:6px;padding-top:8px;border-top:1px dashed rgba(35,48,44,.12)"><i class="fas fa-location-dot" style="color:var(--jade);width:20px"></i> <strong>${escHtml(_trip.city || '')}</strong>${_trip.address ? `<br><span style="font-size:13px;color:var(--warm-gray);margin-left:20px">${escHtml(_trip.address)}</span>` : ''}</div>` : ''}</div>${addonsSummary}`;
                 if (config.webpayUrl && !giftRedeem) { document.getElementById('paymentSection').style.display = 'block'; document.getElementById('webpayBtn').href = config.webpayUrl } else { document.getElementById('paymentSection').style.display = 'none' }
                 // Generate Google Calendar link
@@ -9700,7 +9772,7 @@
             }
         }
 
-        function resetClientBooking() { selectedService = null; selectedDate = null; selectedTime = null; document.getElementById('clientStep1').style.display = 'block'; document.getElementById('clientStep2').style.display = 'none'; document.getElementById('clientSuccess').style.display = 'none'; document.getElementById('clientGift').style.display = 'none'; document.getElementById('clientGiftSuccess').style.display = 'none'; giftService = null; giftRedeem = null; extraServices = []; const gcf = document.getElementById('clientGiftCode'); if (gcf) gcf.value = ''; const gcr = document.getElementById('giftCodeResult'); if (gcr) gcr.innerHTML = ''; document.getElementById('clientName').value = ''; document.getElementById('clientPhone').value = ''; document.getElementById('clientEmail').value = ''; document.getElementById('clientComments').value = ''; document.getElementById('clientBookingForm').style.display = 'none'; const si = document.getElementById('serviceSearchInput'); if (si) { si.value = ''; filterServices() } const cb = document.querySelector('#clientBookingForm .confirm-btn'); if (cb) { cb.innerHTML = '<i class="fas fa-check-circle"></i> Confirmar Reserva'; cb.disabled = false; cb.style.opacity = '1' } bookingTripId = null; renderTripContextBar(); renderTripBanner(); loadClientServices(); renderClientCalendar(); window.scrollTo({ top: 0, behavior: 'smooth' }) }
+        function resetClientBooking() { selectedService = null; selectedDate = null; selectedTime = null; window.currentBookingAddons = null; window.pendingBookingAddons = null;document.getElementById('clientStep1').style.display = 'block'; document.getElementById('clientStep2').style.display = 'none'; document.getElementById('clientSuccess').style.display = 'none'; document.getElementById('clientGift').style.display = 'none'; document.getElementById('clientGiftSuccess').style.display = 'none'; giftService = null; giftRedeem = null; extraServices = []; const gcf = document.getElementById('clientGiftCode'); if (gcf) gcf.value = ''; const gcr = document.getElementById('giftCodeResult'); if (gcr) gcr.innerHTML = ''; document.getElementById('clientName').value = ''; document.getElementById('clientPhone').value = ''; document.getElementById('clientEmail').value = ''; document.getElementById('clientComments').value = ''; document.getElementById('clientBookingForm').style.display = 'none'; const si = document.getElementById('serviceSearchInput'); if (si) { si.value = ''; filterServices() } const cb = document.querySelector('#clientBookingForm .confirm-btn'); if (cb) { cb.innerHTML = '<i class="fas fa-check-circle"></i> Confirmar Reserva'; cb.disabled = false; cb.style.opacity = '1' } bookingTripId = null; renderTripContextBar(); renderTripBanner(); loadClientServices(); renderClientCalendar(); window.scrollTo({ top: 0, behavior: 'smooth' }) }
         function clientChangeMonth(d) { const now = new Date(), proposed = new Date(currentClientMonth); proposed.setMonth(proposed.getMonth() + d); if (d < 0 && proposed.getFullYear() === now.getFullYear() && proposed.getMonth() < now.getMonth()) return; if (d < 0 && proposed.getFullYear() < now.getFullYear()) return; currentClientMonth.setMonth(currentClientMonth.getMonth() + d); renderClientCalendar() }
 
         // Wait for Firebase module to load, then initialize

@@ -30,14 +30,23 @@ rellenarlos. Están marcados en el código.
 | Teléfono / WhatsApp | Panel → Configuración | `+56 9 6163 5077` |
 | Correo de avisos | Panel → Configuración | vacío |
 | Link de Webpay | Panel → Configuración | vacío (si no lo pones, no aparece el botón de pago) |
-| Logo real | Panel → Configuración → Logo | provisorio: monograma en `icons/logo.png` |
+| Logo real | `icons/` | ✅ monograma del logo de Synea |
 | Fotos de la galería | Panel → Galería | vacía |
+| Fotos de portada de cada servicio | Panel → Servicios → Editar | vacías: se ve la portada de marca |
 | Duración del paquete de promoción | Panel → Servicios | estimada en 75 min |
 
-- **Fotos:** no se pudieron bajar desde Instagram (`@synea.studiospa`) — la red
-  de este entorno bloquea el acceso. Súbelas desde **Panel → Galería**; se
-  redimensionan solas y van a Firebase Storage. El link a Instagram en la web ya
-  apunta al perfil correcto.
+- **Fotos:** el perfil de Instagram (`@synea.studiospa`) sí se puede abrir, pero
+  sus publicaciones son casi todas reels y tomas de ambiente, no fotos por
+  servicio. Súbelas desde **Panel → Galería**; se redimensionan solas y van a
+  Firebase Storage. El link a Instagram en la web ya apunta al perfil correcto.
+- **Logo:** el de Instagram se sirve a 150×150, así que `scripts/logo-synea.png`
+  se tomó de la ficha de AgendaPro, que publica el mismo logo a 200×200 y con
+  más detalle.
+- **Portadas de los servicios:** cada tarjeta muestra la foto del servicio si la
+  tiene y, si no, una portada de marca (degradado según la familia del servicio
+  más su icono). Antes se usaban fotos heredadas de PaoPai —de otro local y de
+  servicios que Synea no ofrece—, así que se eliminaron. Para que la grilla se
+  vea con fotos reales, súbelas en **Panel → Servicios → Editar**.
 - **Catálogo:** nombres, precios, duraciones y descripciones son los publicados
   en AgendaPro. La única excepción es el paquete `ESMALTADO + PERFILADO`, que
   ahí figura sin duración: se estimó en 75 min (60 del esmaltado unicolor más el
@@ -50,13 +59,38 @@ rellenarlos. Están marcados en el código.
 | MASOTERAPIA Y BIENESTAR | 10 |
 | MANICURE | 10 |
 | TERAPIAS COMPLEMENTARIAS Y BIENESTAR ENERGÉTICO | 4 |
-| SERVICIOS ADICIONALES MANICURE | 7 |
 | PROMOCIONES (categoría destacada) | 1 |
 
-Los adicionales de manicure duran entre 5 y 15 minutos, por lo que el mínimo de
-duración del panel bajó de 15 a 5 minutos. Si prefieres que no se agenden por
-separado, la app también los admite como **adicionales** de un servicio (Panel →
-Servicios → Editar → Adicionales opcionales), donde suman precio a la reserva.
+### Los adicionales de manicure
+
+En AgendaPro los 7 adicionales (pedrería, diseños, ojo de gato, decoración 3D…)
+son una categoría aparte que se agenda sola. Acá no: **cuelgan de cada servicio
+de manicure** como adicionales opcionales, porque son decoración que se suma a un
+esmaltado, no una visita en sí. La clienta los marca con un check dentro de la
+misma tarjeta del servicio, ordenados de lo más simple a lo más elaborado:
+
+| Adicional | Suma | Precio |
+|---|---|---|
+| Diseño simple (por uña) | +5 min | $500 |
+| Diseño medio (por uña) | +10 min | $1.000 |
+| Diseño complejo | +15 min | $1.500 |
+| Ojo de gato | +5 min | $1.000 |
+| Degradé / francesa | +15 min | $4.000 |
+| Pedrería | +10 min | $1.500 |
+| Decoración 3D | +15 min | $3.000 |
+
+Van en los seis servicios que terminan en uña esmaltada: esmaltado unicolor,
+esmaltado francesa/degradé (sin el adicional de degradé, que ya viene incluido),
+kapping, las dos extensiones y el paquete de promoción.
+
+Cada adicional suma **precio y minutos**: la cita ocupa el tiempo real en la
+agenda, así que un esmaltado unicolor con diseño complejo reserva 75 min y no 60.
+Se editan en **Panel → Servicios → Editar → Adicionales opcionales** (nombre,
+minutos, precio).
+
+La categoría suelta `SERVICIOS ADICIONALES MANICURE` y sus 7 servicios quedan
+**desactivados**, no borrados: las citas antiguas los referencian por id. El
+`seed-catalog.mjs` los desactiva solo si una corrida anterior los había creado.
 
 ---
 
@@ -239,12 +273,28 @@ el `:root` de `index.html`.
 
 Tipografías: **Cormorant Garamond** (títulos) + **Manrope** (texto).
 
-Los iconos de `icons/` y el logo provisorio se generaron con
-`scripts/gen-icons.py`; para regenerarlos tras cambiar la paleta:
+### El logo
+
+`scripts/logo-synea.png` es el logo real de Synea (monograma + «Synea Studio Spa»),
+el mismo que publica el negocio. De ahí salen todos los iconos: como cada lugar
+donde la app muestra el logo es un círculo de 52 a 96 px —portada, pantalla de
+carga, cabecera del panel, login y el encabezado de los correos—, se recorta
+**solo el monograma**; la palabra no se leería a ese tamaño.
+
+Ojo con los colores: el verde del logo (`#12361b`) es más oscuro que el `--jade`
+de la paleta del sitio. El monograma conserva el suyo.
 
 ```bash
-cd ~/synea && python3 scripts/gen-icons.py
+cd ~/synea
+pip install pillow
+python3 scripts/gen-icons.py
 ```
+
+Regenera `icon-192`, `icon-512`, `icon-maskable-512`, `apple-touch-icon` y
+`logo.png` (círculo marfil con anillo bronce). Si cambias los iconos, sube el
+`?v=` de `manifest.webmanifest` e `index.html` para que las PWA ya instaladas
+los vuelvan a pedir. Para el icono sobre fondo verde en vez de marfil, cambia
+`FONDO` por `VERDE` en el script.
 
 ---
 
@@ -259,6 +309,6 @@ database.locked.rules.json reglas cerradas para la instancia sin uso
 storage.rules              reglas de Storage (imágenes)
 firebase.json / .firebaserc  hosting, reglas, funciones
 functions/                 Cloud Functions: correos y recordatorios
-icons/                     iconos PWA + logo provisorio
+icons/                     iconos PWA generados desde el logo real
 scripts/                   utilidades (catálogo, limpieza, iconos)
 ```

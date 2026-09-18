@@ -223,7 +223,7 @@ function emailExtraServices(apt) {
 
 function emailAddonsSection(apt, svc) {
   if (!Array.isArray(apt.addons) || !apt.addons.length) return '';
-  const rows = apt.addons.map(a => `<tr><td style="padding:4px 0;color:#6d7a75;width:20px">+</td><td style="padding:4px 0">${escHtml(a.name)}</td><td style="padding:4px 0;text-align:right;font-weight:600;color:${a.price > 0 ? '#2f5d50' : '#5a9e6f'}">${a.price > 0 ? '$' + a.price.toLocaleString('es-CL') : 'Gratis'}</td></tr>`).join('');
+  const rows = apt.addons.map(a => `<tr><td style="padding:4px 0;color:#6d7a75;width:20px">+</td><td style="padding:4px 0">${escHtml(a.name)}${a.duration > 0 ? ` <span style="color:#6d7a75;font-size:12px">· +${a.duration} min</span>` : ''}</td><td style="padding:4px 0;text-align:right;font-weight:600;color:${a.price > 0 ? '#2f5d50' : '#5a9e6f'}">${a.price > 0 ? '$' + a.price.toLocaleString('es-CL') : 'Gratis'}</td></tr>`).join('');
   const addonsTotal = apt.addons.reduce((s, a) => s + (a.price || 0), 0);
   const total = (apt.totalPrice != null ? apt.totalPrice : (svc.price + addonsTotal));
   return `<div style="margin-top:12px;padding-top:12px;border-top:1px dashed #ddd8cf">
@@ -271,7 +271,7 @@ function pendingEmail(config, apt, svc) {
       <tr><td style="padding:8px 0;color:#6d7a75;width:100px">Servicio</td><td style="padding:8px 0;font-weight:600">${escHtml(svc.name)}</td></tr>
       <tr><td style="padding:8px 0;color:#6d7a75">Fecha</td><td style="padding:8px 0;font-weight:600">${fd}</td></tr>
       <tr><td style="padding:8px 0;color:#6d7a75">Hora</td><td style="padding:8px 0;font-weight:600">${escHtml(apt.time)} hrs</td></tr>
-      <tr><td style="padding:8px 0;color:#6d7a75">Duración</td><td style="padding:8px 0">${svc.duration} min</td></tr>
+      <tr><td style="padding:8px 0;color:#6d7a75">Duración</td><td style="padding:8px 0">${apt.totalDuration || svc.duration} min</td></tr>
       <tr><td style="padding:8px 0;color:#6d7a75">Precio base</td><td style="padding:8px 0;font-weight:600;color:#2f5d50">$${(svc.price || 0).toLocaleString('es-CL')}</td></tr>
     </table>
     ${emailExtraServices(apt)}${emailAddonsSection(apt, svc)}
@@ -297,7 +297,7 @@ function confirmedEmail(config, apt, svc) {
       <tr><td style="padding:8px 0;color:#6d7a75;width:100px">Servicio</td><td style="padding:8px 0;font-weight:600">${escHtml(svc.name)}</td></tr>
       <tr><td style="padding:8px 0;color:#6d7a75">Fecha</td><td style="padding:8px 0;font-weight:600">${fd}</td></tr>
       <tr><td style="padding:8px 0;color:#6d7a75">Hora</td><td style="padding:8px 0;font-weight:600">${escHtml(apt.time)} hrs</td></tr>
-      <tr><td style="padding:8px 0;color:#6d7a75">Duración</td><td style="padding:8px 0">${svc.duration} min</td></tr>
+      <tr><td style="padding:8px 0;color:#6d7a75">Duración</td><td style="padding:8px 0">${apt.totalDuration || svc.duration} min</td></tr>
     </table>
     ${emailExtraServices(apt)}${emailAddonsSection(apt, svc)}
     ${emailLocationSection(config, apt)}
@@ -320,7 +320,7 @@ function rescheduledEmail(config, apt, svc, oldDate, oldTime) {
     </div>
     <table style="width:100%;border-collapse:collapse;margin:16px 0">
       <tr><td style="padding:8px 0;color:#6d7a75;width:100px">Servicio</td><td style="padding:8px 0;font-weight:600">${escHtml(svc.name)}</td></tr>
-      <tr><td style="padding:8px 0;color:#6d7a75">Duración</td><td style="padding:8px 0">${svc.duration} min</td></tr>
+      <tr><td style="padding:8px 0;color:#6d7a75">Duración</td><td style="padding:8px 0">${apt.totalDuration || svc.duration} min</td></tr>
     </table>
     ${emailExtraServices(apt)}${emailAddonsSection(apt, svc)}
     ${emailLocationSection(config, apt)}
@@ -337,7 +337,7 @@ function reminderEmail(config, apt, svc) {
       <tr><td style="padding:8px 0;color:#6d7a75;width:100px">Servicio</td><td style="padding:8px 0;font-weight:600">${escHtml(svc.name)}</td></tr>
       <tr><td style="padding:8px 0;color:#6d7a75">Fecha</td><td style="padding:8px 0;font-weight:600">${fd}</td></tr>
       <tr><td style="padding:8px 0;color:#6d7a75">Hora</td><td style="padding:8px 0;font-weight:600">${escHtml(apt.time)} hrs</td></tr>
-      <tr><td style="padding:8px 0;color:#6d7a75">Duración</td><td style="padding:8px 0">${svc.duration} min</td></tr>
+      <tr><td style="padding:8px 0;color:#6d7a75">Duración</td><td style="padding:8px 0">${apt.totalDuration || svc.duration} min</td></tr>
     </table>
     ${emailExtraServices(apt)}${emailAddonsSection(apt, svc)}
     <div style="background:#eee8de;border-radius:8px;padding:14px 18px;margin:16px 0">
@@ -374,7 +374,7 @@ function adminNewBookingEmail(config, apt, svc) {
       <tr><td style="padding:8px 0;color:#6d7a75">Servicio</td><td style="padding:8px 0;font-weight:600">${escHtml(svc.name)}</td></tr>
       <tr><td style="padding:8px 0;color:#6d7a75">Fecha</td><td style="padding:8px 0;font-weight:600">${fd}</td></tr>
       <tr><td style="padding:8px 0;color:#6d7a75">Hora</td><td style="padding:8px 0;font-weight:600">${escHtml(apt.time)} hrs</td></tr>
-      <tr><td style="padding:8px 0;color:#6d7a75">Duración</td><td style="padding:8px 0">${svc.duration} min</td></tr>
+      <tr><td style="padding:8px 0;color:#6d7a75">Duración</td><td style="padding:8px 0">${apt.totalDuration || svc.duration} min</td></tr>
       ${apt.comments ? `<tr><td style="padding:8px 0;color:#6d7a75">Notas</td><td style="padding:8px 0;font-style:italic">${escHtml(apt.comments)}</td></tr>` : ''}
     </table>
     ${emailExtraServices(apt)}${emailAddonsSection(apt, svc)}
