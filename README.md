@@ -26,6 +26,7 @@ rellenarlos. Están marcados en el código.
 | Correos con acceso al panel | `index.html` (`ADMIN_EMAILS`), `database.rules.json`, `storage.rules` | solo `javier.neo@gmail.com` |
 | Clave VAPID (push) | `index.html` (`FCM_VAPID_KEY`) | `TU_CLAVE_VAPID` |
 | ID del proyecto (si cambias) | `.firebaserc`, `functions/index.js`, `scripts/*.mjs` | `synea-app` |
+| Ubicación de Storage | Consola → Storage | EE.UU. (no se puede cambiar) |
 | Teléfono / WhatsApp | Panel → Configuración | vacío |
 | Correo de avisos | Panel → Configuración | vacío |
 | Link de Webpay | Panel → Configuración | vacío (si no lo pones, no aparece el botón de pago) |
@@ -56,8 +57,9 @@ Sobre los dos últimos:
 En [console.firebase.google.com](https://console.firebase.google.com):
 
 1. **Agregar proyecto** → nombre `synea-app`.
-2. **Realtime Database** → Crear base de datos → modo bloqueado.
-3. **Storage** → Comenzar.
+2. **Realtime Database** → Crear base de datos → modo bloqueado. Elige la región
+   con cuidado: define dónde van también las Cloud Functions.
+3. **Storage** → Comenzar. La ubicación queda fijada para siempre.
 4. **Authentication** → Sign-in method → habilitar **Google**.
 5. **Configuración del proyecto → Tus apps → Web (`</>`)** → registra la app y
    copia el bloque `firebaseConfig`.
@@ -84,11 +86,25 @@ nano index.html                 # busca:  const firebaseConfig
 nano firebase-messaging-sw.js   # busca:  firebase.initializeApp
 ```
 
-**Región:** la base está en `europe-west1`, así que las Cloud Functions se
-despliegan ahí (`setGlobalOptions` en `functions/index.js`) y el cliente las
-llama en esa región (`FUNCTIONS_REGION` en `index.html`). Los triggers de
-Realtime Database no funcionan si la función está en otra región; si alguna vez
-mueves la base, cambia los dos valores juntos.
+**Región y bases de datos.** El proyecto tiene dos instancias de Realtime
+Database y la app usa la de **us-central1**:
+
+| Instancia | Región | Uso |
+|---|---|---|
+| `synea-app` | us-central1 | **la que usa la app** |
+| `synea-app-default-rtdb` | europe-west1 | sin uso, desplegada con reglas cerradas |
+
+La predeterminada quedó en Europa, pero el Storage del proyecto solo puede
+crearse en EE.UU. (la ubicación de recursos predeterminada ya estaba fijada y no
+se cambia). Como desde Chile us-central1 responde bastante mejor que Bélgica, se
+usa la instancia de US y la europea se deja cerrada; no se puede borrar por ser
+la predeterminada.
+
+Los triggers de Realtime Database **no disparan si la función está en otra
+región**, así que las Cloud Functions van en `us-central1` y el cliente las llama
+ahí. Si alguna vez mueves la base, hay que cambiar los cuatro valores juntos:
+`databaseURL` y `FUNCTIONS_REGION` en `index.html`, `DB_INSTANCE` y
+`setGlobalOptions` en `functions/index.js`, más `DATABASE_URL` en `scripts/`.
 
 ### 4. Dar acceso al panel
 
@@ -225,7 +241,8 @@ cd ~/synea && python3 scripts/gen-icons.py
 index.html                 la app completa (cliente + panel)
 firebase-messaging-sw.js   service worker: PWA + push
 manifest.webmanifest       instalable como app
-database.rules.json        reglas de la base de datos
+database.rules.json        reglas de la base de datos en uso
+database.locked.rules.json reglas cerradas para la instancia sin uso
 storage.rules              reglas de Storage (imágenes)
 firebase.json / .firebaserc  hosting, reglas, funciones
 functions/                 Cloud Functions: correos y recordatorios

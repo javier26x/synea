@@ -22,12 +22,12 @@ const admin = require('firebase-admin');
 const nodemailer = require('nodemailer');
 
 admin.initializeApp();
-// europe-west1: los triggers de Realtime Database deben estar en la misma
+// us-central1: los triggers de Realtime Database deben estar en la misma
 // región que la base de datos.
-setGlobalOptions({ region: 'europe-west1', maxInstances: 10 });
+setGlobalOptions({ region: 'us-central1', maxInstances: 10 });
 
 const SMTP_PASSWORD = defineSecret('SMTP_PASSWORD');
-const DB_INSTANCE = 'synea-app-default-rtdb';
+const DB_INSTANCE = 'synea-app';
 const TZ = 'America/Santiago';
 const ADMIN_EMAILS = ['javier.neo@gmail.com'];
 const DEFAULT_LOGO = 'https://synea.frody.cl/icons/logo.png';

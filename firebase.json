@@ -10,7 +10,7 @@
       "functions/**",
       "*.md",
       "storage.rules",
-      "database.rules.json"
+      "database*.rules.json"
     ],
     "rewrites": [
       {
@@ -60,9 +60,16 @@
   "storage": {
     "rules": "storage.rules"
   },
-  "database": {
-    "rules": "database.rules.json"
-  },
+  "database": [
+    {
+      "instance": "synea-app",
+      "rules": "database.rules.json"
+    },
+    {
+      "instance": "synea-app-default-rtdb",
+      "rules": "database.locked.rules.json"
+    }
+  ],
   "functions": {
     "source": "functions",
     "runtime": "nodejs22"
