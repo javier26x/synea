@@ -1,16 +1,10 @@
 /**
- * Busca una foto referencial para cada servicio, la sube a Firebase Storage y
- * guarda su URL en el catálogo. Las fotos salen de Pexels, cuya licencia
- * permite uso comercial sin atribución.
+ * Pone una foto referencial en cada servicio: la baja de Pexels, la sube a
+ * Firebase Storage y guarda imageUrl y thumbUrl en el catálogo.
  *
- * Hay que correrlo desde un lugar con internet abierto (Cloud Shell sirve).
+ *   cd ~/synea/scripts && npm install    # si no lo has hecho
  *
- * UNA VEZ: consigue una API key gratis en https://www.pexels.com/api/
- *
- *   cd ~/synea/scripts && npm install
- *   export PEXELS_API_KEY="tu_key"
- *
- *   # 1) Ver qué foto elegiría para cada servicio (NO descarga ni escribe):
+ *   # 1) Ver qué haría (NO descarga ni escribe):
  *   node fetch-service-images.mjs
  *
  *   # 2) Si convence, descargar, subir y guardar:
@@ -20,11 +14,23 @@
  *   --force            Reemplaza también los servicios que ya tienen foto.
  *                      Sin esto se respetan las que subiste desde el panel.
  *   --only "<texto>"   Solo los servicios cuyo nombre contenga ese texto.
- *   --pick <n>         Toma el resultado n de la búsqueda (1 = el primero).
- *                      Útil para reintentar uno suelto que quedó feo.
  *
- * Para cambiar una sola foto suele ser más rápido el panel
- * (Servicios > Editar > Imagen). Este script es para poblar todo de una vez.
+ * LAS FOTOS
+ * Van fijadas por id, una por servicio, elegidas y revisadas a ojo. No se
+ * buscan al vuelo: una búsqueda a ciegas devuelve cualquier cosa —probando
+ * esto salieron pestañas postizas para una extensión de uñas y unas cabañas
+ * en un bosque para un masaje—, y además fijarlas evita depender de una API
+ * key y hace que dos corridas den el mismo resultado.
+ *
+ * Son de Pexels, cuya licencia permite uso comercial sin atribución
+ * obligatoria; el autor va anotado igual, por si quieres darle crédito.
+ *
+ * PARA CAMBIAR UNA
+ * Lo más rápido es el panel: Servicios > Editar > la foto de arriba. Lo que
+ * subas desde ahí manda y este script no lo pisa (salvo --force). Si prefieres
+ * otra de Pexels, busca en pexels.com, saca el número de la URL de la foto y
+ * cámbialo abajo:
+ *   node fetch-service-images.mjs --only "reiki" --write --force
  */
 
 import { readFileSync, existsSync } from 'node:fs';
@@ -42,53 +48,47 @@ const val = (f) => { const i = argv.indexOf(f); return i >= 0 ? argv[i + 1] : nu
 const doWrite = has('--write');
 const force = has('--force');
 const only = (val('--only') || '').trim();
-const pick = Math.max(1, parseInt(val('--pick')) || 1);
 
-const PEXELS_API_KEY = process.env.PEXELS_API_KEY;
-if (!PEXELS_API_KEY) {
-  console.error('Falta PEXELS_API_KEY. Consigue una gratis en https://www.pexels.com/api/ y luego:');
-  console.error('  export PEXELS_API_KEY="tu_key"');
-  process.exit(1);
-}
-
-// ------------------------------------------------------------------ búsquedas --
-// El nombre comercial no sirve para buscar en un banco de fotos: "ALIVIO &
-// CALMA SYNEA" no significa nada fuera de Synea. Cada servicio lleva su propio
-// término, en inglés porque es donde Pexels tiene más y mejor material.
-const QUERIES = {
+// --------------------------------------------------------------------- fotos --
+const PHOTOS = {
   // Masoterapia y bienestar
-  'HEAD SPA JAPONÉS': 'head spa scalp treatment',
-  'PAUSA ESENCIAL': 'back massage spa relaxation',
-  'ARMONÍA VITAL': 'shoulder massage therapy',
-  'ALIVIO PROFUNDO': 'deep tissue back massage',
-  'ALIVIO & CALMA SYNEA': 'full body massage spa table',
-  'EQUILIBRIO CORPORAL SYNEA': 'massage therapist hands back',
-  'LIBERACIÓN MUSCULAR SYNEA': 'muscle massage therapy clinic',
-  'MASAJE CRANEAL CHAMPI': 'head massage relaxation woman',
-  'MASAJE DEPORTIVO PRE COMPETENCIA/ENTRENO': 'sports massage athlete leg',
-  'MASAJE DEPORTIVO POST COMPETENCIA/ENTRENO': 'athlete recovery massage legs',
+  'HEAD SPA JAPONÉS': { id: 36292486, autor: 'KÁ' },
+  'PAUSA ESENCIAL': { id: 6628701, autor: 'KoolShooters' },
+  'ARMONÍA VITAL': { id: 37719545, autor: 'Nothing Ahead' },
+  'ALIVIO PROFUNDO': { id: 9146381, autor: 'Ron Lach' },
+  'ALIVIO & CALMA SYNEA': { id: 19641816, autor: 'Jonathan Borba' },
+  'EQUILIBRIO CORPORAL SYNEA': { id: 19641818, autor: 'Jonathan Borba' },
+  'LIBERACIÓN MUSCULAR SYNEA': { id: 20860597, autor: 'Funkcinės Terapijos Centras' },
+  'MASAJE CRANEAL CHAMPI': { id: 6628821, autor: 'KoolShooters' },
+  'MASAJE DEPORTIVO PRE COMPETENCIA/ENTRENO': { id: 11349880, autor: 'Towfiqu barbhuiya' },
+  'MASAJE DEPORTIVO POST COMPETENCIA/ENTRENO': { id: 9898722, autor: 'Ekaterina Mitkina' },
 
   // Manicure
-  'LIMPIEZA DE UÑAS': 'manicure nail care hands',
-  'ESMALTADO PERMANENTE UNICOLOR': 'gel nail polish manicure',
-  'ESMALTADO PERMANENTE FRANCESA/DEGRADE': 'french manicure nails',
-  'KAPPING DE POLYGEL/BUILDER GEL': 'nail technician gel nails',
-  'EXTENSIÓN SOFT GEL': 'nail extensions salon',
-  'EXTENSIÓN DE POLYGEL': 'acrylic nail extensions',
-  'RETIRO POLYGEL/BUILDER GEL': 'nail salon manicure tools',
-  'REPARACIÓN': 'nail filing manicure closeup',
-  'RETIRO ESMALTADO PERMANENTE': 'nail polish remover manicure',
-  'GARANTÍA': 'manicured hands nails closeup',
+  'LIMPIEZA DE UÑAS': { id: 22668317, autor: 'Kerim Eveyik' },
+  'ESMALTADO PERMANENTE UNICOLOR': { id: 6135696, autor: 'Gabriel Puyén' },
+  'ESMALTADO PERMANENTE FRANCESA/DEGRADE': { id: 34997574, autor: 'Salim Da' },
+  'KAPPING DE POLYGEL/BUILDER GEL': { id: 7446915, autor: 'Gustavo Fring' },
+  'EXTENSIÓN SOFT GEL': { id: 6135680, autor: 'Gabriel Puyén' },
+  'EXTENSIÓN DE POLYGEL': { id: 34871595, autor: 'Salim Da' },
+  'RETIRO POLYGEL/BUILDER GEL': { id: 7755655, autor: 'RDNE Stock project' },
+  'REPARACIÓN': { id: 16041439, autor: 'Andrea Mosti' },
+  'RETIRO ESMALTADO PERMANENTE': { id: 9253758, autor: 'Ron Lach' },
+  'GARANTÍA': { id: 18466020, autor: 'The Oluseyi' },
 
   // Terapias complementarias
-  'ACOMPAÑAMIENTO TERAPEUTICO': 'therapy session conversation calm',
-  'FLORES DE BACH': 'flower essence dropper bottles',
-  'GEMOTERAPIA': 'healing crystals stones',
-  'REIKI': 'reiki energy healing hands',
+  'ACOMPAÑAMIENTO TERAPEUTICO': { id: 7176298, autor: 'SHVETS production' },
+  'FLORES DE BACH': { id: 19572633, autor: 'Tuğba Öztürk' },
+  'GEMOTERAPIA': { id: 4040611, autor: 'Kaboompics' },
+  'REIKI': { id: 6998232, autor: 'Arina Krasnikova' },
 
   // Promociones
-  'ESMALTADO + PERFILADO': 'manicure gel polish hands salon',
+  'ESMALTADO + PERFILADO': { id: 3997384, autor: 'cottonbro studio' },
 };
+
+// Pexels sirve la imagen ya redimensionada según el ancho que pidas.
+const pexelsUrl = (id, w) =>
+  `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&w=${w}`;
+const pexelsPage = (id) => `https://www.pexels.com/photo/${id}/`;
 
 // ------------------------------------------------------------------- firebase --
 const keyUrl = new URL('./serviceAccountKey.json', import.meta.url);
@@ -102,15 +102,10 @@ const bucket = admin.storage().bucket();
 // -------------------------------------------------------------------- helpers --
 const norm = (s) => (s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
 
-async function searchPexels(query, n) {
-  const url = `https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}`
-    + `&per_page=${Math.max(n, 5)}&orientation=landscape&size=medium`;
-  const res = await fetch(url, { headers: { Authorization: PEXELS_API_KEY } });
-  if (res.status === 429) throw new Error('Pexels devolvió 429: pasaste el límite por hora, espera un rato');
-  if (!res.ok) throw new Error(`Pexels devolvió ${res.status} para "${query}"`);
-  const data = await res.json();
-  return data.photos || [];
-}
+const buscarFoto = (nombre) => {
+  const k = Object.keys(PHOTOS).find((n) => norm(n) === norm(nombre));
+  return k ? PHOTOS[k] : null;
+};
 
 async function subir(srcUrl, path) {
   const res = await fetch(srcUrl);
@@ -144,8 +139,7 @@ async function main() {
   }
 
   const updates = {};
-  const usadas = new Set();   // una misma foto en dos tarjetas se nota
-  let saltados = 0, fallidos = 0;
+  let saltados = 0, sinFoto = 0, fallidos = 0;
 
   for (const s of servicios) {
     if (s.imageUrl && !force) {
@@ -153,25 +147,25 @@ async function main() {
       saltados++;
       continue;
     }
-    const query = QUERIES[s.name] || s.name;
+    const foto = buscarFoto(s.name);
+    if (!foto) {
+      console.log(`  SIN FOTO ASIGNADA  ${s.name}  (agrégala en PHOTOS o súbela desde el panel)`);
+      sinFoto++;
+      continue;
+    }
+
+    console.log(`  ${doWrite ? 'sube        ' : 'pondría     '}${s.name}`);
+    console.log(`      ${foto.autor} · ${pexelsPage(foto.id)}`);
+
+    if (!doWrite) continue;
     try {
-      const fotos = await searchPexels(query, pick + 4);
-      const foto = fotos.slice(pick - 1).find((f) => !usadas.has(f.id)) || fotos[pick - 1] || fotos[0];
-      if (!foto) { console.log(`  SIN RESULTADOS  ${s.name}  («${query}»)`); fallidos++; continue; }
-      usadas.add(foto.id);
-
-      console.log(`  ${doWrite ? 'sube        ' : 'elegiría    '}${s.name}`);
-      console.log(`      «${query}» · ${foto.photographer} · ${foto.url}`);
-
-      if (doWrite) {
-        const id = `srv_${Date.now()}_${Math.random().toString(16).slice(2, 10)}`;
-        const [imageUrl, thumbUrl] = [
-          await subir(foto.src.large, `uploads/services/${id}.jpg`),
-          await subir(foto.src.medium, `uploads/services/${id}_thumb.jpg`),
-        ];
-        updates[`services/${s.id}/imageUrl`] = imageUrl;
-        updates[`services/${s.id}/thumbUrl`] = thumbUrl;
-      }
+      const nombreArchivo = `srv_${Date.now()}_${Math.random().toString(16).slice(2, 10)}`;
+      const [imageUrl, thumbUrl] = [
+        await subir(pexelsUrl(foto.id, 1200), `uploads/services/${nombreArchivo}.jpg`),
+        await subir(pexelsUrl(foto.id, 480), `uploads/services/${nombreArchivo}_thumb.jpg`),
+      ];
+      updates[`services/${s.id}/imageUrl`] = imageUrl;
+      updates[`services/${s.id}/thumbUrl`] = thumbUrl;
     } catch (e) {
       console.log(`  ERROR           ${s.name}: ${e.message}`);
       fallidos++;
@@ -179,12 +173,12 @@ async function main() {
   }
 
   const tocados = Object.keys(updates).length / 2;
-  console.log(`\n${servicios.length} servicios · ${saltados} ya tenían foto · ${fallidos} fallaron`);
+  console.log(`\n${servicios.length} servicios · ${saltados} ya tenían foto · ${sinFoto} sin foto asignada · ${fallidos} fallaron`);
 
   if (!doWrite) {
     console.log('\nSimulación: no se descargó ni se guardó nada.');
     console.log('Para aplicarlo:  node fetch-service-images.mjs --write');
-    process.exit(fallidos ? 1 : 0);
+    process.exit(sinFoto || fallidos ? 1 : 0);
   }
 
   if (tocados) {

@@ -202,32 +202,32 @@ reservas ni disponibilidad.
 ### 8. Fotos referenciales
 
 Mientras no tengas fotos propias de cada servicio, `fetch-service-images.mjs`
-busca una en [Pexels](https://www.pexels.com/) (licencia de uso comercial, sin
-atribución obligatoria), la sube a tu Firebase Storage y guarda la URL en el
-catálogo. Cada servicio lleva su propio término de búsqueda dentro del script:
-el nombre comercial no sirve para un banco de fotos, "ALIVIO & CALMA SYNEA" no
-significa nada fuera de Synea.
-
-Una vez: consigue una API key gratis en <https://www.pexels.com/api/>.
+pone una de [Pexels](https://www.pexels.com/) (licencia de uso comercial, sin
+atribución obligatoria): la baja, la sube a tu Firebase Storage y guarda la URL
+en el catálogo. No necesita API key ni cuenta.
 
 ```bash
 cd ~/synea/scripts
 npm install
-export PEXELS_API_KEY="tu_key"
 
-node fetch-service-images.mjs            # muestra qué elegiría, sin bajar nada
+node fetch-service-images.mjs            # muestra qué pondría, sin bajar nada
 node fetch-service-images.mjs --write    # descarga, sube y guarda
 ```
 
-La simulación imprime el término, el autor y el link de cada foto, para que las
-revises antes. Por defecto **respeta las fotos que ya subiste** desde el panel;
-`--force` las reemplaza. Para reintentar una sola que quedó fea:
+Las 25 fotos van **fijadas por id** dentro del script, una por servicio, elegidas
+y miradas una por una. No se buscan al vuelo: una búsqueda a ciegas devuelve
+cualquier cosa —probándolo salieron pestañas postizas para una extensión de uñas
+y unas cabañas en un bosque para un masaje—, y fijarlas hace además que dos
+corridas den el mismo resultado.
+
+**Para cambiar una**, lo más rápido es el panel: **Servicios → Editar** y subes
+la tuya. Lo que subas desde ahí manda, y el script no lo pisa salvo `--force`. Si
+prefieres otra de Pexels, busca en su web, saca el número de la URL de la foto,
+cámbialo en el bloque `PHOTOS` del script y corre:
 
 ```bash
-node fetch-service-images.mjs --only "REIKI" --pick 2 --write --force
+node fetch-service-images.mjs --only "reiki" --write --force
 ```
-
-`--pick 2` toma el segundo resultado de la búsqueda en vez del primero.
 
 Son fotos de stock: sirven para que la web no se vea vacía, no para representar
 el trabajo real. Reemplázalas por fotos propias apenas las tengas.
