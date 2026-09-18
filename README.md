@@ -27,23 +27,36 @@ rellenarlos. Están marcados en el código.
 | Clave VAPID (push) | `index.html` (`FCM_VAPID_KEY`) | `TU_CLAVE_VAPID` |
 | ID del proyecto (si cambias) | `.firebaserc`, `functions/index.js`, `scripts/*.mjs` | `synea-app` |
 | Ubicación de Storage | Consola → Storage | EE.UU. (no se puede cambiar) |
-| Teléfono / WhatsApp | Panel → Configuración | vacío |
+| Teléfono / WhatsApp | Panel → Configuración | `+56 9 6163 5077` |
 | Correo de avisos | Panel → Configuración | vacío |
 | Link de Webpay | Panel → Configuración | vacío (si no lo pones, no aparece el botón de pago) |
 | Logo real | Panel → Configuración → Logo | provisorio: monograma en `icons/logo.png` |
 | Fotos de la galería | Panel → Galería | vacía |
-| Precios de 5 servicios | Panel → Servicios | cargados pero **ocultos** |
+| Duración del paquete de promoción | Panel → Servicios | estimada en 75 min |
 
-Sobre los dos últimos:
-
-- **Fotos:** no se pudieron bajar desde Instagram (`@synea.studiospa`) — la red de
-  este entorno bloquea el acceso. Súbelas desde **Panel → Galería**; se
+- **Fotos:** no se pudieron bajar desde Instagram (`@synea.studiospa`) — la red
+  de este entorno bloquea el acceso. Súbelas desde **Panel → Galería**; se
   redimensionan solas y van a Firebase Storage. El link a Instagram en la web ya
   apunta al perfil correcto.
-- **Precios:** el catálogo salió de la ficha pública de AgendaPro. Cinco
-  servicios aparecían ahí sin precio ni duración visibles, así que quedaron
-  cargados con `active: false` (no se muestran a las clientas) para no inventar
-  valores. Ponles el precio real en **Panel → Servicios → Editar** y actívalos.
+- **Catálogo:** nombres, precios, duraciones y descripciones son los publicados
+  en AgendaPro. La única excepción es el paquete `ESMALTADO + PERFILADO`, que
+  ahí figura sin duración: se estimó en 75 min (60 del esmaltado unicolor más el
+  perfilado) y está marcado en `scripts/seed-catalog.mjs`.
+
+### El catálogo
+
+| Categoría | Servicios |
+|---|---|
+| MASOTERAPIA Y BIENESTAR | 10 |
+| MANICURE | 10 |
+| TERAPIAS COMPLEMENTARIAS Y BIENESTAR ENERGÉTICO | 4 |
+| SERVICIOS ADICIONALES MANICURE | 7 |
+| PROMOCIONES (categoría destacada) | 1 |
+
+Los adicionales de manicure duran entre 5 y 15 minutos, por lo que el mínimo de
+duración del panel bajó de 15 a 5 minutos. Si prefieres que no se agenden por
+separado, la app también los admite como **adicionales** de un servicio (Panel →
+Servicios → Editar → Adicionales opcionales), donde suman precio a la reserva.
 
 ---
 

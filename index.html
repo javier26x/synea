@@ -14,11 +14,11 @@
     <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png?v=1">
     <meta name="apple-mobile-web-app-title" content="Synea">
     <meta name="description"
-        content="Agenda tu hora en Synea Studio Spa, Puerto Montt. Peluquería, color, uñas, cejas y pestañas, masajes y tratamientos.">
+        content="Agenda tu hora en Synea Studio Spa, Puerto Montt. Masoterapia, manicure, terapias complementarias y bienestar energético.">
     <link rel="canonical" href="https://synea.frody.cl/">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Synea Studio Spa — Reserva tu Hora">
-    <meta property="og:description" content="Agenda tu hora en Synea Studio Spa, Puerto Montt. Peluquería, color, uñas, cejas y pestañas, masajes y tratamientos.">
+    <meta property="og:description" content="Agenda tu hora en Synea Studio Spa, Puerto Montt. Masoterapia, manicure, terapias complementarias y bienestar energético.">
     <meta property="og:url" content="https://synea.frody.cl/">
     <meta property="og:image" content="/icons/logo.png">
     <meta property="og:locale" content="es_CL">
@@ -4660,10 +4660,10 @@
                         onerror="this.style.display='none';this.parentElement.classList.add('logo-fallback')">
                     <span class="logo-fallback-text">S</span>
                 </div>
-                <div class="hero-eyebrow">Studio &amp; Spa · Puerto Montt</div>
+                <div class="hero-eyebrow">Centro Integral de Bienestar y Belleza</div>
                 <h1>Tu próxima hora <em>en un clic</em></h1>
                 <div class="hero-divider" aria-hidden="true"><i class="fas fa-sparkle"></i></div>
-                <p>Peluquería, uñas, cejas y pestañas, masajes y tratamientos. Elige tu servicio, el día y la hora que más te acomode.</p>
+                <p>Masoterapia, manicure y terapias complementarias en Puerto Montt. Elige tu servicio, el día y la hora que más te acomode.</p>
             </div>
 
             <!-- STEP 1: Services -->
@@ -4675,7 +4675,7 @@
                         <i class="fas fa-magic"></i>
                         <div>
                             <h2>Servicios</h2>
-                            <p>Elige el tratamiento que deseas agendar</p>
+                            <p>Elige el servicio que deseas agendar</p>
                         </div>
                     </div>
                     <div class="services-toolbar">
@@ -5591,8 +5591,8 @@
                     se muestran de menor a mayor número</small></div>
             <div class="form-group" style="background:linear-gradient(135deg,rgba(26,55,47,.06),rgba(217,152,99,.06));border:1px solid rgba(26,55,47,.2);border-radius:var(--radius-sm);padding:12px 14px">
                 <label style="display:flex;align-items:center;gap:10px;cursor:pointer;margin-bottom:0">
-                    <input type="checkbox" id="categoryIsSale" style="width:auto;cursor:pointer;accent-color:#b8455c">
-                    <span style="display:inline-flex;align-items:center;gap:8px"><i class="fas fa-star" style="color:#b8455c"></i><strong>Categoría destacada</strong></span>
+                    <input type="checkbox" id="categoryIsSale" style="width:auto;cursor:pointer;accent-color:#b8924a">
+                    <span style="display:inline-flex;align-items:center;gap:8px"><i class="fas fa-star" style="color:#b8924a"></i><strong>Categoría destacada</strong></span>
                 </label>
                 <small style="color:var(--warm-gray);display:block;margin-top:6px;margin-left:26px">Resalta la categoría con un acento dorado boutique y una estrella, para que destaque sobre las demás en la home.</small>
             </div>
@@ -5991,15 +5991,37 @@
 
     <script>
         let currentView = 'client', currentAdminMonth = new Date(), currentClientMonth = new Date(), selectedService = null, selectedDate = null, selectedTime = null, allServices = [], allCategories = [], allAppointments = [], allAvailability = {}, blockedDays = [], galleryPhotos = [];
-        let config = { schedule: { 0: [], 1: ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00'], 2: ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00'], 3: ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00'], 4: ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00'], 5: ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00'], 6: ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00'] }, businessName: 'Synea Studio Spa', phone: '', email: '', address: 'Bosque de Luz 1581, Puerto Montt, Los Lagos', emailNotificationsEnabled: true, minAdvanceEnabled: true, minAdvanceHours: 4, pushPrefs: { newBooking: true, dailySummary: true, rescheduled: true, cancelled: true, confirmed: false }, webpayUrl: '', logoUrl: '/icons/logo.png' };
+        let config = { schedule: { 0: [], 1: ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00'], 2: ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00'], 3: ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00'], 4: ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00'], 5: ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00'], 6: ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00'] }, businessName: 'Synea Studio Spa', phone: '+56 9 6163 5077', email: '', address: 'Bosque de Luz 1581, Puerto Montt, Llanquihue', emailNotificationsEnabled: true, minAdvanceEnabled: true, minAdvanceHours: 4, pushPrefs: { newBooking: true, dailySummary: true, rescheduled: true, cancelled: true, confirmed: false }, webpayUrl: '', logoUrl: '/icons/logo.png' };
         // Hours range for the configurable schedule grid (8:00 to 21:00, hourly)
         const SCHEDULE_HOURS = Array.from({ length: 14 }, (_, i) => String(8 + i).padStart(2, '0') + ':00'); // 08:00..21:00
 
-        function getServiceIcon(name) { const n = name.toLowerCase(); if (n.includes('balayage') || n.includes('mecha') || n.includes('ilumina') || n.includes('color') || n.includes('tintura') || n.includes('cana')) return 'fa-palette'; if (n.includes('corte') || n.includes('barba') || n.includes('cabello') || n.includes('pelo') || n.includes('peinado') || n.includes('flequillo')) return 'fa-scissors'; if (n.includes('keratina') || n.includes('botox') || n.includes('alisado') || n.includes('nutri') || n.includes('hidrataci')) return 'fa-wand-magic-sparkles'; if (n.includes('manicure') || n.includes('u\u00f1as') || n.includes('esmaltado') || n.includes('kapping') || n.includes('nail')) return 'fa-hand-sparkles'; if (n.includes('masaje') || n.includes('piedras') || n.includes('descontractur') || n.includes('relaj') || n.includes('drenaje')) return 'fa-spa'; if (n.includes('pedicure') || n.includes('pies')) return 'fa-shoe-prints'; if (n.includes('cejas') || n.includes('pesta\u00f1as') || n.includes('lash') || n.includes('lifting') || n.includes('laminado')) return 'fa-eye'; if (n.includes('facial') || n.includes('limpieza') || n.includes('hydra') || n.includes('peeling')) return 'fa-face-smile-beam'; if (n.includes('depilaci') || n.includes('wax') || n.includes('cera')) return 'fa-leaf'; if (n.includes('maquilla') || n.includes('makeup')) return 'fa-brush'; if (n.includes('novia') || n.includes('boda')) return 'fa-heart'; if (n.includes('retiro')) return 'fa-eraser'; if (n.includes('dise\u00f1o')) return 'fa-pen-fancy'; return 'fa-gem' }
+        function getServiceIcon(name) {
+            const n = (name || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+            const has = (...w) => w.some(x => n.includes(x));
+            if (has('garantia')) return 'fa-shield-halved';
+            if (has('retiro')) return 'fa-eraser';
+            if (has('reparacion')) return 'fa-screwdriver-wrench';
+            if (has('pedreria', 'decoracion', 'ojo de gato', 'diseno', 'degrade', 'francesa')) return 'fa-wand-magic-sparkles';
+            if (has('esmaltado', 'unas', 'manicure', 'kapping', 'polygel', 'soft gel', 'extension', 'perfilado')) return 'fa-hand-sparkles';
+            if (has('reiki', 'gemoterapia', 'flores de bach', 'acompanamiento', 'terapeutico', 'terapia', 'energetic')) return 'fa-yin-yang';
+            if (has('head spa')) return 'fa-leaf';
+            if (has('deportivo')) return 'fa-person-running';
+            if (has('craneal', 'champi')) return 'fa-brain';
+            if (has('masaje', 'masoterapia', 'pausa', 'armonia', 'alivio', 'equilibrio', 'liberacion', 'descontractur', 'relaj', 'drenaje', 'piedras')) return 'fa-spa';
+            if (has('pedicure', 'pies')) return 'fa-shoe-prints';
+            if (has('cejas', 'pestanas', 'lash', 'laminado')) return 'fa-eye';
+            if (has('facial', 'limpieza', 'hydra', 'peeling')) return 'fa-face-smile-beam';
+            if (has('depilaci', 'wax', 'cera')) return 'fa-leaf';
+            if (has('corte', 'barba', 'cabello', 'peinado')) return 'fa-scissors';
+            if (has('maquilla', 'makeup')) return 'fa-brush';
+            return 'fa-gem';
+        }
 
         // ==================== SECURITY HELPERS ====================
         function escHtml(s) { if (s == null) return ''; return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;') }
         function escAttr(s) { return escHtml(s).replace(/`/g, '&#96;') }
+        // Hay servicios sin costo (la garantía del manicure): mostrar "$0" se lee como un error.
+        function fmtPrice(n) { const v = Number(n) || 0; return v > 0 ? '$' + v.toLocaleString('es-CL') : 'Gratis' }
 
         // ==================== TOAST ====================
         function toast(message, type = 'success', duration = 4000) {
@@ -7865,7 +7887,7 @@
             const p = parseFloat(document.getElementById('servicePrice').value);
             const desc = (document.getElementById('serviceDescription').value || '').trim().slice(0, 300);
             if (!n || !d || isNaN(p)) { toast('Completa los campos obligatorios', 'error'); return }
-            if (d < 15 || d > 600) { toast('Duración debe estar entre 15 y 600 minutos', 'error'); return }
+            if (d < 5 || d > 600) { toast('Duración debe estar entre 5 y 600 minutos', 'error'); return }
             if (p < 0 || p > 10000000) { toast('Precio inválido', 'error'); return }
             const btn = event.target.closest('.btn'); const origHTML = btn.innerHTML;
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...'; btn.disabled = true;
@@ -8875,8 +8897,8 @@
             const imgClass = thumbSrc ? 'service-card-image' : `service-card-image svc-img-${i < 16 ? i : 'default'}`;
             const isSale = !!(opts && opts.isSale);
             const ribbon = ''; // Opción B: la sección destacada ya distingue; las tarjetas quedan limpias (solo la línea dorada superior del CSS).
-            const iconColor = isSale ? '#b8455c' : 'var(--jade)';
-            return `<div class="service-card" onclick="openServicePreview('${s.id}')" data-aos="fade-up" data-aos-delay="${Math.min(i * 60, 400)}">${ribbon}<div class="${imgClass}" ${imgStyle}></div><div class="service-card-body"><h4><i class="fas ${getServiceIcon(s.name)}" style="color:${iconColor};margin-right:6px;font-size:14px"></i> ${escHtml(s.name)}</h4>${s.description ? `<p>${escHtml(s.description)}</p>` : ''}<div class="service-info"><span class="service-duration"><i class="fas fa-clock"></i> ${s.duration} min</span><span class="service-price">$${s.price.toLocaleString('es-CL')}</span></div></div></div>`;
+            const iconColor = isSale ? 'var(--sale-bronze-deep)' : 'var(--jade)';
+            return `<div class="service-card" onclick="openServicePreview('${s.id}')" data-aos="fade-up" data-aos-delay="${Math.min(i * 60, 400)}">${ribbon}<div class="${imgClass}" ${imgStyle}></div><div class="service-card-body"><h4><i class="fas ${getServiceIcon(s.name)}" style="color:${iconColor};margin-right:6px;font-size:14px"></i> ${escHtml(s.name)}</h4>${s.description ? `<p>${escHtml(s.description)}</p>` : ''}<div class="service-info"><span class="service-duration"><i class="fas fa-clock"></i> ${s.duration} min</span><span class="service-price">${fmtPrice(s.price)}</span></div></div></div>`;
         }
 
         function loadClientServices() {
@@ -8998,7 +9020,7 @@
             if (cat && badge) {
                 if (cat.isSale) {
                     badge.innerHTML = `<i class="fas fa-star"></i> ${escHtml(cat.name)}`;
-                    badge.style.background = 'linear-gradient(135deg,#b8455c,#d99863)';
+                    badge.style.background = 'linear-gradient(135deg,#b8924a,#e6cd92)';
                     badge.style.color = '#fff';
                     badge.style.boxShadow = '0 4px 12px rgba(26,55,47,.28)';
                 } else {
@@ -9013,7 +9035,7 @@
             document.getElementById('servicePreviewName').textContent = s.name;
             // Meta (duration + price)
             const durTxt = formatDuration(s.duration);
-            document.getElementById('servicePreviewMeta').innerHTML = `<span class="pill"><i class="fas fa-clock"></i> ${durTxt}</span><span class="pill price"><i class="fas fa-tag"></i> $${s.price.toLocaleString('es-CL')}</span>`;
+            document.getElementById('servicePreviewMeta').innerHTML = `<span class="pill"><i class="fas fa-clock"></i> ${durTxt}</span><span class="pill price"><i class="fas fa-tag"></i> ${fmtPrice(s.price)}</span>`;
             // Description
             const descEl = document.getElementById('servicePreviewDescription');
             if (s.description && s.description.trim()) {

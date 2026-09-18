@@ -1,5 +1,5 @@
 /**
- * Carga el catálogo inicial de Synea Studio Spa (categorías + servicios) y la
+ * Carga el catálogo de Synea Studio Spa (categorías + servicios) y la
  * configuración base del negocio en la base de datos.
  *
  * USO (en Cloud Shell):
@@ -14,9 +14,9 @@
  * Es idempotente: si una categoría o servicio ya existe con el mismo nombre, lo
  * actualiza en vez de duplicarlo. Nunca toca reservas ni disponibilidad.
  *
- * Los servicios marcados `active: false` son los que salieron publicados en
- * AgendaPro sin precio ni duración visibles: quedan cargados pero ocultos en la
- * web hasta que les pongas el valor real desde el panel (Servicios > Editar).
+ * Fuente: ficha de Synea Studio Spa en AgendaPro. Nombres, precios, duraciones
+ * y descripciones son los publicados ahí. La única excepción está marcada con
+ * DURACIÓN ESTIMADA más abajo.
  */
 
 import { readFileSync, existsSync } from 'node:fs';
@@ -34,57 +34,90 @@ admin.initializeApp(initOpts);
 const db = admin.database();
 
 // ---------------------------------------------------------------- catálogo --
-// Fuente: ficha pública de Synea Studio Spa en AgendaPro.
-// `active: false` = falta confirmar precio/duración reales.
 const CATEGORIES = [
-  { key: 'peluqueria', name: 'Peluquería', icon: 'fa-cut', order: 1 },
-  { key: 'color', name: 'Color', icon: 'fa-paint-brush', order: 2 },
-  { key: 'unas', name: 'Uñas', icon: 'fa-hand-sparkles', order: 3 },
-  { key: 'cejas', name: 'Cejas y Pestañas', icon: 'fa-eye', order: 4 },
-  { key: 'spa', name: 'Masajes y Spa', icon: 'fa-spa', order: 5 },
+  { key: 'maso', name: 'MASOTERAPIA Y BIENESTAR', icon: 'fa-spa', order: 1 },
+  { key: 'mani', name: 'MANICURE', icon: 'fa-hand-sparkles', order: 2 },
+  { key: 'terapias', name: 'TERAPIAS COMPLEMENTARIAS Y BIENESTAR ENERGÉTICO', icon: 'fa-yin-yang', order: 3 },
+  { key: 'adicionales', name: 'SERVICIOS ADICIONALES MANICURE', icon: 'fa-gem', order: 4 },
+  { key: 'promos', name: 'PROMOCIONES', icon: 'fa-star', order: 5, isSale: true },
 ];
 
 const SERVICES = [
-  {
-    cat: 'peluqueria', name: 'Corte de pelo', duration: 45, price: 11990, active: true,
-    description: 'Corte personalizado según tu tipo de cabello y el estilo que buscas, con lavado y terminación.',
-  },
-  {
-    cat: 'color', name: 'Balayage', duration: 180, price: 70000, active: true,
-    description: 'Técnica de coloración que aclara el cabello de forma gradual y personalizada, con un degradado natural.',
-  },
-  {
-    cat: 'color', name: 'Morena Iluminada con papel', duration: 240, price: 50000, active: true,
-    description: 'Reflejos trabajados con papel que aportan luz, dimensión y movimiento al cabello moreno. Resultado natural y de bajo mantenimiento.',
-  },
-  {
-    cat: 'color', name: 'Cubrimiento de canas', duration: 120, price: 35000, active: true,
-    description: 'Coloración que cubre las canas de forma pareja, respetando tu tono base.',
-  },
-  {
-    cat: 'unas', name: 'Manicure', duration: 30, price: 5000, active: true,
-    description: 'Limado, retiro de cutícula e hidratación para dejar tus manos prolijas.',
-  },
-  {
-    cat: 'unas', name: 'Esmaltado permanente', duration: 60, price: 0, active: false,
-    description: 'Esmaltado en gel que mantiene el brillo entre 2 y 3 semanas. Incluye preparación de la uña, limado, limpieza de cutícula, aplicación del gel y sellado en lámpara LED/UV.',
-  },
-  {
-    cat: 'unas', name: 'Diseño medio', duration: 45, price: 0, active: false,
-    description: 'Diseños con mayor nivel de detalle: combinaciones de colores, degradados o efectos decorativos.',
-  },
-  {
-    cat: 'unas', name: 'Retiro de esmaltado permanente', duration: 30, price: 0, active: false,
-    description: 'Retiro cuidadoso del esmaltado permanente, con acondicionamiento de la superficie de la uña e hidratación de cutículas.',
-  },
-  {
-    cat: 'cejas', name: 'Laminado de cejas', duration: 60, price: 0, active: false,
-    description: 'Alisa y fija el vello de la ceja hacia arriba para lograr un efecto más poblado y definido.',
-  },
-  {
-    cat: 'spa', name: 'Masaje con piedras calientes', duration: 60, price: 0, active: false,
-    description: 'Masaje con piedras calientes para liberar tensión muscular y reducir el estrés.',
-  },
+  // ---- MASOTERAPIA Y BIENESTAR ----
+  { cat: 'maso', name: 'HEAD SPA JAPONÉS', duration: 60, price: 34990,
+    description: '✨Ritual de bienestar que combina masajes relajantes específicos en el cuero cabelludo, rostro y zona clavicular/hombros, para revitalizar el cabello, aliviar tensiones y brindar una experiencia de relajación completa.✨' },
+  { cat: 'maso', name: 'PAUSA ESENCIAL', duration: 50, price: 29990,
+    description: '✨Masaje de relajación enfocado en la zona posterior del cuerpo, incluyendo cráneo, espalda, cuello, hombros, brazos y piernas. Libera tensiones, disminuye el estrés y favorece una profunda sensación de bienestar y descanso.✨' },
+  { cat: 'maso', name: 'ARMONÍA VITAL', duration: 50, price: 32990,
+    description: '✨Combinación de técnicas de masaje relajante y descontracturante, alternando maniobras suaves con presiones más profundas para liberar tensiones musculares, reducir contracturas y proporcionar bienestar integral.✨' },
+  { cat: 'maso', name: 'ALIVIO PROFUNDO', duration: 50, price: 34990,
+    description: '✨Masaje de presión media a profunda, enfocado en liberar tensiones y contracturas musculares, aliviar molestias y mejorar la movilidad, incluyendo cráneo, cuello, hombros, espalda y piernas posterior.✨' },
+  { cat: 'maso', name: 'ALIVIO & CALMA SYNEA', duration: 70, price: 34990,
+    description: '✨Masaje suave y envolvente que recorre todo el cuerpo, ayudando a liberar tensiones, disminuir el estrés y promover una profunda sensación de relajación, descanso y bienestar.✨' },
+  { cat: 'maso', name: 'EQUILIBRIO CORPORAL SYNEA', duration: 70, price: 37990,
+    description: '✨Combinación de técnicas de masaje relajante y descontracturante en todo el cuerpo, alternando maniobras suaves con presiones más profundas para liberar tensiones musculares y reducir contracturas.✨' },
+  { cat: 'maso', name: 'LIBERACIÓN MUSCULAR SYNEA', duration: 70, price: 39990,
+    description: '✨Masaje de presión media a profunda, enfocado en liberar tensiones y contracturas musculares, aliviar molestias y mejorar la movilidad. Proporciona alivio y bienestar en cuerpo completo.✨' },
+  { cat: 'maso', name: 'MASAJE CRANEAL CHAMPI', duration: 30, price: 19990,
+    description: '✨Masaje inspirado en la tradición ayurvédica, enfocado en cuero cabelludo, cráneo, cuello y hombros. Ayuda a liberar tensiones, reducir el estrés y proporcionar una profunda sensación de relajación.✨' },
+  { cat: 'maso', name: 'MASAJE DEPORTIVO PRE COMPETENCIA/ENTRENO', duration: 45, price: 27990,
+    description: '🏃Masaje dinámico y estimulante diseñado para preparar la musculatura antes de la actividad física. Activa la circulación, aumenta la movilidad y prepara el cuerpo para el esfuerzo.🏃‍♀️' },
+  { cat: 'maso', name: 'MASAJE DEPORTIVO POST COMPETENCIA/ENTRENO', duration: 60, price: 34990,
+    description: '🏃‍♂️Masaje enfocado en relajar y recuperar la musculatura después de la actividad física. Disminuye la tensión muscular, favorece la circulación y acelera la recuperación.🏃‍♀️' },
+
+  // ---- MANICURE ----
+  { cat: 'mani', name: 'LIMPIEZA DE UÑAS', duration: 45, price: 13000,
+    description: '✨Servicio enfocado en limpiar, dar forma y retirar cuidadosamente el exceso de cutícula, dejando las uñas prolijas, saludables y con una apariencia limpia y cuidada.✨' },
+  { cat: 'mani', name: 'ESMALTADO PERMANENTE UNICOLOR', duration: 60, price: 14990,
+    description: '✨Aplicación de un tono de esmalte de larga duración con acabado brillante y uniforme, ideal para mantener las uñas impecables por más tiempo. Incluye base rubber, color y top coat.✨' },
+  { cat: 'mani', name: 'ESMALTADO PERMANENTE FRANCESA/DEGRADE', duration: 75, price: 19990,
+    description: '✨Técnicas de esmaltado que aportan un acabado delicado y elegante, ya sea con la clásica punta francesa o con una transición suave de tonos en efecto degradé.✨' },
+  { cat: 'mani', name: 'KAPPING DE POLYGEL/BUILDER GEL', duration: 90, price: 22000,
+    description: '✨Técnica que refuerza la uña natural con una capa de builder gel o polygel, aportando mayor resistencia, protección y una apariencia prolija sin necesidad de alargarla.✨' },
+  { cat: 'mani', name: 'EXTENSIÓN SOFT GEL', duration: 120, price: 25990,
+    description: '✨Técnica de alargamiento de uñas mediante tips de gel flexible, logrando un acabado natural, liviano y resistente con la forma y largo deseado.✨' },
+  { cat: 'mani', name: 'EXTENSIÓN DE POLYGEL', duration: 120, price: 28990,
+    description: '✨Alargamiento de uñas que combina resistencia y flexibilidad, con una pasta que une gel y acrílico para crear la forma y largo deseado con un acabado firme, prolijo y natural.✨' },
+  { cat: 'mani', name: 'RETIRO POLYGEL/BUILDER GEL', duration: 45, price: 10000,
+    description: '✨Proceso cuidadoso para remover el producto de las uñas de forma segura, protegiendo la uña natural y dejándola limpia y preparada para un nuevo servicio.✨' },
+  { cat: 'mani', name: 'REPARACIÓN', duration: 10, price: 3000,
+    description: '✨Servicio destinado a reparar una uña quebrada, dañada o debilitada, devolviéndole su forma, resistencia y una apariencia prolija.✨' },
+  { cat: 'mani', name: 'RETIRO ESMALTADO PERMANENTE', duration: 30, price: 5000,
+    description: '✨Proceso cuidadoso para remover el esmalte permanente de forma segura, protegiendo la uña natural y dejándola limpia y preparada para un nuevo servicio.✨' },
+  { cat: 'mani', name: 'GARANTÍA', duration: 30, price: 0,
+    description: '✨Servicio destinado a corregir detalles del manicure realizado, como levantamiento o desprendimiento del producto, dentro del período de garantía establecido por el salón.✨' },
+
+  // ---- TERAPIAS COMPLEMENTARIAS Y BIENESTAR ENERGÉTICO ----
+  { cat: 'terapias', name: 'ACOMPAÑAMIENTO TERAPEUTICO', duration: 60, price: 25000,
+    description: '🤍 Un espacio seguro para detenerte, escucharte y recibir apoyo. A través de una mirada integrativa y cercana, te acompañamos en tu proceso personal para fortalecer tu bienestar emocional y calidad de vida.' },
+  { cat: 'terapias', name: 'FLORES DE BACH', duration: 60, price: 30000,
+    description: '🌷 Acompaña tu bienestar emocional de forma natural. Esta terapia floral busca ayudarte a gestionar momentos de estrés, cambios o desafíos emocionales, promoviendo equilibrio, calma y bienestar interior.' },
+  { cat: 'terapias', name: 'GEMOTERAPIA', duration: 60, price: 29990,
+    description: '✨ Conecta con la energía de los cristales a través de una experiencia diseñada para favorecer la armonía y el bienestar integral. Un momento de relajación y conexión personal que invita al equilibrio.' },
+  { cat: 'terapias', name: 'REIKI', duration: 60, price: 29990,
+    description: '✨ Un espacio para reconectar contigo y encontrar equilibrio interior. Reiki es una terapia energética suave que promueve la relajación profunda, armonizando cuerpo, mente y emociones.' },
+
+  // ---- SERVICIOS ADICIONALES MANICURE ----
+  { cat: 'adicionales', name: 'PEDRERÍA', duration: 10, price: 1500,
+    description: '✨Decoración de uñas con pequeñas piedras o cristales, ideal para aportar brillo y un detalle elegante y personalizado al diseño.✨' },
+  { cat: 'adicionales', name: 'DISEÑO SIMPLE', duration: 5, price: 500,
+    description: '✨Decoración sencilla sobre una o más uñas, con detalles minimalistas como líneas, puntos, figuras o pequeños diseños para complementar el esmaltado.✨ Valor por uña.' },
+  { cat: 'adicionales', name: 'DISEÑO MEDIO', duration: 10, price: 1000,
+    description: '✨Decoración de complejidad intermedia sobre una o más uñas, con combinaciones de colores, líneas, puntos, figuras, degradados o detalles decorativos.✨ Valor por uña.' },
+  { cat: 'adicionales', name: 'DISEÑO COMPLEJO', duration: 15, price: 1500,
+    description: '✨Decoración elaborada que puede incluir trazos detallados, combinaciones de técnicas, figuras, relieves o múltiples elementos para un resultado más artístico y personalizado.✨' },
+  { cat: 'adicionales', name: 'DECORACIÓN 3D', duration: 15, price: 3000,
+    description: '✨Diseño en relieve realizado sobre la uña, utilizando distintos materiales para crear detalles con volumen y un acabado llamativo y personalizado.✨' },
+  { cat: 'adicionales', name: 'DISEÑO OJO DE GATO', duration: 5, price: 1000,
+    description: '✨Técnica de esmaltado magnético que crea un reflejo luminoso y profundo sobre la uña, logrando un acabado elegante y llamativo que cambia según la luz.✨' },
+  { cat: 'adicionales', name: 'DISEÑO DEGRADE/FRANCESA', duration: 15, price: 4000,
+    description: '✨Técnicas de esmaltado que aportan un acabado delicado y elegante, ya sea con la clásica punta francesa o con una transición suave de tonos en efecto degradé.✨' },
+
+  // ---- PROMOCIONES ----
+  // DURACIÓN ESTIMADA: AgendaPro publica este paquete sin duración. Los 75 min
+  // salen del esmaltado unicolor (60) más el perfilado. Ajústala en el panel.
+  { cat: 'promos', name: 'ESMALTADO + PERFILADO', duration: 75, price: 21990,
+    description: 'Paquete de servicios: esmaltado permanente unicolor más perfilado de uñas.' },
 ];
 
 // ------------------------------------------------------------ configuración --
@@ -92,7 +125,8 @@ const SERVICES = [
 // desde el panel.
 const CONFIG = {
   businessName: 'Synea Studio Spa',
-  address: 'Bosque de Luz 1581, Puerto Montt, Los Lagos',
+  address: 'Bosque de Luz 1581, Puerto Montt, Llanquihue',
+  phone: '+56 9 6163 5077',
   // Lunes a sábado, 10:00 a 20:00 (última hora de inicio 19:00). Domingo cerrado.
   schedule: {
     0: [],
@@ -124,38 +158,41 @@ async function main() {
   // --- categorías ---
   const catIds = {};
   for (const c of CATEGORIES) {
-    const id = findBy(existingCats, c.name) || db.ref('categories').push().key;
+    const prev = findBy(existingCats, c.name);
+    const id = prev || db.ref('categories').push().key;
     catIds[c.key] = id;
-    updates[`categories/${id}`] = { name: c.name, icon: c.icon, order: c.order, active: true, isSale: false };
-    plan.push(`${findBy(existingCats, c.name) ? 'actualiza' : 'crea    '} categoría  ${c.name}`);
+    updates[`categories/${id}`] = {
+      name: c.name, icon: c.icon, order: c.order, active: true, isSale: !!c.isSale,
+    };
+    plan.push(`${prev ? 'actualiza' : 'crea     '} categoría  ${c.name}`);
   }
 
   // --- servicios ---
   for (const s of SERVICES) {
-    const id = findBy(existingSvcs, s.name) || db.ref('services').push().key;
+    const prev = findBy(existingSvcs, s.name);
+    const id = prev || db.ref('services').push().key;
     updates[`services/${id}`] = {
       name: s.name,
       duration: s.duration,
       price: s.price,
       description: s.description,
-      active: s.active,
+      active: true,
       categoryId: catIds[s.cat],
       addons: null,
     };
-    const flag = s.active ? '' : '  (oculto: falta precio)';
-    plan.push(`${findBy(existingSvcs, s.name) ? 'actualiza' : 'crea    '} servicio   ${s.name}${flag}`);
+    plan.push(`${prev ? 'actualiza' : 'crea     '} servicio   ${s.name}`);
   }
 
   // --- configuración (solo lo que falte) ---
   for (const [k, v] of Object.entries(CONFIG)) {
     if (existingCfg[k] === undefined) {
       updates[`config/${k}`] = v;
-      plan.push(`crea     config     ${k}`);
+      plan.push(`crea      config     ${k}`);
     }
   }
 
   console.log(plan.join('\n'));
-  console.log(`\n${Object.keys(updates).length} nodos a escribir.`);
+  console.log(`\n${CATEGORIES.length} categorías · ${SERVICES.length} servicios · ${Object.keys(updates).length} nodos a escribir.`);
 
   if (!doWrite) {
     console.log('\nSimulación. Para escribir de verdad: node seed-catalog.mjs --write');
@@ -163,7 +200,7 @@ async function main() {
   }
 
   await db.ref().update(updates);
-  console.log('\nListo. Revisa el panel > Servicios y ponle precio a los que quedaron ocultos.');
+  console.log('\nListo. Revisa el panel > Servicios.');
   process.exit(0);
 }
 
