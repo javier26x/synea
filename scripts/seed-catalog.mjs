@@ -57,12 +57,22 @@ const MANI_ADDONS = [
 ];
 const maniAddons = (...excluir) => MANI_ADDONS.filter((a) => !excluir.includes(a.name));
 
-// La categoría y los 7 servicios sueltos que cargaban las corridas anteriores.
-// No se borran (hay citas viejas que los referencian por id): se desactivan.
-const RETIRED_CATEGORIES = ['SERVICIOS ADICIONALES MANICURE'];
+// Lo que cargaron corridas anteriores y ya no va. No se borra (puede haber
+// citas que lo referencian por id): se desactiva, y así desaparece de la web.
+//   - Los 7 adicionales sueltos, que ahora cuelgan de cada servicio.
+//   - El primer catálogo, que estaba equivocado: se armó con datos que los
+//     buscadores tenían indexados y traía peluquería y color, que Synea no hace.
+const RETIRED_CATEGORIES = [
+  'SERVICIOS ADICIONALES MANICURE',
+  'Peluquería', 'Color', 'Uñas', 'Cejas y Pestañas', 'Masajes y Spa',
+];
 const RETIRED_SERVICES = [
   'PEDRERÍA', 'DISEÑO SIMPLE', 'DISEÑO MEDIO', 'DISEÑO COMPLEJO',
   'DECORACIÓN 3D', 'DISEÑO OJO DE GATO', 'DISEÑO DEGRADE/FRANCESA',
+  'Corte de pelo', 'Balayage', 'Morena Iluminada con papel',
+  'Cubrimiento de canas', 'Manicure', 'Esmaltado permanente',
+  'Retiro de esmaltado permanente', 'Laminado de cejas',
+  'Masaje con piedras calientes',
 ];
 
 const SERVICES = [
@@ -193,6 +203,14 @@ async function main() {
     };
     const nAdd = s.addons ? s.addons.length : 0;
     plan.push(`${prev ? 'actualiza' : 'crea     '} servicio   ${s.name}${nAdd ? `  (+${nAdd} adicionales)` : ''}`);
+  }
+
+  // Un nombre retirado que siga en el catálogo apagaría un servicio vigente.
+  const activos = new Set(SERVICES.map((s) => norm(s.name)));
+  const choque = RETIRED_SERVICES.filter((n) => activos.has(norm(n)));
+  if (choque.length) {
+    console.error('RETIRED_SERVICES choca con el catálogo vigente:', choque.join(', '));
+    process.exit(1);
   }
 
   // --- lo que dejó de ofrecerse: se desactiva, no se borra ---

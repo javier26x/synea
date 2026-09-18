@@ -995,6 +995,157 @@
             }
         }
 
+        /* Explorador de servicios. Las categorías dejaron de ser un acordeón:
+           ahora filtran, y el catálogo se ve desde que entras. */
+        .cat-filter {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 26px
+        }
+
+        .cat-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            min-height: 44px;
+            padding: 10px 17px;
+            border: 1.5px solid rgba(35, 48, 44, .1);
+            border-radius: 999px;
+            background: var(--white);
+            color: var(--charcoal-light);
+            font-family: var(--sans);
+            font-size: 12.5px;
+            font-weight: 500;
+            line-height: 1.25;
+            text-align: left;
+            cursor: pointer;
+            transition: background .18s, border-color .18s, color .18s
+        }
+
+        .cat-pill i {
+            font-size: 12px;
+            color: var(--jade);
+            transition: color .18s
+        }
+
+        .cat-pill .n {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--warm-gray);
+            font-variant-numeric: tabular-nums;
+            transition: color .18s
+        }
+
+        .cat-pill:hover {
+            border-color: var(--jade-light)
+        }
+
+        .cat-pill:focus-visible {
+            outline: 2px solid var(--jade);
+            outline-offset: 2px
+        }
+
+        .cat-pill[aria-pressed="true"] {
+            background: var(--jade);
+            border-color: var(--jade);
+            color: var(--white)
+        }
+
+        .cat-pill[aria-pressed="true"] i,
+        .cat-pill[aria-pressed="true"] .n {
+            color: rgba(255, 255, 255, .7)
+        }
+
+        .cat-pill.is-sale[aria-pressed="true"] {
+            background: var(--sale-bronze-deep);
+            border-color: var(--sale-bronze-deep)
+        }
+
+        .cat-heading {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 14px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(35, 48, 44, .07)
+        }
+
+        .cat-heading .ico {
+            width: 34px;
+            height: 34px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            background: var(--ivory-dark);
+            color: var(--jade);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px
+        }
+
+        .cat-heading h3 {
+            font-family: var(--serif);
+            font-size: 21px;
+            font-weight: 600;
+            line-height: 1.2;
+            color: var(--charcoal)
+        }
+
+        @media (max-width:680px) {
+            .cat-filter {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                scrollbar-width: none;
+                scroll-snap-type: x proximity;
+                -webkit-overflow-scrolling: touch;
+                margin-right: -20px;
+                padding-right: 20px;
+                mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent)
+            }
+
+            .cat-filter::-webkit-scrollbar {
+                display: none
+            }
+
+            .cat-pill {
+                flex: 0 0 auto;
+                scroll-snap-align: start;
+                white-space: nowrap
+            }
+
+            .cat-heading h3 {
+                font-size: 18px
+            }
+        }
+
+        .category-section.is-sale .cat-heading .ico {
+            background: var(--sale-bronze-light);
+            color: var(--sale-bronze-deep)
+        }
+
+        /* El filete que separaba el pie de la tarjeta ahora carga un dato: se
+           dibuja proporcional al servicio más largo del catálogo, para que al
+           escanear la grilla se vea cuánto ocupa cada sesión. */
+        .svc-meter {
+            height: 3px;
+            margin-top: auto;
+            border-radius: 999px;
+            background: rgba(35, 48, 44, .07);
+            overflow: hidden
+        }
+
+        .svc-meter span {
+            display: block;
+            height: 100%;
+            border-radius: 999px;
+            background: var(--jade-light)
+        }
+
+        .category-section.is-sale .svc-meter span {
+            background: var(--sale-bronze)
+        }
+
         .category-section {
             margin-top: 36px;
             transition: margin-top .35s cubic-bezier(.4, 0, .2, 1)
@@ -1696,9 +1847,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding-top: 14px;
-            border-top: 1px solid rgba(35, 48, 44, .06);
-            margin-top: auto
+            padding-top: 14px
         }
 
         .service-duration {
@@ -6102,22 +6251,10 @@
                     card.style.display = match ? '' : 'none';
                     if (match) { visibleInSection++; visibleTotal++ }
                 });
-                // Hide whole section if no visible cards
                 sec.style.display = visibleInSection ? '' : 'none';
-                // Auto-expand sections that have matches when searching
-                if (q && visibleInSection > 0 && sec.classList.contains('collapsed')) {
-                    sec.classList.remove('collapsed');
-                    const header = sec.querySelector('.category-header');
-                    if (header) header.setAttribute('aria-expanded', 'true');
-                }
-                // Update count badge inside section header
-                const countEl = sec.querySelector('.category-header-text .count');
-                if (countEl && q) {
-                    countEl.textContent = `${visibleInSection} de ${cards.length} servicio${cards.length !== 1 ? 's' : ''}`;
-                } else if (countEl) {
-                    countEl.textContent = `${cards.length} servicio${cards.length !== 1 ? 's' : ''}`;
-                }
             });
+            const noRes = document.getElementById('svcNoResults');
+            if (noRes) noRes.style.display = (grandTotal && !visibleTotal) ? '' : 'none';
             const countEl = document.getElementById('servicesCount');
             if (countEl) {
                 countEl.textContent = q ? `${visibleTotal} de ${grandTotal} servicios` : `${grandTotal} servicio${grandTotal !== 1 ? 's' : ''}`;
@@ -8953,6 +9090,15 @@
         function changeMonth(d) { currentAdminMonth.setMonth(currentAdminMonth.getMonth() + d); renderAdminCalendar() }
 
         // ==================== CLIENT BOOKING ====================
+        // Largo de la sesión más extensa del catálogo visible: es la escala
+        // contra la que se dibuja el medidor de cada tarjeta.
+        let catalogMaxDuration = 0;
+        function durationPct(min) {
+            const d = parseInt(min) || 0;
+            if (!catalogMaxDuration || !d) return 0;
+            return Math.max(8, Math.round(d / catalogMaxDuration * 100));
+        }
+
         function renderServiceCard(s, i, opts) {
             const thumbSrc = s.thumbUrl || s.imageUrl;
             const isSale = !!(opts && opts.isSale);
@@ -8962,7 +9108,26 @@
                 : `<div class="service-card-image svc-cover ${getServiceCoverClass(s.name, isSale)}"><i class="fas ${getServiceIcon(s.name)}"></i></div>`;
             const ribbon = ''; // Opción B: la sección destacada ya distingue; las tarjetas quedan limpias (solo la línea dorada superior del CSS).
             const iconColor = isSale ? 'var(--sale-bronze-deep)' : 'var(--jade)';
-            return `<div class="service-card" onclick="openServicePreview('${s.id}')" data-aos="fade-up" data-aos-delay="${Math.min(i * 60, 400)}">${ribbon}${cover}<div class="service-card-body"><h4><i class="fas ${getServiceIcon(s.name)}" style="color:${iconColor};margin-right:6px;font-size:14px"></i> ${escHtml(s.name)}</h4>${s.description ? `<p>${escHtml(s.description)}</p>` : ''}<div class="service-info"><span class="service-duration"><i class="fas fa-clock"></i> ${s.duration} min</span><span class="service-price">${fmtPrice(s.price)}</span></div></div></div>`;
+            return `<div class="service-card" onclick="openServicePreview('${s.id}')" data-aos="fade-up" data-aos-delay="${Math.min(i * 60, 400)}">${ribbon}${cover}<div class="service-card-body"><h4><i class="fas ${getServiceIcon(s.name)}" style="color:${iconColor};margin-right:6px;font-size:14px"></i> ${escHtml(s.name)}</h4>${s.description ? `<p>${escHtml(s.description)}</p>` : ''}<div class="svc-meter" aria-hidden="true"><span style="width:${durationPct(s.duration)}%"></span></div><div class="service-info"><span class="service-duration"><i class="fas fa-clock"></i> ${s.duration} min</span><span class="service-price">${fmtPrice(s.price)}</span></div></div></div>`;
+        }
+
+        // Categoría elegida en el filtro ('all' = el catálogo completo).
+        let clientCatFilter = 'all';
+        try { clientCatFilter = sessionStorage.getItem('synea_cat_filter') || 'all' } catch (e) { }
+
+        function setClientCatFilter(id) {
+            clientCatFilter = id;
+            try { sessionStorage.setItem('synea_cat_filter', id) } catch (e) { }
+            loadClientServices();
+            filterServices();
+            const box = document.getElementById('clientServices');
+            if (box) box.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+        }
+
+        function clearServiceFilters() {
+            const input = document.getElementById('serviceSearchInput');
+            if (input) input.value = '';
+            setClientCatFilter('all');
         }
 
         function loadClientServices() {
@@ -8996,64 +9161,59 @@
             // Show toolbar (search) only if more than 3 services
             if (toolbar) toolbar.style.display = visibleServices.length > 3 ? 'flex' : 'none';
 
-            // Group services by category, only categories with >=1 active service
-            let html = '', globalIdx = 0;
-            // Restore expanded state from sessionStorage. En la primera visita
-            // (sin estado guardado) la primera categoría parte abierta, para que
-            // la home muestre servicios de inmediato y no solo títulos.
-            let expandedSet = new Set(), hasStoredState = false;
-            try { const s = sessionStorage.getItem('synea_expanded_cats'); if (s !== null) { expandedSet = new Set(JSON.parse(s)); hasStoredState = true } } catch (e) { }
+            // Escala del medidor de duración de las tarjetas.
+            catalogMaxDuration = visibleServices.reduce((m, s) => Math.max(m, parseInt(s.duration) || 0), 0);
+
             const catsWithServices = allCategories.filter(cat => visibleServices.some(s => s.categoryId === cat.id));
-            // Las categorías destacadas (PROMO) SIEMPRE parten abiertas — es el
-            // gancho comercial. En la primera visita, además, se abre la primera.
-            catsWithServices.filter(cat => cat.isSale).forEach(cat => expandedSet.add(cat.id));
-            if (!hasStoredState && catsWithServices.length) {
-                expandedSet.add(catsWithServices[0].id);
+            // Una categoría que ya no existe (o que se quedó sin servicios) no
+            // puede dejar la pantalla en blanco: se vuelve al catálogo completo.
+            if (clientCatFilter !== 'all' && !catsWithServices.some(cat => cat.id === clientCatFilter)) {
+                clientCatFilter = 'all';
+                try { sessionStorage.setItem('synea_cat_filter', 'all') } catch (e) { }
             }
-            if (catsWithServices.length) {
-                try { sessionStorage.setItem('synea_expanded_cats', JSON.stringify([...expandedSet])) } catch (e) { }
+
+            // Filtro por categoría. Con una sola categoría no aporta nada.
+            let html = '';
+            if (catsWithServices.length > 1) {
+                const pill = (id, name, icon, n, isSale) => `<button type="button" class="cat-pill${isSale ? ' is-sale' : ''}" aria-pressed="${clientCatFilter === id}" onclick="setClientCatFilter('${escAttr(id)}')"><i class="fas ${escAttr(icon)}"></i>${escHtml(name)}<span class="n">${n}</span></button>`;
+                html += '<div class="cat-filter" role="group" aria-label="Filtrar por categoría">'
+                    + pill('all', 'Todos', 'fa-layer-group', visibleServices.length, false)
+                    + catsWithServices.map(cat => pill(cat.id, cat.name, cat.icon || 'fa-tags',
+                        visibleServices.filter(s => s.categoryId === cat.id).length, !!cat.isSale)).join('')
+                    + '</div>';
             }
-            for (const cat of catsWithServices) {
+
+            const shown = clientCatFilter === 'all' ? catsWithServices : catsWithServices.filter(cat => cat.id === clientCatFilter);
+            let globalIdx = 0;
+            for (const cat of shown) {
                 const catServices = visibleServices.filter(s => s.categoryId === cat.id);
                 if (!catServices.length) continue;
-                const isCollapsed = !expandedSet.has(cat.id);
-                const saleClass = cat.isSale ? ' is-sale' : '';
-                html += `<div class="category-section${isCollapsed ? ' collapsed' : ''}${saleClass}" data-category-id="${cat.id}">
-                    <div class="category-header" onclick="toggleCategory('${cat.id}')" role="button" aria-expanded="${!isCollapsed}" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleCategory('${cat.id}')}">
-                        <div class="category-header-icon"><i class="fas ${escAttr(cat.icon || 'fa-tags')}"></i></div>
-                        <div class="category-header-text">
-                            <h3>${escHtml(cat.name)}</h3>
-                            <div class="count">${catServices.length} servicio${catServices.length !== 1 ? 's' : ''}</div>
-                        </div>
-                        <div class="category-toggle" aria-hidden="true"><i class="fas fa-chevron-down"></i></div>
-                    </div>
+                // Con una categoría elegida, el título sobra: lo dice la píldora activa.
+                const heading = clientCatFilter === 'all' && catsWithServices.length > 1
+                    ? `<div class="cat-heading">
+                        <div class="ico" aria-hidden="true"><i class="fas ${escAttr(cat.icon || 'fa-tags')}"></i></div>
+                        <h3>${escHtml(cat.name)}</h3>
+                    </div>` : '';
+                html += `<div class="category-section${cat.isSale ? ' is-sale' : ''}" data-category-id="${cat.id}">
+                    ${heading}
                     <div class="services-grid">
                         ${catServices.map(s => { const card = renderServiceCard(s, globalIdx, { isSale: !!cat.isSale }); globalIdx++; return card }).join('')}
                     </div>
                 </div>`;
             }
+
+            html += `<div class="empty-state" id="svcNoResults" style="display:none">
+                <i class="fas fa-magnifying-glass"></i>
+                <p>Ningún servicio coincide con tu búsqueda.<br>
+                <button class="btn btn-ghost" style="margin-top:12px" onclick="clearServiceFilters()">Ver todos los servicios</button></p>
+            </div>`;
+
             c.innerHTML = html;
             const countEl = document.getElementById('servicesCount');
             if (countEl) countEl.textContent = `${visibleServices.length} servicio${visibleServices.length !== 1 ? 's' : ''}`;
             AOS.refresh();
         }
 
-        function toggleCategory(catId) {
-            const sec = document.querySelector(`#clientServices .category-section[data-category-id="${catId}"]`);
-            if (!sec) return;
-            const willCollapse = !sec.classList.contains('collapsed');
-            sec.classList.toggle('collapsed', willCollapse);
-            // Update aria
-            const header = sec.querySelector('.category-header');
-            if (header) header.setAttribute('aria-expanded', !willCollapse);
-            // Persist state (tracking expanded, not collapsed)
-            try {
-                const s = sessionStorage.getItem('synea_expanded_cats');
-                const set = new Set(s ? JSON.parse(s) : []);
-                if (willCollapse) set.delete(catId); else set.add(catId);
-                sessionStorage.setItem('synea_expanded_cats', JSON.stringify([...set]));
-            } catch (e) { }
-        }
 
         // ==================== SERVICE PREVIEW MODAL ====================
         let previewServiceId = null;
