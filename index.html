@@ -4377,58 +4377,6 @@
         }
         .trip-card-head h4 { font-family: var(--serif); font-size: 17px; color: var(--charcoal) }
 
-        /* ====== ESTUDIO DE PROMOS (generador de flyers) ====== */
-        .promo-studio {
-            display: grid;
-            grid-template-columns: 1fr 340px;
-            gap: 28px;
-            align-items: start
-        }
-        .promo-preview {
-            position: sticky;
-            top: 20px
-        }
-        #pmCanvas {
-            width: 100%;
-            max-width: 320px;
-            height: auto;
-            display: block;
-            margin: 0 auto;
-            border-radius: 14px;
-            box-shadow: 0 10px 34px rgba(35, 48, 44, .18);
-            border: 1px solid rgba(35, 48, 44, .06)
-        }
-        .pm-price-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr auto;
-            gap: 6px;
-            margin-bottom: 8px;
-            align-items: center
-        }
-        .pm-price-row input {
-            padding: 9px 10px;
-            border: 1.5px solid rgba(35, 48, 44, .12);
-            border-radius: var(--radius-sm);
-            font-size: 13px;
-            background: var(--ivory);
-            width: 100%
-        }
-        .pm-price-row .remove-btn {
-            background: rgba(196, 86, 86, .1);
-            color: var(--danger);
-            border: none;
-            width: 34px;
-            height: 34px;
-            border-radius: 8px;
-            cursor: pointer;
-            flex-shrink: 0
-        }
-        @media (max-width: 820px) {
-            .promo-studio { grid-template-columns: 1fr }
-            .promo-preview { position: static; order: -1; margin-bottom: 12px }
-            #pmCanvas { max-width: 260px }
-        }
-
         /* ====== MAPA DE UBICACIÓN (web pública) ====== */
         .location-map-wrap {
             position: relative;
@@ -5210,8 +5158,6 @@
                     <div class="nav-group" role="group" aria-label="Ventas">
                         <button class="nav-btn" onclick="showAdminSection('giftcards',this)"><i class="fas fa-gift"></i>
                             Giftcards</button>
-                        <button class="nav-btn" onclick="showAdminSection('promos',this)"><i class="fas fa-wand-magic-sparkles"></i>
-                            Promo</button>
                     </div>
                     <span class="nav-sep" aria-hidden="true"></span>
                     <div class="nav-group" role="group" aria-label="Cuenta">
@@ -5418,54 +5364,6 @@
                         </select>
                     </div>
                     <div id="giftList" style="margin-top:18px"></div>
-                </div>
-                <div id="adminPromos" class="admin-section" style="display:none">
-                    <div class="section-title"><i class="fas fa-wand-magic-sparkles"></i>
-                        <div>
-                            <h2>Crear Promo</h2>
-                            <p>Diseña un flyer para Instagram en segundos y descárgalo</p>
-                        </div>
-                    </div>
-                    <div class="promo-studio">
-                        <div class="promo-form">
-                            <div class="form-group">
-                                <label>Plantilla</label>
-                                <select id="pmTemplate" onchange="pmApplyTemplate(this.value)">
-                                    <option value="membresia">Membresía</option>
-                                    <option value="promo">Promo del mes</option>
-                                    <option value="giftcard">Giftcard</option>
-                                    <option value="blank">En blanco</option>
-                                </select>
-                            </div>
-                            <div class="form-group"><label>Etiqueta superior</label><input type="text" id="pmTitle"
-                                    maxlength="40" oninput="drawPromoFromForm()"></div>
-                            <div class="form-group"><label>Subtítulo</label><textarea id="pmSubtitle" rows="2"
-                                    maxlength="160" oninput="drawPromoFromForm()"></textarea></div>
-                            <div class="form-group"><label>Nombre del plan / destacado</label><input type="text"
-                                    id="pmPlan" maxlength="40" oninput="drawPromoFromForm()"></div>
-                            <div class="form-group"><label>Servicios incluidos</label><textarea id="pmServices" rows="2"
-                                    maxlength="160" oninput="drawPromoFromForm()"></textarea></div>
-                            <label style="display:block;font-size:13px;color:var(--charcoal-light);font-weight:500;margin-bottom:7px">Precios</label>
-                            <div id="pmPriceRows"></div>
-                            <button type="button" class="btn btn-secondary" style="width:100%;justify-content:center;margin-bottom:14px"
-                                onclick="pmAddPriceRow()"><i class="fas fa-plus"></i> Agregar precio</button>
-                            <div class="form-group"><label>Nota</label><input type="text" id="pmNote" maxlength="40"
-                                    oninput="drawPromoFromForm()"></div>
-                            <div class="form-group"><label>Medios de pago</label><input type="text" id="pmPay"
-                                    maxlength="60" oninput="drawPromoFromForm()"></div>
-                            <div class="form-group"><label>Sello (esquina) <span
-                                        style="color:var(--warm-gray-light);font-weight:400">(opcional)</span></label><input
-                                    type="text" id="pmTag" maxlength="30" oninput="drawPromoFromForm()"></div>
-                        </div>
-                        <div class="promo-preview">
-                            <canvas id="pmCanvas" width="1080" height="1920"></canvas>
-                            <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:14px">
-                                <button type="button" class="btn btn-primary" onclick="downloadPromo()"><i
-                                        class="fas fa-download"></i> Descargar imagen</button>
-                            </div>
-                            <small style="color:var(--warm-gray);display:block;text-align:center;margin-top:8px">1080×1920, ideal para historia de Instagram</small>
-                        </div>
-                    </div>
                 </div>
                 <div id="adminConfig" class="admin-section" style="display:none">
                     <div class="section-title"><i class="fas fa-cog"></i>
@@ -5747,7 +5645,6 @@
                 <button onclick="bottomNavGo('gallery')"><i class="fas fa-images"></i> Galería</button>
                 <div class="ams-title">Ventas</div>
                 <button onclick="bottomNavGo('giftcards')"><i class="fas fa-gift"></i> Giftcards</button>
-                <button onclick="bottomNavGo('promos')"><i class="fas fa-wand-magic-sparkles"></i> Crear Promo</button>
                 <div class="ams-title">Cuenta</div>
                 <button onclick="bottomNavGo('config')"><i class="fas fa-cog"></i> Configuración</button>
                 <button onclick="closeAdminMoreSheet();logout()" style="color:var(--danger)"><i
@@ -6619,7 +6516,6 @@
             else if (section === 'services') renderServicesList();
             else if (section === 'gallery') renderAdminGallery();
             else if (section === 'giftcards') renderGiftcards();
-            else if (section === 'promos') renderPromoStudio();
             else if (section === 'config') renderConfigPage();
             updateBottomNavActive(section);
         }
@@ -6676,7 +6572,7 @@
 
         // ==================== BARRA INFERIOR (MÓVIL) ====================
         function updateBottomNavActive(section) {
-            const overflow = ['services', 'categories', 'gallery', 'giftcards', 'promos', 'config'];
+            const overflow = ['services', 'categories', 'gallery', 'giftcards', 'config'];
             document.querySelectorAll('.admin-bottom-nav .abn-btn[data-bnav]').forEach(b => {
                 const on = b.dataset.bnav === section;
                 b.classList.toggle('active', on);
@@ -6939,301 +6835,6 @@
                 toast('Error al guardar', 'error');
                 console.error(e);
             }
-        }
-
-        // ==================== ESTUDIO DE PROMOS (flyer para Instagram) ====================
-        const PM_TEMPLATES = {
-            membresia: {
-                title: 'MEMBRESÍA', subtitle: 'Tus tratamientos favoritos con descuento por 3 o 6 meses',
-                plan: 'Mi Basic', services: 'HYDRAFACIAL + MASAJE DE ESPALDA CON PIEDRAS CALIENTES',
-                prices: [{ label: '3 MESES', price: '150.000', real: '174.000' }, { label: '6 MESES', price: '270.000', real: '348.000' }],
-                note: 'CUPOS LIMITADOS', pay: 'Crédito / Débito / Transferencia', tag: '2 cupos disponibles'
-            },
-            promo: {
-                title: 'PROMO DEL MES', subtitle: 'Aprovecha este mes precios especiales por tiempo limitado',
-                plan: '', services: 'LIMPIEZA FACIAL PROFUNDA', prices: [{ label: 'ESTE MES', price: '25.000', real: '35.000' }],
-                note: 'CUPOS LIMITADOS', pay: 'Crédito / Débito / Transferencia', tag: ''
-            },
-            giftcard: {
-                title: 'GIFTCARD', subtitle: 'Regala belleza y bienestar a quien más quieres',
-                plan: '', services: 'CANJEABLE POR CUALQUIER SERVICIO', prices: [{ label: 'DESDE', price: '30.000', real: '' }],
-                note: 'VÁLIDA POR 6 MESES', pay: 'Crédito / Débito / Transferencia', tag: ''
-            },
-            blank: { title: '', subtitle: '', plan: '', services: '', prices: [{ label: '', price: '', real: '' }], note: '', pay: '', tag: '' }
-        };
-        let _pmFontsReady = false;
-        let _pmLogo = null, _pmLogoTried = false;
-
-        // Carga el logo para el flyer. Debe poder exportarse a PNG, así que la
-        // imagen tiene que ser "limpia" para el canvas: Firebase Storage no
-        // manda cabeceras CORS, por eso se intenta primero el logo configurado
-        // y, si el navegador lo rechaza, se usa el ícono del propio sitio
-        // (mismo origen, siempre exportable) que también es el logo de Synea.
-        function pmTryLoadImage(url, useCors) {
-            return new Promise(resolve => {
-                const img = new Image();
-                if (useCors) img.crossOrigin = 'anonymous';
-                img.onload = () => resolve(img);
-                img.onerror = () => resolve(null);
-                img.src = url;
-            });
-        }
-        async function pmLoadLogo() {
-            if (_pmLogoTried) return _pmLogo;
-            _pmLogoTried = true;
-            const configured = config.logoUrl || DEFAULT_LOGO_URL;
-            _pmLogo = await pmTryLoadImage(configured, true);           // logo del negocio (si permite CORS)
-            if (!_pmLogo) _pmLogo = await pmTryLoadImage('/icons/icon-512.png', false); // ícono local del sitio
-            return _pmLogo;
-        }
-
-        function renderPromoStudio() {
-            // Cargar la plantilla por defecto si los campos están vacíos.
-            if (!document.getElementById('pmTitle').value && !document.getElementById('pmPriceRows').children.length) {
-                pmApplyTemplate(document.getElementById('pmTemplate').value || 'membresia');
-            } else {
-                drawPromoFromForm();
-            }
-        }
-
-        function pmApplyTemplate(key) {
-            const t = PM_TEMPLATES[key] || PM_TEMPLATES.membresia;
-            document.getElementById('pmTitle').value = t.title;
-            document.getElementById('pmSubtitle').value = t.subtitle;
-            document.getElementById('pmPlan').value = t.plan;
-            document.getElementById('pmServices').value = t.services;
-            document.getElementById('pmNote').value = t.note;
-            document.getElementById('pmPay').value = t.pay;
-            document.getElementById('pmTag').value = t.tag;
-            const wrap = document.getElementById('pmPriceRows');
-            wrap.innerHTML = '';
-            (t.prices.length ? t.prices : [{ label: '', price: '', real: '' }]).forEach(p => pmAddPriceRow(p));
-            drawPromoFromForm();
-        }
-
-        function pmAddPriceRow(p) {
-            const wrap = document.getElementById('pmPriceRows');
-            const row = document.createElement('div');
-            row.className = 'pm-price-row';
-            row.innerHTML = `<input placeholder="Etiqueta (3 MESES)" class="pm-label" maxlength="24" value="${escAttr((p && p.label) || '')}">
-                <input placeholder="Precio (150.000)" class="pm-price" maxlength="14" value="${escAttr((p && p.price) || '')}">
-                <input placeholder="Antes (174.000)" class="pm-real" maxlength="14" value="${escAttr((p && p.real) || '')}">
-                <button type="button" class="remove-btn" title="Quitar" onclick="this.parentElement.remove();drawPromoFromForm()"><i class="fas fa-times"></i></button>`;
-            row.querySelectorAll('input').forEach(i => i.addEventListener('input', drawPromoFromForm));
-            wrap.appendChild(row);
-        }
-
-        function pmCollectData() {
-            const prices = [...document.querySelectorAll('#pmPriceRows .pm-price-row')].map(r => ({
-                label: r.querySelector('.pm-label').value.trim(),
-                price: r.querySelector('.pm-price').value.trim(),
-                real: r.querySelector('.pm-real').value.trim()
-            })).filter(p => p.label || p.price);
-            return {
-                title: document.getElementById('pmTitle').value.trim(),
-                subtitle: document.getElementById('pmSubtitle').value.trim(),
-                plan: document.getElementById('pmPlan').value.trim(),
-                services: document.getElementById('pmServices').value.trim(),
-                prices,
-                note: document.getElementById('pmNote').value.trim(),
-                pay: document.getElementById('pmPay').value.trim(),
-                tag: document.getElementById('pmTag').value.trim()
-            };
-        }
-
-        async function drawPromoFromForm() {
-            const canvas = document.getElementById('pmCanvas'); if (!canvas) return;
-            if (!_pmFontsReady && document.fonts) {
-                try { await Promise.all([document.fonts.load('700 60px "Cormorant Garamond"'), document.fonts.load('italic 700 60px "Cormorant Garamond"'), document.fonts.load('700 40px "Manrope"'), document.fonts.load('500 40px "Manrope"')]); } catch (e) { }
-                _pmFontsReady = true;
-            }
-            if (!_pmLogoTried) { await pmLoadLogo(); }
-            drawPromo(canvas.getContext('2d'), pmCollectData());
-        }
-
-        // Helpers de canvas
-        function pmRoundRect(ctx, x, y, w, h, r) {
-            ctx.beginPath();
-            ctx.moveTo(x + r, y);
-            ctx.arcTo(x + w, y, x + w, y + h, r);
-            ctx.arcTo(x + w, y + h, x, y + h, r);
-            ctx.arcTo(x, y + h, x, y, r);
-            ctx.arcTo(x, y, x + w, y, r);
-            ctx.closePath();
-        }
-        function pmStar(ctx, cx, cy, r, color) {
-            ctx.save(); ctx.fillStyle = color; ctx.beginPath();
-            for (let i = 0; i < 10; i++) { const a = Math.PI / 5 * i - Math.PI / 2; const rad = i % 2 ? r * 0.45 : r; ctx.lineTo(cx + Math.cos(a) * rad, cy + Math.sin(a) * rad); }
-            ctx.closePath(); ctx.fill(); ctx.restore();
-        }
-        function pmWrap(ctx, text, maxW) {
-            const words = String(text).split(/\s+/); const lines = []; let cur = '';
-            for (const w of words) {
-                const test = cur ? cur + ' ' + w : w;
-                if (ctx.measureText(test).width > maxW && cur) { lines.push(cur); cur = w; } else cur = test;
-            }
-            if (cur) lines.push(cur);
-            return lines;
-        }
-        function pmCenter(ctx, text, cx, y, font, color, ls) {
-            ctx.font = font; ctx.fillStyle = color; ctx.textAlign = 'center';
-            ctx.letterSpacing = (ls || 0) + 'px';
-            ctx.fillText(text, cx, y);
-            ctx.letterSpacing = '0px';
-        }
-
-        function drawPromo(ctx, d) {
-            const W = 1080, H = 1920, cx = W / 2;
-            ctx.clearRect(0, 0, W, H);
-            // Fondo boutique: crema con degradado suave + blobs translúcidos
-            let bg = ctx.createLinearGradient(0, 0, W, H);
-            bg.addColorStop(0, '#f8f5f0'); bg.addColorStop(.5, '#f7eef0'); bg.addColorStop(1, '#efe9f2');
-            ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
-            const blob = (x, y, r, col) => { const g = ctx.createRadialGradient(x, y, 0, x, y, r); g.addColorStop(0, col); g.addColorStop(1, 'rgba(255,255,255,0)'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill(); };
-            blob(150, 260, 460, 'rgba(47,93,80,.18)');
-            blob(980, 620, 520, 'rgba(176,139,87,.16)');
-            blob(120, 1500, 560, 'rgba(150,120,190,.12)');
-            blob(1000, 1750, 460, 'rgba(47,93,80,.12)');
-
-            let y = 120;
-            // Logo del negocio (círculo con borde claro). Si no cargó, se usa el
-            // nombre de la marca en su lugar.
-            if (_pmLogo) {
-                const R = 92, lcy = y + R;
-                ctx.save();
-                ctx.shadowColor = 'rgba(35,48,44,.18)'; ctx.shadowBlur = 30; ctx.shadowOffsetY = 8;
-                ctx.fillStyle = '#fff';
-                ctx.beginPath(); ctx.arc(cx, lcy, R + 8, 0, 7); ctx.fill();
-                ctx.restore();
-                ctx.save();
-                ctx.beginPath(); ctx.arc(cx, lcy, R, 0, 7); ctx.clip();
-                ctx.fillStyle = '#fff'; ctx.fillRect(cx - R, lcy - R, R * 2, R * 2);
-                ctx.drawImage(_pmLogo, cx - R, lcy - R, R * 2, R * 2);
-                ctx.restore();
-                y = lcy + R + 46;
-            } else {
-                y += 30;
-                pmCenter(ctx, 'Synea Studio Spa', cx, y, 'italic 700 40px "Cormorant Garamond"', '#1e3f36', 1);
-                y += 70;
-            }
-
-            // Tarjeta del título
-            if (d.title || d.subtitle) {
-                const hasSub = !!d.subtitle;
-                ctx.save();
-                ctx.shadowColor = 'rgba(35,48,44,.10)'; ctx.shadowBlur = 40; ctx.shadowOffsetY = 12;
-                ctx.fillStyle = 'rgba(255,255,255,.82)';
-                const cardH = hasSub ? 280 : 170;
-                pmRoundRect(ctx, 90, y, W - 180, cardH, 34); ctx.fill();
-                ctx.restore();
-                let ty = y + 105;
-                if (d.title) { pmCenter(ctx, d.title.toUpperCase(), cx, ty, '800 68px "Manrope"', '#23302c', 8); ty += 20; }
-                if (hasSub) {
-                    ctx.strokeStyle = 'rgba(47,93,80,.35)'; ctx.lineWidth = 2;
-                    ctx.beginPath(); ctx.moveTo(cx - 210, ty); ctx.lineTo(cx + 210, ty); ctx.stroke();
-                    ty += 55; ctx.font = '400 40px "Manrope"';
-                    pmWrap(ctx, d.subtitle, W - 280).forEach(l => { pmCenter(ctx, l, cx, ty, '400 40px "Manrope"', '#414f4a', 0); ty += 52; });
-                }
-                y += cardH + 60;
-            }
-
-            // Nombre del plan / destacado
-            if (d.plan) {
-                pmCenter(ctx, d.plan, cx, y + 90, 'italic 800 120px "Cormorant Garamond"', '#23302c', 0);
-                y += 170;
-            }
-
-            // Tarjeta principal
-            const hasBody = d.services || (d.prices && d.prices.length) || d.note || d.pay;
-            if (hasBody) {
-                const cardTop = y + 10;
-                // Medimos alto aproximado
-                ctx.font = '700 46px "Manrope"';
-                const svcLines = d.services ? pmWrap(ctx, d.services.toUpperCase(), W - 300) : [];
-                let bodyH = 70;
-                bodyH += svcLines.length * 58 + (svcLines.length ? 40 : 0);
-                bodyH += (d.prices ? d.prices.length : 0) * 180;
-                if (d.note) bodyH += 90;
-                if (d.pay) bodyH += 60;
-                bodyH += 40;
-                ctx.save();
-                ctx.shadowColor = 'rgba(35,48,44,.10)'; ctx.shadowBlur = 44; ctx.shadowOffsetY = 14;
-                ctx.fillStyle = '#ffffff';
-                pmRoundRect(ctx, 120, cardTop, W - 240, bodyH, 40); ctx.fill();
-                ctx.restore();
-
-                let by = cardTop + 90;
-                svcLines.forEach(l => { pmCenter(ctx, l, cx, by, '700 46px "Manrope"', '#23302c', 1); by += 58; });
-                if (svcLines.length) by += 30;
-
-                (d.prices || []).forEach(p => {
-                    if (p.label) {
-                        by += 6;
-                        const lbl = p.label.toUpperCase();
-                        pmCenter(ctx, lbl, cx, by, '600 44px "Manrope"', '#23302c', 3);
-                        ctx.font = '600 44px "Manrope"'; ctx.letterSpacing = '3px';
-                        const lw = ctx.measureText(lbl).width; ctx.letterSpacing = '0px';
-                        pmStar(ctx, cx - lw / 2 - 42, by - 15, 17, '#b08b57');
-                        pmStar(ctx, cx + lw / 2 + 42, by - 15, 17, '#b08b57');
-                        by += 22;
-                        ctx.strokeStyle = 'rgba(176,139,87,.5)'; ctx.lineWidth = 2;
-                        ctx.beginPath(); ctx.moveTo(cx - 200, by); ctx.lineTo(cx + 200, by); ctx.stroke();
-                        by += 60;
-                    }
-                    if (p.price) { pmCenter(ctx, '$' + p.price, cx, by, '800 64px "Manrope"', '#2f5d50', 0); by += 12; }
-                    if (p.real) {
-                        by += 34;
-                        const t = 'Precio real $' + p.real;
-                        pmCenter(ctx, t, cx, by, 'italic 400 34px "Cormorant Garamond"', '#6d7a75', 0);
-                        ctx.font = 'italic 400 34px "Cormorant Garamond"';
-                        const tw = ctx.measureText(t).width;
-                        ctx.strokeStyle = '#9aa5a0'; ctx.lineWidth = 2;
-                        ctx.beginPath(); ctx.moveTo(cx - tw / 2, by - 11); ctx.lineTo(cx + tw / 2, by - 11); ctx.stroke();
-                    }
-                    by += 46;
-                });
-
-                if (d.note) { by += 20; pmCenter(ctx, d.note.toUpperCase(), cx, by, '800 46px "Manrope"', '#23302c', 4); by += 20; }
-                if (d.pay) { by += 40; pmCenter(ctx, d.pay, cx, by, 'italic 400 34px "Cormorant Garamond"', '#6d7a75', 0); }
-                y = cardTop + bodyH;
-            }
-
-            // Sello rotado
-            if (d.tag) {
-                ctx.save();
-                ctx.translate(W - 300, H - 250); ctx.rotate(-8 * Math.PI / 180);
-                ctx.font = 'italic 700 56px "Cormorant Garamond"';
-                const tw = ctx.measureText(d.tag).width;
-                ctx.shadowColor = 'rgba(35,48,44,.18)'; ctx.shadowBlur = 24; ctx.shadowOffsetY = 8;
-                ctx.fillStyle = '#ffffff';
-                pmRoundRect(ctx, -tw / 2 - 44, -58, tw + 88, 116, 20); ctx.fill();
-                ctx.shadowColor = 'transparent';
-                ctx.fillStyle = '#2f5d50'; ctx.textAlign = 'center';
-                ctx.fillText(d.tag, 0, 20);
-                ctx.restore();
-            }
-        }
-
-        async function downloadPromo() {
-            const canvas = document.getElementById('pmCanvas');
-            // Si el logo remoto impidiera exportar (canvas bloqueado), se
-            // redibuja sin logo para que la descarga nunca falle en silencio.
-            try { canvas.getContext('2d').getImageData(0, 0, 1, 1); }
-            catch (e) {
-                _pmLogo = null;
-                await drawPromoFromForm();
-                toast('El logo no se pudo incluir; la imagen se descarga sin él', 'warning', 6000);
-            }
-            canvas.toBlob(blob => {
-                if (!blob) { toast('No se pudo generar la imagen', 'error'); return; }
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                const name = (pmCollectData().title || 'promo').toLowerCase().replace(/[^a-z0-9]+/g, '-');
-                a.href = url; a.download = 'synea-' + name + '.png';
-                document.body.appendChild(a); a.click(); a.remove();
-                setTimeout(() => URL.revokeObjectURL(url), 1000);
-                toast('Imagen descargada · súbela a tu historia', 'success');
-            }, 'image/png');
         }
 
         function renderConfigPage() {
