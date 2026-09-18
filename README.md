@@ -32,7 +32,7 @@ rellenarlos. Están marcados en el código.
 | Link de Webpay | Panel → Configuración | vacío (si no lo pones, no aparece el botón de pago) |
 | Logo real | `icons/` | ✅ monograma del logo de Synea |
 | Fotos de la galería | Panel → Galería | vacía |
-| Fotos de portada de cada servicio | Panel → Servicios → Editar | vacías: se ve la portada de marca |
+| Fotos de portada de cada servicio | `scripts/fetch-service-images.mjs` o el panel | vacías: se ve la portada de marca |
 | Duración del paquete de promoción | Panel → Servicios | estimada en 75 min |
 
 - **Fotos:** el perfil de Instagram (`@synea.studiospa`) sí se puede abrir, pero
@@ -45,8 +45,9 @@ rellenarlos. Están marcados en el código.
 - **Portadas de los servicios:** cada tarjeta muestra la foto del servicio si la
   tiene y, si no, una portada de marca (degradado según la familia del servicio
   más su icono). Antes se usaban fotos heredadas de PaoPai —de otro local y de
-  servicios que Synea no ofrece—, así que se eliminaron. Para que la grilla se
-  vea con fotos reales, súbelas en **Panel → Servicios → Editar**.
+  servicios que Synea no ofrece—, así que se eliminaron. Para poblarlas de una
+  vez con fotos referenciales, mira [Fotos referenciales](#fotos-referenciales);
+  para cambiar una suelta, **Panel → Servicios → Editar**.
 - **Catálogo:** nombres, precios, duraciones y descripciones son los publicados
   en AgendaPro. La única excepción es el paquete `ESMALTADO + PERFILADO`, que
   ahí figura sin duración: se estimó en 75 min (60 del esmaltado unicolor más el
@@ -198,12 +199,45 @@ node seed-catalog.mjs --write    # lo escribe de verdad
 Es idempotente: si lo corres dos veces actualiza en vez de duplicar, y nunca toca
 reservas ni disponibilidad.
 
-### 8. Correos y push
+### 8. Fotos referenciales
+
+Mientras no tengas fotos propias de cada servicio, `fetch-service-images.mjs`
+busca una en [Pexels](https://www.pexels.com/) (licencia de uso comercial, sin
+atribución obligatoria), la sube a tu Firebase Storage y guarda la URL en el
+catálogo. Cada servicio lleva su propio término de búsqueda dentro del script:
+el nombre comercial no sirve para un banco de fotos, "ALIVIO & CALMA SYNEA" no
+significa nada fuera de Synea.
+
+Una vez: consigue una API key gratis en <https://www.pexels.com/api/>.
+
+```bash
+cd ~/synea/scripts
+npm install
+export PEXELS_API_KEY="tu_key"
+
+node fetch-service-images.mjs            # muestra qué elegiría, sin bajar nada
+node fetch-service-images.mjs --write    # descarga, sube y guarda
+```
+
+La simulación imprime el término, el autor y el link de cada foto, para que las
+revises antes. Por defecto **respeta las fotos que ya subiste** desde el panel;
+`--force` las reemplaza. Para reintentar una sola que quedó fea:
+
+```bash
+node fetch-service-images.mjs --only "REIKI" --pick 2 --write --force
+```
+
+`--pick 2` toma el segundo resultado de la búsqueda en vez del primero.
+
+Son fotos de stock: sirven para que la web no se vea vacía, no para representar
+el trabajo real. Reemplázalas por fotos propias apenas las tengas.
+
+### 9. Correos y push
 
 Sigue [`FUNCTIONS.md`](FUNCTIONS.md) (correos y recordatorios) y
 [`PWA-PUSH.md`](PWA-PUSH.md) (notificaciones al celular).
 
-### 9. Dominio propio (opcional)
+### 10. Dominio propio (opcional)
 
 Console → **Hosting → Agregar dominio personalizado** → `synea.frody.cl` → sigue
 las instrucciones de DNS. Después agrégalo también a Dominios autorizados (paso 6)
@@ -310,5 +344,5 @@ storage.rules              reglas de Storage (imágenes)
 firebase.json / .firebaserc  hosting, reglas, funciones
 functions/                 Cloud Functions: correos y recordatorios
 icons/                     iconos PWA generados desde el logo real
-scripts/                   utilidades (catálogo, limpieza, iconos)
+scripts/                   utilidades (catálogo, fotos, limpieza, iconos)
 ```
