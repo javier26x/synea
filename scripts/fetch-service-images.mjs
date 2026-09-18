@@ -52,37 +52,37 @@ const only = (val('--only') || '').trim();
 // --------------------------------------------------------------------- fotos --
 const PHOTOS = {
   // Masoterapia y bienestar
-  'HEAD SPA JAPONÉS': { id: 36292486, autor: 'KÁ' },
-  'PAUSA ESENCIAL': { id: 6628701, autor: 'KoolShooters' },
-  'ARMONÍA VITAL': { id: 37719545, autor: 'Nothing Ahead' },
-  'ALIVIO PROFUNDO': { id: 9146381, autor: 'Ron Lach' },
-  'ALIVIO & CALMA SYNEA': { id: 19641816, autor: 'Jonathan Borba' },
-  'EQUILIBRIO CORPORAL SYNEA': { id: 19641818, autor: 'Jonathan Borba' },
-  'LIBERACIÓN MUSCULAR SYNEA': { id: 20860597, autor: 'Funkcinės Terapijos Centras' },
-  'MASAJE CRANEAL CHAMPI': { id: 6628821, autor: 'KoolShooters' },
-  'MASAJE DEPORTIVO PRE COMPETENCIA/ENTRENO': { id: 11349880, autor: 'Towfiqu barbhuiya' },
-  'MASAJE DEPORTIVO POST COMPETENCIA/ENTRENO': { id: 9898722, autor: 'Ekaterina Mitkina' },
+  'Head spa japonés': { id: 36292486, autor: 'KÁ' },
+  'Pausa esencial': { id: 6628701, autor: 'KoolShooters' },
+  'Armonía vital': { id: 37719545, autor: 'Nothing Ahead' },
+  'Alivio profundo': { id: 9146381, autor: 'Ron Lach' },
+  'Alivio & calma Synea': { id: 19641816, autor: 'Jonathan Borba' },
+  'Equilibrio corporal Synea': { id: 19641818, autor: 'Jonathan Borba' },
+  'Liberación muscular Synea': { id: 20860597, autor: 'Funkcinės Terapijos Centras' },
+  'Masaje craneal champi': { id: 6628821, autor: 'KoolShooters' },
+  'Masaje deportivo pre competencia/entreno': { id: 11349880, autor: 'Towfiqu barbhuiya' },
+  'Masaje deportivo post competencia/entreno': { id: 9898722, autor: 'Ekaterina Mitkina' },
 
   // Manicure
-  'LIMPIEZA DE UÑAS': { id: 22668317, autor: 'Kerim Eveyik' },
-  'ESMALTADO PERMANENTE UNICOLOR': { id: 6135696, autor: 'Gabriel Puyén' },
-  'ESMALTADO PERMANENTE FRANCESA/DEGRADE': { id: 34997574, autor: 'Salim Da' },
-  'KAPPING DE POLYGEL/BUILDER GEL': { id: 7446915, autor: 'Gustavo Fring' },
-  'EXTENSIÓN SOFT GEL': { id: 6135680, autor: 'Gabriel Puyén' },
-  'EXTENSIÓN DE POLYGEL': { id: 34871595, autor: 'Salim Da' },
-  'RETIRO POLYGEL/BUILDER GEL': { id: 7755655, autor: 'RDNE Stock project' },
-  'REPARACIÓN': { id: 16041439, autor: 'Andrea Mosti' },
-  'RETIRO ESMALTADO PERMANENTE': { id: 9253758, autor: 'Ron Lach' },
-  'GARANTÍA': { id: 18466020, autor: 'The Oluseyi' },
+  'Limpieza de uñas': { id: 22668317, autor: 'Kerim Eveyik' },
+  'Esmaltado permanente unicolor': { id: 6135696, autor: 'Gabriel Puyén' },
+  'Esmaltado permanente francesa/degradé': { id: 34997574, autor: 'Salim Da' },
+  'Kapping de polygel/builder gel': { id: 7446915, autor: 'Gustavo Fring' },
+  'Extensión soft gel': { id: 6135680, autor: 'Gabriel Puyén' },
+  'Extensión de polygel': { id: 34871595, autor: 'Salim Da' },
+  'Retiro polygel/builder gel': { id: 7755655, autor: 'RDNE Stock project' },
+  'Reparación': { id: 16041439, autor: 'Andrea Mosti' },
+  'Retiro esmaltado permanente': { id: 9253758, autor: 'Ron Lach' },
+  'Garantía': { id: 18466020, autor: 'The Oluseyi' },
 
   // Terapias complementarias
-  'ACOMPAÑAMIENTO TERAPEUTICO': { id: 7176298, autor: 'SHVETS production' },
-  'FLORES DE BACH': { id: 19572633, autor: 'Tuğba Öztürk' },
-  'GEMOTERAPIA': { id: 4040611, autor: 'Kaboompics' },
-  'REIKI': { id: 6998232, autor: 'Arina Krasnikova' },
+  'Acompañamiento terapéutico': { id: 7176298, autor: 'SHVETS production' },
+  'Flores de Bach': { id: 19572633, autor: 'Tuğba Öztürk' },
+  'Gemoterapia': { id: 4040611, autor: 'Kaboompics' },
+  'Reiki': { id: 6998232, autor: 'Arina Krasnikova' },
 
   // Promociones
-  'ESMALTADO + PERFILADO': { id: 3997384, autor: 'cottonbro studio' },
+  'Esmaltado + perfilado': { id: 3997384, autor: 'cottonbro studio' },
 };
 
 // Pexels sirve la imagen ya redimensionada según el ancho que pidas.

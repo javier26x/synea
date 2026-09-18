@@ -35,10 +35,10 @@ const db = admin.database();
 
 // ---------------------------------------------------------------- catálogo --
 const CATEGORIES = [
-  { key: 'maso', name: 'MASOTERAPIA Y BIENESTAR', icon: 'fa-spa', order: 1 },
-  { key: 'mani', name: 'MANICURE', icon: 'fa-hand-sparkles', order: 2 },
-  { key: 'terapias', name: 'TERAPIAS COMPLEMENTARIAS Y BIENESTAR ENERGÉTICO', icon: 'fa-yin-yang', order: 3 },
-  { key: 'promos', name: 'PROMOCIONES', icon: 'fa-star', order: 4, isSale: true },
+  { key: 'maso', name: 'Masoterapia y bienestar', icon: 'fa-spa', order: 1 },
+  { key: 'mani', name: 'Manicure', icon: 'fa-hand-sparkles', order: 2 },
+  { key: 'terapias', name: 'Terapias complementarias y bienestar energético', icon: 'fa-yin-yang', order: 3 },
+  { key: 'promos', name: 'Promociones', icon: 'fa-star', order: 4, isSale: true },
 ];
 
 // Los "SERVICIOS ADICIONALES MANICURE" de AgendaPro no son servicios que se
@@ -77,63 +77,63 @@ const RETIRED_SERVICES = [
 
 const SERVICES = [
   // ---- MASOTERAPIA Y BIENESTAR ----
-  { cat: 'maso', name: 'HEAD SPA JAPONÉS', duration: 60, price: 34990,
+  { cat: 'maso', name: 'Head spa japonés', duration: 60, price: 34990,
     description: '✨Ritual de bienestar que combina masajes relajantes específicos en el cuero cabelludo, rostro y zona clavicular/hombros, para revitalizar el cabello, aliviar tensiones y brindar una experiencia de relajación completa.✨' },
-  { cat: 'maso', name: 'PAUSA ESENCIAL', duration: 50, price: 29990,
+  { cat: 'maso', name: 'Pausa esencial', duration: 50, price: 29990,
     description: '✨Masaje de relajación enfocado en la zona posterior del cuerpo, incluyendo cráneo, espalda, cuello, hombros, brazos y piernas. Libera tensiones, disminuye el estrés y favorece una profunda sensación de bienestar y descanso.✨' },
-  { cat: 'maso', name: 'ARMONÍA VITAL', duration: 50, price: 32990,
+  { cat: 'maso', name: 'Armonía vital', duration: 50, price: 32990,
     description: '✨Combinación de técnicas de masaje relajante y descontracturante, alternando maniobras suaves con presiones más profundas para liberar tensiones musculares, reducir contracturas y proporcionar bienestar integral.✨' },
-  { cat: 'maso', name: 'ALIVIO PROFUNDO', duration: 50, price: 34990,
+  { cat: 'maso', name: 'Alivio profundo', duration: 50, price: 34990,
     description: '✨Masaje de presión media a profunda, enfocado en liberar tensiones y contracturas musculares, aliviar molestias y mejorar la movilidad, incluyendo cráneo, cuello, hombros, espalda y piernas posterior.✨' },
-  { cat: 'maso', name: 'ALIVIO & CALMA SYNEA', duration: 70, price: 34990,
+  { cat: 'maso', name: 'Alivio & calma Synea', duration: 70, price: 34990,
     description: '✨Masaje suave y envolvente que recorre todo el cuerpo, ayudando a liberar tensiones, disminuir el estrés y promover una profunda sensación de relajación, descanso y bienestar.✨' },
-  { cat: 'maso', name: 'EQUILIBRIO CORPORAL SYNEA', duration: 70, price: 37990,
+  { cat: 'maso', name: 'Equilibrio corporal Synea', duration: 70, price: 37990,
     description: '✨Combinación de técnicas de masaje relajante y descontracturante en todo el cuerpo, alternando maniobras suaves con presiones más profundas para liberar tensiones musculares y reducir contracturas.✨' },
-  { cat: 'maso', name: 'LIBERACIÓN MUSCULAR SYNEA', duration: 70, price: 39990,
+  { cat: 'maso', name: 'Liberación muscular Synea', duration: 70, price: 39990,
     description: '✨Masaje de presión media a profunda, enfocado en liberar tensiones y contracturas musculares, aliviar molestias y mejorar la movilidad. Proporciona alivio y bienestar en cuerpo completo.✨' },
-  { cat: 'maso', name: 'MASAJE CRANEAL CHAMPI', duration: 30, price: 19990,
+  { cat: 'maso', name: 'Masaje craneal champi', duration: 30, price: 19990,
     description: '✨Masaje inspirado en la tradición ayurvédica, enfocado en cuero cabelludo, cráneo, cuello y hombros. Ayuda a liberar tensiones, reducir el estrés y proporcionar una profunda sensación de relajación.✨' },
-  { cat: 'maso', name: 'MASAJE DEPORTIVO PRE COMPETENCIA/ENTRENO', duration: 45, price: 27990,
+  { cat: 'maso', name: 'Masaje deportivo pre competencia/entreno', duration: 45, price: 27990,
     description: '🏃Masaje dinámico y estimulante diseñado para preparar la musculatura antes de la actividad física. Activa la circulación, aumenta la movilidad y prepara el cuerpo para el esfuerzo.🏃‍♀️' },
-  { cat: 'maso', name: 'MASAJE DEPORTIVO POST COMPETENCIA/ENTRENO', duration: 60, price: 34990,
+  { cat: 'maso', name: 'Masaje deportivo post competencia/entreno', duration: 60, price: 34990,
     description: '🏃‍♂️Masaje enfocado en relajar y recuperar la musculatura después de la actividad física. Disminuye la tensión muscular, favorece la circulación y acelera la recuperación.🏃‍♀️' },
 
   // ---- MANICURE ----
-  { cat: 'mani', name: 'LIMPIEZA DE UÑAS', duration: 45, price: 13000,
+  { cat: 'mani', name: 'Limpieza de uñas', duration: 45, price: 13000,
     description: '✨Servicio enfocado en limpiar, dar forma y retirar cuidadosamente el exceso de cutícula, dejando las uñas prolijas, saludables y con una apariencia limpia y cuidada.✨' },
-  { cat: 'mani', name: 'ESMALTADO PERMANENTE UNICOLOR', duration: 60, price: 14990, addons: maniAddons(),
+  { cat: 'mani', name: 'Esmaltado permanente unicolor', duration: 60, price: 14990, addons: maniAddons(),
     description: '✨Aplicación de un tono de esmalte de larga duración con acabado brillante y uniforme, ideal para mantener las uñas impecables por más tiempo. Incluye base rubber, color y top coat.✨' },
-  { cat: 'mani', name: 'ESMALTADO PERMANENTE FRANCESA/DEGRADE', duration: 75, price: 19990, addons: maniAddons('Degradé / francesa'),
+  { cat: 'mani', name: 'Esmaltado permanente francesa/degradé', duration: 75, price: 19990, addons: maniAddons('Degradé / francesa'),
     description: '✨Técnicas de esmaltado que aportan un acabado delicado y elegante, ya sea con la clásica punta francesa o con una transición suave de tonos en efecto degradé.✨' },
-  { cat: 'mani', name: 'KAPPING DE POLYGEL/BUILDER GEL', duration: 90, price: 22000, addons: maniAddons(),
+  { cat: 'mani', name: 'Kapping de polygel/builder gel', duration: 90, price: 22000, addons: maniAddons(),
     description: '✨Técnica que refuerza la uña natural con una capa de builder gel o polygel, aportando mayor resistencia, protección y una apariencia prolija sin necesidad de alargarla.✨' },
-  { cat: 'mani', name: 'EXTENSIÓN SOFT GEL', duration: 120, price: 25990, addons: maniAddons(),
+  { cat: 'mani', name: 'Extensión soft gel', duration: 120, price: 25990, addons: maniAddons(),
     description: '✨Técnica de alargamiento de uñas mediante tips de gel flexible, logrando un acabado natural, liviano y resistente con la forma y largo deseado.✨' },
-  { cat: 'mani', name: 'EXTENSIÓN DE POLYGEL', duration: 120, price: 28990, addons: maniAddons(),
+  { cat: 'mani', name: 'Extensión de polygel', duration: 120, price: 28990, addons: maniAddons(),
     description: '✨Alargamiento de uñas que combina resistencia y flexibilidad, con una pasta que une gel y acrílico para crear la forma y largo deseado con un acabado firme, prolijo y natural.✨' },
-  { cat: 'mani', name: 'RETIRO POLYGEL/BUILDER GEL', duration: 45, price: 10000,
+  { cat: 'mani', name: 'Retiro polygel/builder gel', duration: 45, price: 10000,
     description: '✨Proceso cuidadoso para remover el producto de las uñas de forma segura, protegiendo la uña natural y dejándola limpia y preparada para un nuevo servicio.✨' },
-  { cat: 'mani', name: 'REPARACIÓN', duration: 10, price: 3000,
+  { cat: 'mani', name: 'Reparación', duration: 10, price: 3000,
     description: '✨Servicio destinado a reparar una uña quebrada, dañada o debilitada, devolviéndole su forma, resistencia y una apariencia prolija.✨' },
-  { cat: 'mani', name: 'RETIRO ESMALTADO PERMANENTE', duration: 30, price: 5000,
+  { cat: 'mani', name: 'Retiro esmaltado permanente', duration: 30, price: 5000,
     description: '✨Proceso cuidadoso para remover el esmalte permanente de forma segura, protegiendo la uña natural y dejándola limpia y preparada para un nuevo servicio.✨' },
-  { cat: 'mani', name: 'GARANTÍA', duration: 30, price: 0,
+  { cat: 'mani', name: 'Garantía', duration: 30, price: 0,
     description: '✨Servicio destinado a corregir detalles del manicure realizado, como levantamiento o desprendimiento del producto, dentro del período de garantía establecido por el salón.✨' },
 
   // ---- TERAPIAS COMPLEMENTARIAS Y BIENESTAR ENERGÉTICO ----
-  { cat: 'terapias', name: 'ACOMPAÑAMIENTO TERAPEUTICO', duration: 60, price: 25000,
+  { cat: 'terapias', name: 'Acompañamiento terapéutico', duration: 60, price: 25000,
     description: '🤍 Un espacio seguro para detenerte, escucharte y recibir apoyo. A través de una mirada integrativa y cercana, te acompañamos en tu proceso personal para fortalecer tu bienestar emocional y calidad de vida.' },
-  { cat: 'terapias', name: 'FLORES DE BACH', duration: 60, price: 30000,
+  { cat: 'terapias', name: 'Flores de Bach', duration: 60, price: 30000,
     description: '🌷 Acompaña tu bienestar emocional de forma natural. Esta terapia floral busca ayudarte a gestionar momentos de estrés, cambios o desafíos emocionales, promoviendo equilibrio, calma y bienestar interior.' },
-  { cat: 'terapias', name: 'GEMOTERAPIA', duration: 60, price: 29990,
+  { cat: 'terapias', name: 'Gemoterapia', duration: 60, price: 29990,
     description: '✨ Conecta con la energía de los cristales a través de una experiencia diseñada para favorecer la armonía y el bienestar integral. Un momento de relajación y conexión personal que invita al equilibrio.' },
-  { cat: 'terapias', name: 'REIKI', duration: 60, price: 29990,
+  { cat: 'terapias', name: 'Reiki', duration: 60, price: 29990,
     description: '✨ Un espacio para reconectar contigo y encontrar equilibrio interior. Reiki es una terapia energética suave que promueve la relajación profunda, armonizando cuerpo, mente y emociones.' },
 
   // ---- PROMOCIONES ----
   // DURACIÓN ESTIMADA: AgendaPro publica este paquete sin duración. Los 75 min
   // salen del esmaltado unicolor (60) más el perfilado. Ajústala en el panel.
-  { cat: 'promos', name: 'ESMALTADO + PERFILADO', duration: 75, price: 21990, addons: maniAddons(),
+  { cat: 'promos', name: 'Esmaltado + perfilado', duration: 75, price: 21990, addons: maniAddons(),
     description: 'Paquete de servicios: esmaltado permanente unicolor más perfilado de uñas.' },
 ];
 
