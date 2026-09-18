@@ -19,7 +19,7 @@
 import { readFileSync, existsSync } from 'node:fs';
 import admin from 'firebase-admin';
 
-const DATABASE_URL = 'https://synea-app-default-rtdb.firebaseio.com';
+const DATABASE_URL = 'https://synea-app-default-rtdb.europe-west1.firebasedatabase.app';
 
 const args = process.argv.slice(2);
 const doDelete = args.includes('--delete');

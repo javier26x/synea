@@ -10,12 +10,12 @@ importScripts('https://www.gstatic.com/firebasejs/10.8.0/firebase-messaging-comp
 
 // Debe coincidir con el firebaseConfig de index.html.
 firebase.initializeApp({
-  apiKey: 'TU_API_KEY',
+  apiKey: 'AIzaSyBh8rWlkZBeN44B6NmHoXdV-naa05PD9OA',
   authDomain: 'synea-app.firebaseapp.com',
   projectId: 'synea-app',
   storageBucket: 'synea-app.firebasestorage.app',
-  messagingSenderId: 'TU_SENDER_ID',
-  appId: 'TU_APP_ID'
+  messagingSenderId: '135290756716',
+  appId: '1:135290756716:web:e84ae7bc4861107fa60249'
 });
 
 const messaging = firebase.messaging();

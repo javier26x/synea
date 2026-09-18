@@ -45,7 +45,7 @@ Incluye el manifest, los iconos, el service worker y la regla `adminPushTokens`.
 4. Crea una hora **confirmada** para mañana y fuerza el envío:
 
 ```bash
-gcloud scheduler jobs run firebase-schedule-dailyReminders-us-central1 --location=us-central1
+gcloud scheduler jobs run firebase-schedule-dailyReminders-europe-west1 --location=europe-west1
 ```
 
 Debería llegarte el push (y el email a la clienta de prueba).

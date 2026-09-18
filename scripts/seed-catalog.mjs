@@ -22,7 +22,7 @@
 import { readFileSync, existsSync } from 'node:fs';
 import admin from 'firebase-admin';
 
-const DATABASE_URL = 'https://synea-app-default-rtdb.firebaseio.com';
+const DATABASE_URL = 'https://synea-app-default-rtdb.europe-west1.firebasedatabase.app';
 
 const doWrite = process.argv.slice(2).includes('--write');
 

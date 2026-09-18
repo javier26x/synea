@@ -22,7 +22,9 @@ const admin = require('firebase-admin');
 const nodemailer = require('nodemailer');
 
 admin.initializeApp();
-setGlobalOptions({ region: 'us-central1', maxInstances: 10 });
+// europe-west1: los triggers de Realtime Database deben estar en la misma
+// región que la base de datos.
+setGlobalOptions({ region: 'europe-west1', maxInstances: 10 });
 
 const SMTP_PASSWORD = defineSecret('SMTP_PASSWORD');
 const DB_INSTANCE = 'synea-app-default-rtdb';

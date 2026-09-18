@@ -22,10 +22,10 @@ rellenarlos. Están marcados en el código.
 
 | Qué | Dónde | Estado |
 |---|---|---|
-| Credenciales de Firebase | `index.html` (`firebaseConfig`) y `firebase-messaging-sw.js` | `TU_API_KEY`, `TU_SENDER_ID`, `TU_APP_ID` |
-| ID del proyecto | `.firebaserc`, `functions/index.js` (`DB_INSTANCE`), `scripts/*.mjs` | `synea-app` (cámbialo si usas otro) |
+| Credenciales de Firebase | `index.html`, `firebase-messaging-sw.js` | ✅ proyecto `synea-app` |
 | Correos con acceso al panel | `index.html` (`ADMIN_EMAILS`), `database.rules.json`, `storage.rules` | solo `javier.neo@gmail.com` |
 | Clave VAPID (push) | `index.html` (`FCM_VAPID_KEY`) | `TU_CLAVE_VAPID` |
+| ID del proyecto (si cambias) | `.firebaserc`, `functions/index.js`, `scripts/*.mjs` | `synea-app` |
 | Teléfono / WhatsApp | Panel → Configuración | vacío |
 | Correo de avisos | Panel → Configuración | vacío |
 | Link de Webpay | Panel → Configuración | vacío (si no lo pones, no aparece el botón de pago) |
@@ -48,12 +48,15 @@ Sobre los dos últimos:
 
 ## Puesta en marcha desde cero
 
-### 1. Crear el proyecto de Firebase
+> El proyecto **`synea-app` ya está creado** y sus credenciales están puestas en
+> el código. Si usas ese proyecto, salta al paso 2.
+
+### 1. Crear el proyecto de Firebase (solo si partes de otro)
 
 En [console.firebase.google.com](https://console.firebase.google.com):
 
 1. **Agregar proyecto** → nombre `synea-app`.
-2. **Realtime Database** → Crear base de datos → ubicación `us-central1` → modo bloqueado.
+2. **Realtime Database** → Crear base de datos → modo bloqueado.
 3. **Storage** → Comenzar.
 4. **Authentication** → Sign-in method → habilitar **Google**.
 5. **Configuración del proyecto → Tus apps → Web (`</>`)** → registra la app y
@@ -70,9 +73,10 @@ git clone https://github.com/javier26x/synea.git ~/synea
 cd ~/synea
 ```
 
-### 3. Pegar tus credenciales
+### 3. Credenciales (ya puestas)
 
-Reemplaza los valores en los dos archivos (deben quedar idénticos):
+`index.html` y `firebase-messaging-sw.js` ya traen el `firebaseConfig` de
+`synea-app`. Solo hay que tocarlos si cambias de proyecto:
 
 ```bash
 cd ~/synea
@@ -80,12 +84,11 @@ nano index.html                 # busca:  const firebaseConfig
 nano firebase-messaging-sw.js   # busca:  firebase.initializeApp
 ```
 
-Si tu proyecto NO se llama `synea-app`, cambia el ID también aquí:
-
-```bash
-cd ~/synea
-sed -i 's/synea-app/TU-PROJECT-ID/g' .firebaserc functions/index.js scripts/*.mjs firebase-messaging-sw.js index.html
-```
+**Región:** la base está en `europe-west1`, así que las Cloud Functions se
+despliegan ahí (`setGlobalOptions` en `functions/index.js`) y el cliente las
+llama en esa región (`FUNCTIONS_REGION` en `index.html`). Los triggers de
+Realtime Database no funcionan si la función está en otra región; si alguna vez
+mueves la base, cambia los dos valores juntos.
 
 ### 4. Dar acceso al panel
 
@@ -105,16 +108,16 @@ quién ve el panel.
 
 ```bash
 cd ~/synea
-firebase use TU-PROJECT-ID
+firebase use synea-app
 firebase deploy --only database,storage,hosting
 ```
 
-Queda en `https://TU-PROJECT-ID.web.app`.
+Queda en `https://synea-app.web.app`.
 
 ### 6. Autorizar el dominio para el login
 
 Firebase Console → **Authentication → Settings → Dominios autorizados** → agrega
-`TU-PROJECT-ID.web.app` (y después tu dominio real).
+`synea-app.web.app` (y después tu dominio real).
 
 ### 7. Cargar el catálogo de servicios
 

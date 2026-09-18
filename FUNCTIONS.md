@@ -64,7 +64,7 @@ El recordatorio diario se puede forzar sin esperar a las 9 AM (crea antes una
 hora **confirmada** para mañana, con email):
 
 ```bash
-gcloud scheduler jobs run firebase-schedule-dailyReminders-us-central1 --location=us-central1
+gcloud scheduler jobs run firebase-schedule-dailyReminders-europe-west1 --location=europe-west1
 ```
 
 Y hay una prueba de correo directa en **Panel → Configuración → Probar correo**.
@@ -77,4 +77,8 @@ Y hay una prueba de correo directa en **Panel → Configuración → Probar corr
   `ADMIN_EMAILS` (`functions/index.js`).
 - Las respuestas de las clientas llegan al correo del negocio vía `reply-to`.
 - `DB_INSTANCE` en `functions/index.js` debe coincidir con tu Realtime Database
-  (por defecto `synea-app-default-rtdb`).
+  (`synea-app-default-rtdb`).
+- **Región:** las funciones se despliegan en `europe-west1`, la misma de la base
+  de datos. Los triggers de Realtime Database solo disparan si coinciden. El
+  cliente también llama ahí (`FUNCTIONS_REGION` en `index.html`); si cambias una,
+  cambia las tres.

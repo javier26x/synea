@@ -5930,13 +5930,12 @@
         import { getStorage, ref as storageRef, uploadBytes, getDownloadURL, deleteObject } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js';
         import { getMessaging, getToken, onMessage, isSupported } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-messaging.js';
         import { getFunctions, httpsCallable } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-functions.js';
-        // Reemplaza estos valores por los de TU proyecto de Firebase
-        // (Consola de Firebase > Configuración del proyecto > Tus apps > Web).
-        const firebaseConfig = { apiKey: "TU_API_KEY", authDomain: "synea-app.firebaseapp.com", databaseURL: "https://synea-app-default-rtdb.firebaseio.com", projectId: "synea-app", storageBucket: "synea-app.firebasestorage.app", messagingSenderId: "TU_SENDER_ID", appId: "TU_APP_ID" };
+        const firebaseConfig = { apiKey: "AIzaSyBh8rWlkZBeN44B6NmHoXdV-naa05PD9OA", authDomain: "synea-app.firebaseapp.com", databaseURL: "https://synea-app-default-rtdb.europe-west1.firebasedatabase.app", projectId: "synea-app", storageBucket: "synea-app.firebasestorage.app", messagingSenderId: "135290756716", appId: "1:135290756716:web:e84ae7bc4861107fa60249" };
         const app = initializeApp(firebaseConfig); const auth = getAuth(app); const db = getDatabase(app); const storage = getStorage(app);
         window.auth = auth; window.db = db; window.dbRef = ref; window.dbSet = set; window.dbGet = get; window.dbPush = push; window.dbOnValue = onValue; window.dbUpdate = update; window.dbRemove = remove; window.signOut = signOut;
         window.storage = storage; window.stRef = storageRef; window.stUpload = uploadBytes; window.stGetUrl = getDownloadURL; window.stDelete = deleteObject;
-        window.callFn = (name, data) => httpsCallable(getFunctions(app), name)(data || {});
+        const FUNCTIONS_REGION = 'europe-west1';
+        window.callFn = (name, data) => httpsCallable(getFunctions(app, FUNCTIONS_REGION), name)(data || {});
 
         // ---- PWA: registrar service worker ----
         // updateViaCache:'none' obliga a re-descargar el SW en cada verificación,
