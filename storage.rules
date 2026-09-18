@@ -1,0 +1,35 @@
+rules_version = '2';
+
+// Synea Studio Spa - Reglas de Firebase Storage
+// Las imágenes (servicios, galería, logo) son públicas para lectura porque se
+// muestran en la web de reservas. Solo el admin autenticado puede subir o borrar.
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // Solo las cuentas autorizadas pueden administrar (misma lista que en
+    // las reglas de la base de datos y en el frontend).
+    function isAdmin() {
+      return request.auth != null
+             && request.auth.token.email_verified == true
+             && request.auth.token.email in ['javier.neo@gmail.com'];
+    }
+
+    match /uploads/{context}/{fileName} {
+      // Cualquiera puede ver las imágenes (la web pública las muestra).
+      allow read: if true;
+
+      // Solo el admin autorizado puede escribir, con límites de tipo y tamaño.
+      allow write: if isAdmin()
+                   && context in ['services', 'gallery', 'logo']
+                   && request.resource.size < 10 * 1024 * 1024
+                   && request.resource.contentType.matches('image/(jpeg|png|webp|gif)');
+
+      allow delete: if isAdmin();
+    }
+
+    // Todo lo demás, cerrado.
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

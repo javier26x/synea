@@ -1,0 +1,125 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "config": {
+      ".read": true,
+      ".write": "auth != null && auth.token.email_verified === true && (auth.token.email === 'javier.neo@gmail.com')"
+    },
+    "services": {
+      ".read": true,
+      ".write": "auth != null && auth.token.email_verified === true && (auth.token.email === 'javier.neo@gmail.com')"
+    },
+    "categories": {
+      ".read": true,
+      ".write": "auth != null && auth.token.email_verified === true && (auth.token.email === 'javier.neo@gmail.com')"
+    },
+    "gallery": {
+      ".read": true,
+      ".write": "auth != null && auth.token.email_verified === true && (auth.token.email === 'javier.neo@gmail.com')"
+    },
+    "blockedDays": {
+      ".read": true,
+      ".write": "auth != null && auth.token.email_verified === true && (auth.token.email === 'javier.neo@gmail.com')"
+    },
+    "adminPushTokens": {
+      ".read": "auth != null && auth.token.email_verified === true && (auth.token.email === 'javier.neo@gmail.com')",
+      ".write": "auth != null && auth.token.email_verified === true && (auth.token.email === 'javier.neo@gmail.com')"
+    },
+    "clientFlags": {
+      ".read": "auth != null && auth.token.email_verified === true && (auth.token.email === 'javier.neo@gmail.com')",
+      ".write": "auth != null && auth.token.email_verified === true && (auth.token.email === 'javier.neo@gmail.com')"
+    },
+    "availability": {
+      ".read": true,
+      "$date": {
+        "$time": {
+          ".write": "(auth != null && auth.token.email_verified === true && (auth.token.email === 'javier.neo@gmail.com')) || (!data.exists() && newData.isString())"
+        }
+      }
+    },
+    "appointments": {
+      ".read": "auth != null && auth.token.email_verified === true && (auth.token.email === 'javier.neo@gmail.com')",
+      ".indexOn": [
+        "date"
+      ],
+      "$id": {
+        ".write": "(auth != null && auth.token.email_verified === true && (auth.token.email === 'javier.neo@gmail.com')) || (!data.exists() && newData.exists())",
+        ".validate": "newData.hasChildren(['serviceId','date','time','clientName','clientPhone','status'])",
+        "clientName": {
+          ".validate": "newData.isString() && newData.val().length >= 2 && newData.val().length <= 100"
+        },
+        "clientPhone": {
+          ".validate": "newData.isString() && newData.val().length >= 8 && newData.val().length <= 20"
+        },
+        "clientEmail": {
+          ".validate": "newData.isString() && newData.val().length <= 100"
+        },
+        "comments": {
+          ".validate": "newData.isString() && newData.val().length <= 500"
+        },
+        "serviceId": {
+          ".validate": "newData.isString()"
+        },
+        "date": {
+          ".validate": "newData.isString()"
+        },
+        "time": {
+          ".validate": "newData.isString()"
+        },
+        "status": {
+          ".validate": "newData.isString()"
+        },
+        "$other": {
+          ".validate": true
+        }
+      }
+    },
+    "giftcards": {
+      ".read": "auth != null",
+      "$id": {
+        ".write": "auth != null || (!data.exists() && newData.exists())",
+        ".validate": "newData.hasChildren(['code','serviceId','price','buyerName','buyerPhone','buyerEmail','toName','status'])",
+        "code": {
+          ".validate": "newData.isString() && newData.val().length <= 20"
+        },
+        "serviceId": {
+          ".validate": "newData.isString()"
+        },
+        "serviceName": {
+          ".validate": "newData.isString() && newData.val().length <= 100"
+        },
+        "price": {
+          ".validate": "newData.isNumber() && newData.val() >= 0"
+        },
+        "buyerName": {
+          ".validate": "newData.isString() && newData.val().length >= 2 && newData.val().length <= 100"
+        },
+        "buyerPhone": {
+          ".validate": "newData.isString() && newData.val().length >= 8 && newData.val().length <= 20"
+        },
+        "buyerEmail": {
+          ".validate": "newData.isString() && newData.val().length <= 100"
+        },
+        "toName": {
+          ".validate": "newData.isString() && newData.val().length >= 2 && newData.val().length <= 100"
+        },
+        "toEmail": {
+          ".validate": "newData.isString() && newData.val().length <= 100"
+        },
+        "message": {
+          ".validate": "newData.isString() && newData.val().length <= 300"
+        },
+        "status": {
+          ".validate": "newData.isString()"
+        },
+        "$other": {
+          ".validate": true
+        }
+      },
+      ".indexOn": [
+        "code"
+      ]
+    }
+  }
+}

@@ -1,0 +1,14 @@
+# Firebase / migración
+scripts/node_modules/
+scripts/serviceAccountKey.json
+scripts/uploads/
+.firebase/
+*.log
+
+# Node
+node_modules/
+
+# Cloud Functions
+functions/node_modules/
+functions/.env
+functions/.env.*.local

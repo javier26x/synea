@@ -1,0 +1,10 @@
+{
+  "name": "synea-scripts",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Utilidades de mantención de Synea Studio Spa",
+  "dependencies": {
+    "firebase-admin": "^12.7.0"
+  }
+}
