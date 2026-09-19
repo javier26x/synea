@@ -49,12 +49,69 @@ self.addEventListener('notificationclick', (event) => {
   );
 });
 
-// --- PWA mínima (necesario para que sea instalable) ---
-self.addEventListener('install', () => self.skipWaiting());
-self.addEventListener('activate', (e) => e.waitUntil(self.clients.claim()));
+// --------------------------------------------------------------- PWA offline --
+// Antes esto era un passthrough vacío: la app instalada, sin señal, mostraba la
+// pantalla de error del navegador. Ahora guarda una copia del cascarón (la
+// página y los iconos) y la sirve cuando la red no responde. Los datos siguen
+// viniendo de Firebase: sin conexión la app abre y avisa, no inventa reservas.
+const CACHE = 'synea-shell-v2';
+const SHELL = ['/', '/index.html', '/manifest.webmanifest', '/icons/logo.png', '/icons/icon-192.png'];
 
-// Passthrough de red. No cacheamos index.html para no servir versiones viejas.
+self.addEventListener('install', (e) => {
+  e.waitUntil(
+    caches.open(CACHE)
+      .then((c) => c.addAll(SHELL))
+      .catch(() => { })          // sin red al instalar: se llenará al navegar
+      .then(() => self.skipWaiting())
+  );
+});
+
+self.addEventListener('activate', (e) => {
+  e.waitUntil(
+    caches.keys()
+      .then((ks) => Promise.all(ks.filter((k) => k !== CACHE).map((k) => caches.delete(k))))
+      .then(() => self.clients.claim())
+  );
+});
+
 self.addEventListener('fetch', (event) => {
-  // Deja que el navegador maneje todo normalmente.
-  return;
+  const req = event.request;
+  if (req.method !== 'GET') return;
+
+  const url = new URL(req.url);
+  // Firebase y compañía tienen que ir siempre a la red: son datos, no cascarón.
+  if (url.origin !== self.location.origin) return;
+
+  // La página y el manifest: primero la red, para no servir una versión vieja
+  // (el manifest no lleva ?v= y servirlo de caché dejaba los accesos directos
+  // congelados). Si no hay red, se entrega la última copia guardada.
+  if (req.mode === 'navigate' || url.pathname === '/manifest.webmanifest') {
+    const clave = req.mode === 'navigate' ? '/index.html' : req;
+    event.respondWith(
+      fetch(req)
+        .then((res) => {
+          if (res && res.ok) {
+            const copia = res.clone();
+            caches.open(CACHE).then((c) => c.put(clave, copia)).catch(() => { });
+          }
+          return res;
+        })
+        .catch(() => caches.match(clave).then((r) => r || caches.match('/')))
+    );
+    return;
+  }
+
+  // Iconos: de la copia, y se refresca por detrás. Van versionados con ?v=, así
+  // que cambiarlos cambia la URL y entra solo.
+  if (url.pathname.startsWith('/icons/')) {
+    event.respondWith(
+      caches.match(req).then((hit) => {
+        const red = fetch(req).then((res) => {
+          if (res && res.ok) caches.open(CACHE).then((c) => c.put(req, res.clone())).catch(() => { });
+          return res;
+        }).catch(() => hit);
+        return hit || red;
+      })
+    );
+  }
 });

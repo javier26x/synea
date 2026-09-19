@@ -2903,6 +2903,32 @@
         }
 
         /* ========== TOAST NOTIFICATIONS ========== */
+        /* Barra de conexión: ocupa sitio de verdad (no flota) para que no tape
+           nada, y solo aparece cuando se cae la red. */
+        .offline-bar {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: calc(8px + env(safe-area-inset-top)) 16px 8px;
+            background: var(--charcoal);
+            color: var(--ivory);
+            font-size: 13px;
+            font-weight: 500;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 10001
+        }
+
+        .offline-bar.visible {
+            display: flex
+        }
+
+        .offline-bar.reconectado {
+            background: var(--success)
+        }
+
         .toast-container {
             position: fixed;
             top: calc(20px + env(safe-area-inset-top));
@@ -4951,6 +4977,12 @@
         <i class="fab fa-whatsapp"></i>
     </a>
 
+    <!-- Aviso de conexión: sin él la app se queda cargando sin explicar por qué -->
+    <div id="offlineBar" class="offline-bar" role="status" aria-live="polite">
+        <i class="fas fa-wifi" aria-hidden="true"></i>
+        <span id="offlineBarText">Sin conexión. Estás viendo lo último que se cargó.</span>
+    </div>
+
     <!-- Toast notifications -->
     <div id="toastContainer" class="toast-container" role="status" aria-live="polite" aria-atomic="false"></div>
 
@@ -5355,7 +5387,7 @@
                     <span class="nav-sep" aria-hidden="true"></span>
                     <div class="nav-group" role="group" aria-label="Cuenta">
                         <button class="nav-btn" onclick="showAdminSection('config',this)"><i class="fas fa-cog"></i>
-                            Config</button>
+                            Configuración</button>
                         <button class="nav-btn" onclick="logout()" style="color:var(--danger)"><i
                                 class="fas fa-sign-out-alt"></i> Salir</button>
                     </div>
@@ -6119,7 +6151,7 @@
                             style="color:var(--warm-gray-light);font-weight:400">(opcional)</span></label><input
                         type="email" id="maEmail" placeholder="cliente@email.com" maxlength="100"></div>
             </div>
-            <div class="form-group"><label>Servicio *</label><select id="maService"
+            <div class="form-group"><label>Servicio *</label><select id="maService" onchange="manualAptRefreshTimes()"
                     style="width:100%;padding:12px 14px;border:1.5px solid rgba(35,48,44,.12);border-radius:var(--radius-sm);background:var(--white);font-size:14px;color:var(--charcoal);cursor:pointer"></select>
             </div>
             <div class="grid-2" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
@@ -6716,23 +6748,30 @@
 
         function showView(v) { document.querySelectorAll('.view').forEach(el => el.classList.remove('active')); document.getElementById(v + 'View').classList.add('active'); currentView = v; setupWhatsApp() }
         function showClientView() { setBookingMode(false); showView('client'); loadClientServices(); renderClientCalendar() }
+        const ADMIN_SECTIONS = ['dashboard', 'appointments', 'notifications', 'loyalty', 'services', 'categories', 'gallery', 'giftcards', 'config'];
+
         function showAdminView() {
             showView('admin');
             _navReady = false;
-            showAdminSection('dashboard');
-            // Punto de partida: desde el Dashboard, atrás sale de la app.
-            try { history.replaceState({ adminSection: 'dashboard' }, '', '#dashboard') } catch (e) { }
+            // La sección puede venir en el enlace: los accesos directos de la app
+            // instalada apuntan a #appointments, y recargar en #config volvía al
+            // inicio en vez de quedarse donde estabas.
+            const pedida = (location.hash || '').replace('#', '');
+            const inicial = ADMIN_SECTIONS.includes(pedida) ? pedida : 'dashboard';
+            showAdminSection(inicial);
+            // Punto de partida: desde ahí, atrás sale de la app.
+            try { history.replaceState({ adminSection: inicial }, '', '#' + inicial) } catch (e) { }
             _navReady = true;
         }
 
         function showAdminSection(section, btn, skipHistory) {
             document.querySelectorAll('.admin-section').forEach(s => s.style.display = 'none');
             document.getElementById('admin' + section.charAt(0).toUpperCase() + section.slice(1)).style.display = 'block';
-            document.querySelectorAll('.view-selector .nav-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.view-selector .nav-btn').forEach(b => { b.classList.remove('active'); b.removeAttribute('aria-current') });
             // El botón se resuelve por la sección: así queda marcado también al
             // llegar desde la barra inferior o desde el botón atrás.
             const deskBtn = btn || document.querySelector(`.view-selector .nav-btn[onclick*="'${section}'"]`);
-            if (deskBtn) deskBtn.classList.add('active');
+            if (deskBtn) { deskBtn.classList.add('active'); deskBtn.setAttribute('aria-current', 'page') }
             adminSection = section;
             if (!skipHistory) { pushAdminHistory(section); window.scrollTo({ top: 0, behavior: 'smooth' }) }
             if (section === 'dashboard') { updateDashboardStats(); renderTodayAppointments() }
@@ -6980,7 +7019,12 @@
         }
 
         // El login es con Google (loginWithGoogle, definido en el módulo Firebase).
-        async function logout() { try { await window.signOut(window.auth); showClientView() } catch (err) { toast('Error al cerrar sesión', 'error') } }
+        // Con confirmación: en escritorio el botón está pegado a "Configuración"
+        // y en el móvil al final de la hoja, a un dedo de distancia.
+        async function logout() {
+            if (!confirm('¿Cerrar sesión del panel?\n\nTendrás que entrar de nuevo con tu cuenta de Google.')) return;
+            try { await window.signOut(window.auth); showClientView() } catch (err) { toast('Error al cerrar sesión', 'error') }
+        }
 
         async function loadConfig() {
             try {
@@ -8465,10 +8509,32 @@
             return all.filter(t => { const m = toMin(t); return m >= start && m < end; });
         }
 
+        // Paso de la grilla de horas: la diferencia más chica entre dos horas
+        // seguidas del día (60 min en la configuración actual).
+        function slotStep(all) {
+            const mins = (all || []).map(toMin).sort((a, b) => a - b);
+            if (mins.length < 2) return 60;
+            return Math.max(1, Math.min(...mins.slice(1).map((m, i) => m - mins[i])));
+        }
+
+        // ¿El tramo queda cubierto de punta a punta por horas de la agenda?
+        // Sin esto solo se cruzaba la duración con las horas que existen, y una
+        // extensión de 2 h se ofrecía a las 19:00 —la última hora— terminando a
+        // las 21:00, con el local cerrado desde las 20:00. Igual con un hueco a
+        // media tarde: se saltaba sin avisar.
+        function spanCompleto(time, duration, all) {
+            const start = toMin(time), end = start + Math.max(parseInt(duration) || 60, 1);
+            const span = slotsSpan(null, time, duration, all);
+            if (!span) return false;
+            return span.length >= Math.ceil((end - start) / slotStep(all));
+        }
+
         // ¿Cabe una cita de esa duración empezando a esa hora?
         function fitsDuration(ds, time, duration, dayList, ignoreAptId) {
-            const span = slotsSpan(ds, time, duration, dayList);
+            const all = dayList || slotsForDate(ds);
+            const span = slotsSpan(ds, time, duration, all);
             if (!span) return false;
+            if (!spanCompleto(time, duration, all)) return false;
             return span.every(t => {
                 const taken = allAvailability && allAvailability[ds] && allAvailability[ds][t];
                 if (taken && taken !== ignoreAptId) return false;
@@ -8850,17 +8916,27 @@
         function manualAptRefreshTimes() {
             const date = document.getElementById('maDate').value;
             const timeSel = document.getElementById('maTime');
+            const previa = timeSel.value;
             if (!date) { timeSel.innerHTML = '<option value="">Elige fecha primero</option>'; return }
             const dow = new Date(date + 'T12:00:00').getDay();
             const slots = [...((config.schedule && config.schedule[dow]) || [])].sort();
             if (!slots.length) { timeSel.innerHTML = '<option value="">Este día no tiene horarios de atención</option>'; return }
             const busy = new Set(allAppointments.filter(a => a.date === date && a.status !== 'cancelled').map(a => a.time));
+            // El servicio elegido manda cuánto dura: una extensión de 2 h a las
+            // 19:00 termina a las 21:00. Se avisa sin bloquear, porque el panel
+            // sí puede querer quedarse más tarde por una clienta.
+            const svcSel = allServices.find(s => s.id === document.getElementById('maService').value);
+            const dur = (svcSel && svcSel.duration) || 0;
             timeSel.innerHTML = slots.map(ts => {
                 const occ = busy.has(ts) || isTimeBlocked(date, ts);
-                return `<option value="${ts}" ${occ ? 'disabled' : ''}>${ts}${occ ? ' — ocupado' : ''}</option>`;
+                const noAlcanza = !occ && dur > 0 && !spanCompleto(ts, dur, slots);
+                const nota = occ ? ' — ocupado' : (noAlcanza ? ` — se pasa del cierre (${dur} min)` : '');
+                return `<option value="${ts}" ${occ ? 'disabled' : ''}>${ts}${nota}</option>`;
             }).join('');
+            // Cambiar el servicio no debe borrar la hora que ya eligió el panel.
             const firstFree = slots.find(ts => !busy.has(ts) && !isTimeBlocked(date, ts));
-            timeSel.value = firstFree || '';
+            timeSel.value = (previa && slots.includes(previa) && !busy.has(previa) && !isTimeBlocked(date, previa))
+                ? previa : (firstFree || '');
         }
 
         async function saveManualAppointment() {
@@ -9612,6 +9688,31 @@
                 toast(`<strong>${escHtml(d.title || 'Synea Studio Spa')}</strong>${d.body ? '<small>' + escHtml(d.body) + '</small>' : ''}`, 'info', 8000);
             });
         }
+
+        // ==================== ESTADO DE CONEXIÓN ====================
+        // Firebase no avisa: sin red la app se queda cargando en silencio y la
+        // clienta cree que está rota. La barra lo dice, y al volver la conexión
+        // se confirma un momento y se va sola.
+        let _offlineTimer = null;
+        function renderConnState(inicial) {
+            const bar = document.getElementById('offlineBar');
+            const txt = document.getElementById('offlineBarText');
+            if (!bar || !txt) return;
+            clearTimeout(_offlineTimer);
+            if (!navigator.onLine) {
+                txt.textContent = 'Sin conexión. Estás viendo lo último que se cargó.';
+                bar.classList.remove('reconectado');
+                bar.classList.add('visible');
+                return;
+            }
+            if (inicial) { bar.classList.remove('visible', 'reconectado'); return }
+            txt.textContent = 'Conexión recuperada.';
+            bar.classList.add('visible', 'reconectado');
+            _offlineTimer = setTimeout(() => bar.classList.remove('visible', 'reconectado'), 2600);
+        }
+        window.addEventListener('online', () => renderConnState(false));
+        window.addEventListener('offline', () => renderConnState(false));
+        renderConnState(true);
 
         // Instalación PWA
         let deferredInstallPrompt = null;

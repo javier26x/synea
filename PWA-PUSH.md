@@ -9,6 +9,30 @@ Piezas:
 - `manifest.webmanifest`, `icons/`, `firebase-messaging-sw.js` → PWA + recepción push.
 - `index.html` → botón "Activar en este dispositivo" (Configuración) que registra el token.
 
+## Sin conexión
+
+El service worker guarda una copia del cascarón —la página, el manifest y los
+iconos— en la caché `synea-shell`. Si el celular se queda sin señal, la app
+instalada **abre igual** con la última versión que cargó, en vez de mostrar la
+pantalla de error del navegador, y una barra arriba dice "Sin conexión. Estás
+viendo lo último que se cargó"; al volver la red se confirma y se va sola.
+
+Los datos siguen viniendo de Firebase en vivo: sin conexión no se pueden crear
+ni ver reservas nuevas. Es un cascarón offline, no una app offline.
+
+La página y el manifest van **primero a la red** (así una versión nueva entra de
+inmediato) y solo caen a la copia si la red falla. Los iconos van al revés,
+porque llevan `?v=` en la URL: cambiarlos cambia la dirección y entran solos. Si
+alguna vez hay que invalidar todo a la fuerza, sube el número de `CACHE`
+(`synea-shell-v2`) en `firebase-messaging-sw.js`.
+
+## Accesos directos
+
+Al mantener pulsado el icono de la app instalada aparecen tres atajos, definidos
+en `shortcuts` del manifest: **Reservar** (la web pública), **Citas** y
+**Avisos** (van directo a esas secciones del panel, con `#appointments` y
+`#notifications` — el panel lee la sección del enlace al abrir).
+
 ## 1. Clave VAPID (obligatoria)
 
 1. Firebase Console → ⚙️ Configuración del proyecto → **Cloud Messaging**.
