@@ -42,8 +42,8 @@
             --ivory-dark: #eee8de;
             --charcoal: #23302c;
             --charcoal-light: #414f4a;
-            --warm-gray: #6d7a75;
-            --warm-gray-light: #8d9a95;
+            --warm-gray: #5a6762;
+            --warm-gray-light: #66736e;
             --white: #fff;
             --success: #5a9e6f;
             --warning: #b9812a;
@@ -444,6 +444,14 @@
                 font-size: 10px;
                 letter-spacing: 2.5px
             }
+
+            @media (max-width: 420px) {
+                .client-hero .hero-eyebrow {
+                    font-size: 9px;
+                    letter-spacing: 1.5px;
+                    gap: 6px
+                }
+            }
             .client-hero .hero-icon {
                 width: 80px;
                 height: 80px
@@ -743,8 +751,7 @@
 
         .calendar-header h3 {
             font-size: 18px;
-            color: var(--charcoal);
-            text-transform: capitalize
+            color: var(--charcoal)
         }
 
         .calendar-grid {
@@ -793,6 +800,12 @@
             color: var(--warm-gray-light);
             cursor: not-allowed;
             opacity: .5
+        }
+
+        .calendar-date.closed {
+            background: transparent;
+            border: 1.5px dashed rgba(35, 48, 44, .14);
+            opacity: .55
         }
 
         .calendar-date.disabled:hover {
@@ -995,6 +1008,107 @@
             }
         }
 
+        .gift-toggle {
+            background: none;
+            border: 0;
+            padding: 4px 0;
+            font-family: var(--sans);
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--bronze-text);
+            cursor: pointer;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+            text-decoration-color: rgba(124, 95, 47, .35)
+        }
+
+        .gift-toggle i {
+            margin-right: 6px
+        }
+
+        .gift-toggle:focus-visible {
+            outline: 2px solid var(--jade);
+            outline-offset: 2px
+        }
+
+        .client-hours {
+            margin-top: 18px;
+            padding: 14px 18px;
+            background: var(--ivory);
+            border-radius: var(--radius-md);
+            font-size: 13.5px
+        }
+
+        .client-hours-title {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            color: var(--jade);
+            margin-bottom: 8px
+        }
+
+        .client-hours-title i {
+            margin-right: 6px
+        }
+
+        .client-hours-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 4px 0;
+            color: var(--charcoal)
+        }
+
+        .client-hours-row b {
+            font-weight: 600;
+            font-variant-numeric: tabular-nums;
+            white-space: nowrap
+        }
+
+        .client-hours-row.is-closed {
+            color: var(--warm-gray)
+        }
+
+        .client-hours-row.is-closed b {
+            font-weight: 500
+        }
+
+        .location-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 16px
+        }
+
+        /* Modo reserva: sin burbuja de WhatsApp (tapaba la flecha del mes y el
+           total del formulario) y con el hero compacto, que en cada paso volvía
+           a ocupar media pantalla. */
+        body.is-booking #whatsappFab {
+            display: none !important
+        }
+
+        body.is-booking .client-hero {
+            padding: 30px 24px 38px;
+            margin-bottom: 20px
+        }
+
+        body.is-booking .client-hero .hero-icon {
+            width: 56px;
+            height: 56px;
+            margin-bottom: 12px
+        }
+
+        body.is-booking .client-hero h1 {
+            font-size: 22px;
+            margin-bottom: 0
+        }
+
+        body.is-booking .client-hero p,
+        body.is-booking .client-hero .hero-divider {
+            display: none
+        }
+
         /* Explorador de servicios. Las categorías dejaron de ser un acordeón:
            ahora filtran, y el catálogo se ve desde que entras. */
         .cat-filter {
@@ -1093,6 +1207,40 @@
         }
 
         @media (max-width:680px) {
+            /* En móvil la tarjeta apilada medía 304px y el 40% era portada: con
+               25 servicios la home pasaba de 9.000px. En fila, cabe en ~130. */
+            .services-grid .service-card {
+                display: grid;
+                grid-template-columns: 108px minmax(0, 1fr);
+                align-items: stretch
+            }
+
+            .services-grid .service-card .service-card-image {
+                aspect-ratio: auto;
+                height: 100%;
+                min-height: 128px
+            }
+
+            .services-grid .service-card .service-card-body {
+                padding: 12px 14px 12px 12px
+            }
+
+            .services-grid .service-card h4 {
+                font-size: 15.5px;
+                margin-bottom: 4px
+            }
+
+            .services-grid .service-card p {
+                font-size: 12px;
+                line-height: 1.45;
+                margin-bottom: 8px;
+                -webkit-line-clamp: 2
+            }
+
+            .services-grid .service-card .service-info {
+                padding-top: 8px
+            }
+
             .cat-filter {
                 flex-wrap: nowrap;
                 overflow-x: auto;
@@ -1728,6 +1876,11 @@
 
         /* Portada con proporción fija: da igual el ancho de la columna, todas
            las fotos se ven iguales y la grilla queda pareja. */
+        .service-card:focus-visible {
+            outline: 2px solid var(--jade);
+            outline-offset: 3px
+        }
+
         .service-card-image {
             aspect-ratio: 16 / 9;
             background-size: cover;
@@ -2102,6 +2255,16 @@
             flex-wrap: wrap
         }
 
+        @media(min-width:601px) {
+            .service-preview-actions {
+                position: sticky;
+                bottom: -32px;
+                margin: 0 -32px -32px;
+                padding: 16px 32px 32px;
+                background: linear-gradient(180deg, transparent 0, var(--white) 22%)
+            }
+        }
+
         .service-preview-actions .btn {
             flex: 1;
             justify-content: center;
@@ -2168,11 +2331,11 @@
             .service-preview-actions {
                 flex-direction: column-reverse;
                 position: sticky;
-                bottom: 0;
+                bottom: -22px;
                 background: linear-gradient(180deg, transparent 0, var(--white) 20%);
                 padding-top: 16px;
                 margin: 0 -20px -22px;
-                padding: 16px 20px max(16px, env(safe-area-inset-bottom))
+                padding: 16px 20px max(22px, env(safe-area-inset-bottom))
             }
 
             .service-preview-actions .btn {
@@ -2719,7 +2882,10 @@
         }
 
         .admin-footer-link {
-            color: var(--warm-gray-light);
+            color: var(--warm-gray);
+            text-decoration: underline;
+            text-underline-offset: 3px;
+            text-decoration-color: rgba(35, 48, 44, .25);
             font-size: 12px;
             text-decoration: none;
             transition: color .3s;
@@ -2929,12 +3095,29 @@
         }
 
         @media(max-width:480px) {
+            /* En fila no caben los tres nombres: círculo arriba y nombre abajo. */
+            .step-indicator {
+                gap: 6px;
+                padding: 0;
+                flex-wrap: nowrap
+            }
+
+            .step {
+                flex-direction: column;
+                gap: 5px;
+                text-align: center;
+                min-width: 0
+            }
+
             .step-label {
-                display: none
+                font-size: 10.5px
             }
 
             .step-line {
-                width: 20px
+                width: 22px;
+                flex-shrink: 0;
+                align-self: flex-start;
+                margin-top: 14px
             }
         }
 
@@ -3743,7 +3926,7 @@
 
             /* Time slots */
             .time-slots {
-                grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+                grid-template-columns: repeat(4, minmax(0, 1fr));
                 gap: 6px;
                 margin-top: 12px
             }
@@ -4854,9 +5037,13 @@
                     </div>
                     <div class="location-map-wrap"><iframe id="clientLocationMap" title="Mapa de ubicación"
                             loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe></div>
-                    <a id="clientLocationBtn" href="#" target="_blank" rel="noopener" class="btn btn-primary"
-                        style="margin-top:16px;text-decoration:none"><i class="fas fa-diamond-turn-right"></i> Cómo
-                        llegar</a>
+                    <div id="clientHours" class="client-hours" style="display:none"></div>
+                    <div class="location-actions">
+                        <a id="clientLocationBtn" href="#" target="_blank" rel="noopener" class="btn btn-primary"
+                            style="text-decoration:none"><i class="fas fa-diamond-turn-right"></i> Cómo llegar</a>
+                        <a href="https://www.instagram.com/synea.studiospa/" target="_blank" rel="noopener"
+                            class="btn btn-ghost" style="text-decoration:none"><i class="fab fa-instagram"></i> Instagram</a>
+                    </div>
                 </div>
             </div>
 
@@ -4910,6 +5097,9 @@
                             <span style="display:flex;align-items:center;gap:5px"><span
                                     style="width:10px;height:10px;background:repeating-linear-gradient(135deg,var(--ivory),var(--ivory) 2px,rgba(196,86,86,.2) 2px,rgba(196,86,86,.2) 4px);border-radius:3px;display:inline-block"></span>
                                 No disponible</span>
+                            <span id="legendClosed" style="display:none;align-items:center;gap:5px"><span
+                                    style="width:10px;height:10px;border:1.5px dashed var(--warm-gray-light);border-radius:3px;display:inline-block"></span>
+                                <b style="font-weight:500"></b></span>
                         </div>
                     </div>
                     <div id="clientTimeSlots"></div>
@@ -4938,17 +5128,20 @@
                                     id="clientComments" rows="3" placeholder="Alguna petición especial..."
                                     maxlength="500"></textarea></div>
                             <div class="form-group" id="giftRedeemGroup">
-                                <label for="clientGiftCode"><i class="fas fa-gift"
-                                        style="color:var(--bronze-text);margin-right:5px"></i>¿Te regalaron una giftcard?
-                                    <span style="color:var(--warm-gray-light);font-weight:400">(opcional)</span></label>
+                                <button type="button" id="giftRedeemToggle" class="gift-toggle" aria-expanded="false"
+                                    aria-controls="giftRedeemFields" onclick="toggleGiftRedeem()"><i class="fas fa-gift"></i>
+                                    ¿Te regalaron una giftcard?</button>
+                                <div id="giftRedeemFields" style="display:none">
+                                <label for="clientGiftCode" style="margin-top:10px">Código de la giftcard</label>
                                 <div style="display:flex;gap:8px;flex-wrap:wrap">
-                                    <input type="text" id="clientGiftCode" placeholder="PP-XXXXXX" maxlength="20"
+                                    <input type="text" id="clientGiftCode" placeholder="SY-XXXXXX" maxlength="20"
                                         style="flex:1;min-width:150px;text-transform:uppercase;letter-spacing:2px;font-weight:600"
                                         autocomplete="off" spellcheck="false">
                                     <button type="button" class="btn btn-secondary" onclick="checkGiftCode()"
                                         style="min-height:46px"><i class="fas fa-check"></i> Validar</button>
                                 </div>
                                 <div id="giftCodeResult" style="margin-top:8px;font-size:13px"></div>
+                                </div>
                             </div>
                             <div id="bookingRecap"></div>
                             <button class="btn btn-success confirm-btn" onclick="confirmBooking()"><i
@@ -5073,8 +5266,8 @@
                 <div class="main-content">
                     <div class="success-view">
                         <div class="success-icon"><i class="fas fa-check"></i></div>
-                        <h2>¡Reserva confirmada!</h2>
-                        <p>Tu cita ha sido agendada con éxito. Te contactaremos para confirmar.</p>
+                        <h2>¡Recibimos tu reserva!</h2>
+                        <p>Tu hora quedó reservada. Te la confirmamos por WhatsApp o correo antes de la visita.</p>
                         <div id="bookingSummary"
                             style="text-align:left;background:var(--ivory);border-radius:var(--radius-md);padding:22px;margin:0 auto 20px;max-width:400px;border:1.5px solid rgba(35,48,44,.06)">
                         </div>
@@ -6116,6 +6309,9 @@
         // ==================== SECURITY HELPERS ====================
         function escHtml(s) { if (s == null) return ''; return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;') }
         function escAttr(s) { return escHtml(s).replace(/`/g, '&#96;') }
+        // Las fechas de toLocaleDateString vienen en minúscula ("septiembre de 2026"):
+        // solo va en mayúscula la primera letra, no cada palabra.
+        function ucfirst(s) { s = String(s || ''); return s.charAt(0).toUpperCase() + s.slice(1) }
         // Hay servicios sin costo (la garantía del manicure): mostrar "$0" se lee como un error.
         function fmtPrice(n) { const v = Number(n) || 0; return v > 0 ? '$' + v.toLocaleString('es-CL') : 'Gratis' }
 
@@ -6205,6 +6401,37 @@
             }
             const btn = document.getElementById('clientLocationBtn');
             btn.href = mapsUrl || ('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(addr));
+            renderClientHours();
+        }
+
+        // Horario de atención a partir de la grilla de horas: días seguidos con
+        // el mismo horario se agrupan ("Lunes a sábado"), y la hora de cierre es
+        // la última hora de inicio más una hora.
+        function renderClientHours() {
+            const el = document.getElementById('clientHours'); if (!el) return;
+            const sch = config.schedule || {};
+            const names = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+            const order = [1, 2, 3, 4, 5, 6, 0];
+            const label = (d) => {
+                const h = (sch[d] || []).slice().sort();
+                if (!h.length) return 'Cerrado';
+                const [hh, mm] = h[h.length - 1].split(':').map(Number);
+                const close = String(hh + 1).padStart(2, '0') + ':' + String(mm).padStart(2, '0');
+                return h[0] + ' – ' + close;
+            };
+            const groups = [];
+            for (const d of order) {
+                const l = label(d), last = groups[groups.length - 1];
+                if (last && last.label === l) last.days.push(d); else groups.push({ label: l, days: [d] });
+            }
+            if (!groups.some(g => g.label !== 'Cerrado')) { el.style.display = 'none'; return; }
+            el.style.display = '';
+            el.innerHTML = '<div class="client-hours-title"><i class="fas fa-clock"></i> Horario de atención</div>'
+                + groups.map(g => {
+                    const days = g.days.length > 2 ? `${names[g.days[0]]} a ${names[g.days[g.days.length - 1]].toLowerCase()}`
+                        : g.days.map((d, i) => i ? names[d].toLowerCase() : names[d]).join(' y ');
+                    return `<div class="client-hours-row${g.label === 'Cerrado' ? ' is-closed' : ''}"><span>${escHtml(days)}</span><b>${escHtml(g.label)}</b></div>`;
+                }).join('');
         }
         function hideLoading() { setTimeout(() => { const l = document.getElementById('appLoading'); if (l) l.classList.add('hidden'); setTimeout(() => { if (l) l.remove() }, 500) }, 600) }
         // Failsafe: remove loading after 8s even if Firebase fails
@@ -6488,7 +6715,7 @@
         function closeLoginModal() { document.getElementById('loginModal').classList.remove('active') }
 
         function showView(v) { document.querySelectorAll('.view').forEach(el => el.classList.remove('active')); document.getElementById(v + 'View').classList.add('active'); currentView = v; setupWhatsApp() }
-        function showClientView() { showView('client'); loadClientServices(); renderClientCalendar() }
+        function showClientView() { setBookingMode(false); showView('client'); loadClientServices(); renderClientCalendar() }
         function showAdminView() {
             showView('admin');
             _navReady = false;
@@ -7717,7 +7944,7 @@
             }
             const addonCount = Array.isArray(s.addons) ? s.addons.length : 0;
             const addonBadge = addonCount > 0 ? `<span class="badge" style="background:rgba(212,168,83,.15);color:#7c5f2f;font-size:11px;padding:3px 10px;border-radius:20px;font-weight:600"><i class="fas fa-sparkles" style="margin-right:4px"></i>${addonCount} adicional${addonCount !== 1 ? 'es' : ''}</span>` : '';
-            return `<div class="appointment-item" style="${!s.active ? 'opacity:.5' : ''}"><div class="appointment-header"><div style="display:flex;align-items:center;gap:14px;flex:1;min-width:0">${thumb}<div style="flex:1;min-width:0"><h3 style="color:var(--charcoal);margin-bottom:5px;font-family:'Cormorant Garamond',serif;font-size:17px">${escHtml(s.name)} ${!s.active ? '<span style="color:var(--danger);font-size:11px;font-family:Manrope,sans-serif">(DESACTIVADO)</span>' : ''}</h3><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span class="badge badge-bronze"><i class="fas fa-clock"></i> ${s.duration} min</span><span class="service-price" style="font-size:17px">$${s.price.toLocaleString('es-CL')}</span>${addonBadge}</div></div></div></div>${s.description ? `<p style="color:var(--warm-gray);margin-top:12px;font-size:13px">${escHtml(s.description)}</p>` : ''}<div class="appointment-actions"><button class="btn ${s.active ? 'btn-ghost' : 'btn-success'}" onclick="toggleServiceActive('${s.id}',${!s.active})"><i class="fas ${s.active ? 'fa-eye-slash' : 'fa-eye'}"></i> ${s.active ? 'Desactivar' : 'Activar'}</button><button class="btn btn-secondary" onclick="openServiceModal('${s.id}')"><i class="fas fa-edit"></i> Editar</button><button class="btn btn-danger" onclick="deleteService('${s.id}')"><i class="fas fa-trash"></i> Eliminar</button></div></div>`;
+            return `<div class="appointment-item" style="${!s.active ? 'opacity:.5' : ''}"><div class="appointment-header"><div style="display:flex;align-items:center;gap:14px;flex:1;min-width:0">${thumb}<div style="flex:1;min-width:0"><h3 style="color:var(--charcoal);margin-bottom:5px;font-family:'Cormorant Garamond',serif;font-size:17px">${escHtml(s.name)} ${!s.active ? '<span style="color:var(--danger);font-size:11px;font-family:Manrope,sans-serif">(DESACTIVADO)</span>' : ''}</h3><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span class="badge badge-bronze"><i class="fas fa-clock"></i> ${formatDuration(s.duration)}</span><span class="service-price" style="font-size:17px">$${s.price.toLocaleString('es-CL')}</span>${addonBadge}</div></div></div></div>${s.description ? `<p style="color:var(--warm-gray);margin-top:12px;font-size:13px">${escHtml(s.description)}</p>` : ''}<div class="appointment-actions"><button class="btn ${s.active ? 'btn-ghost' : 'btn-success'}" onclick="toggleServiceActive('${s.id}',${!s.active})"><i class="fas ${s.active ? 'fa-eye-slash' : 'fa-eye'}"></i> ${s.active ? 'Desactivar' : 'Activar'}</button><button class="btn btn-secondary" onclick="openServiceModal('${s.id}')"><i class="fas fa-edit"></i> Editar</button><button class="btn btn-danger" onclick="deleteService('${s.id}')"><i class="fas fa-trash"></i> Eliminar</button></div></div>`;
         }
 
         function renderServicesList() {
@@ -8124,7 +8351,7 @@
                 <div style="font-size:12.5px;color:var(--warm-gray)"><i class="fas fa-clock" style="margin-right:4px"></i><span id="extraPickDur">${sv.duration}</span> min · <span class="service-price">$${(sv.price || 0).toLocaleString('es-CL')}</span></div></div></div>`;
             document.getElementById('extraServiceAddonsList').innerHTML = sv.addons.map((a, i) => {
                 const priceLbl = a.price > 0 ? `+$${a.price.toLocaleString('es-CL')}` : 'Gratis';
-                const durLbl = a.duration > 0 ? `<span class="addon-dur"><i class="fas fa-clock"></i> +${a.duration} min</span>` : '';
+                const durLbl = a.duration > 0 ? `<span class="addon-dur"><i class="fas fa-clock"></i> +${formatDuration(a.duration)}</span>` : '';
                 return `<div class="preview-addon-option" data-extra-addon="${i}" onclick="toggleExtraAddon(${i})" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleExtraAddon(${i})}"><div class="addon-check"><i class="fas fa-check"></i></div><div class="addon-label">${escHtml(a.name)}${durLbl}</div><div class="addon-price-tag ${a.price > 0 ? '' : 'free'}">${priceLbl}</div></div>`;
             }).join('');
             updateExtraAddonsTotal();
@@ -8166,7 +8393,7 @@
             selectedTime = null; // la duración cambió: hay que reelegir la hora
             renderStep2Summary();
             renderClientTimeSlots();
-            toast(`<strong>${escHtml(s.name)} agregado</strong><small>Ahora son ${bookingDuration()} min en total</small>`, 'success');
+            toast(`<strong>${escHtml(s.name)} agregado</strong><small>Ahora son ${formatDuration(bookingDuration())} en total</small>`, 'success');
         }
 
         function removeExtraService(sid) {
@@ -8199,7 +8426,7 @@
                         ${cover}
                         <div class="extra-card-body">
                             <h5><i class="fas ${getServiceIcon(sv.name)}"></i> ${escHtml(sv.name)}</h5>
-                            <div class="extra-card-info"><span><i class="fas fa-clock"></i> ${sv.duration} min</span><span class="service-price">$${(sv.price || 0).toLocaleString('es-CL')}</span></div>${Array.isArray(sv.addons) && sv.addons.length ? `<div style="font-size:11px;color:var(--bronze-text);margin-top:5px"><i class="fas fa-sparkles"></i> ${sv.addons.length} adicional${sv.addons.length > 1 ? 'es' : ''}</div>` : ''}
+                            <div class="extra-card-info"><span><i class="fas fa-clock"></i> ${formatDuration(sv.duration)}</span><span class="service-price">$${(sv.price || 0).toLocaleString('es-CL')}</span></div>${Array.isArray(sv.addons) && sv.addons.length ? `<div style="font-size:11px;color:var(--bronze-text);margin-top:5px"><i class="fas fa-sparkles"></i> ${sv.addons.length} adicional${sv.addons.length > 1 ? 'es' : ''}</div>` : ''}
                         </div>
                     </button>`;
                 }).join('');
@@ -8342,7 +8569,7 @@
 
         function renderTodayAppointments() { const c = document.getElementById('todayAppointments'), t = dateToStr(new Date()), ta = allAppointments.filter(a => a.date === t && a.status !== 'cancelled').sort((a, b) => a.time.localeCompare(b.time)); if (!ta.length) { c.innerHTML = '<div class="empty-state"><i class="fas fa-calendar-check"></i><p>No hay citas para hoy</p></div>'; return } c.innerHTML = ta.map(a => renderAppointmentItem(a)).join('') }
 
-        function renderAppointmentItem(apt) { const svc = allServices.find(s => s.id === apt.serviceId), sc = `status-${apt.status}`, st = { pending: 'Pendiente', confirmed: 'Confirmada', completed: 'Completada', cancelled: 'Cancelada' }, si = { pending: 'fa-hourglass-half', confirmed: 'fa-check-circle', completed: 'fa-star', cancelled: 'fa-times-circle' }; const addonsHtml = Array.isArray(apt.addons) && apt.addons.length ? `<div style="margin-top:6px;padding-top:6px;border-top:1px dashed rgba(35,48,44,.1)"><i class="fas fa-sparkles" style="color:var(--bronze);margin-right:4px"></i><strong style="font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--jade)">Adicionales:</strong> ${apt.addons.map(a => `<span class="addon-tag"><i class="fas fa-check" style="font-size:9px"></i> ${escHtml(a.name)}${a.duration > 0 ? ` · +${a.duration} min` : ''}${a.price > 0 ? ` · +$${a.price.toLocaleString('es-CL')}` : ''}</span>`).join('')}${apt.totalPrice ? `<div style="margin-top:4px;font-size:13px;color:var(--charcoal)"><strong>Total:</strong> <span style="color:var(--jade);font-weight:700">$${apt.totalPrice.toLocaleString('es-CL')}</span></div>` : ''}</div>` : ''; const canReschedule = apt.status === 'pending' || apt.status === 'confirmed'; const rescheduleBtn = canReschedule ? `<button class="btn btn-secondary" onclick="openRescheduleModal('${apt.id}')"><i class="fas fa-calendar-pen"></i> Reagendar</button>` : ''; const waBtn = waNumber(apt.clientPhone) ? `<a class="btn btn-success" href="https://wa.me/${waNumber(apt.clientPhone)}?text=${encodeURIComponent('Hola ' + ((apt.clientName || '').split(' ')[0] || '') + '! Te escribimos de Synea Studio Spa por tu hora ✨')}" target="_blank" rel="noopener" title="Escribir por WhatsApp"><i class="fab fa-whatsapp"></i></a>` : ''; return `<div class="appointment-item"><div class="appointment-header"><div class="appointment-time"><i class="fas fa-clock" style="color:var(--bronze);font-size:14px"></i> ${escHtml(apt.time)}</div><span class="appointment-status ${sc}"><i class="fas ${si[apt.status]}"></i> ${st[apt.status] || escHtml(apt.status)}</span>${apt.locationCity ? `<span class="trip-chip" style="margin-left:6px"><i class="fas fa-plane-departure" style="font-size:9px"></i> ${escHtml(apt.locationCity)}</span>` : ''}${apt.giftCode ? `<span class="gc-chip ${apt.giftStatus === 'redeemed' ? 'activa' : 'vencida'}" style="margin-left:6px" title="${apt.giftStatus === 'redeemed' ? 'Canje válido: no cobrar' : 'Revisar esta giftcard'}"><i class="fas fa-gift" style="font-size:9px"></i> ${escHtml(apt.giftCode)}</span>` : ''}${apt.paymentType && !apt.giftCode ? `<span class="gc-chip activa" style="margin-left:6px" title="Ya pagada: no se cobra en esta visita"><i class="fas fa-circle-check" style="font-size:9px"></i> ${escHtml(PAY_LABELS[apt.paymentType] || 'Pagada')}${apt.membershipSession ? ' · sesión ' + apt.membershipSession : ''}</span>` : ''}</div><div class="appointment-details"><div><i class="fas fa-user"></i> <strong>Cliente:</strong> ${escHtml(apt.clientName)}</div><div><i class="fas fa-gem"></i> <strong>Servicio:</strong> ${svc ? escHtml(svc.name) : 'N/A'}${Array.isArray(apt.extraServices) && apt.extraServices.length ? apt.extraServices.map(x => ` <span class="extra-chip" style="padding:2px 10px;font-size:11.5px">+ ${escHtml(x.name)}${Array.isArray(x.addons) && x.addons.length ? ` <span style="font-weight:500;color:var(--warm-gray)">· ${x.addons.map(a => escHtml(a.name)).join(', ')}</span>` : ''}</span>`).join('') : ''}${apt.totalDuration ? ` <span style="color:var(--warm-gray);font-size:12.5px">· ${apt.totalDuration} min</span>` : ''}</div><div><i class="fas fa-phone"></i> <strong>Tel:</strong> <a href="tel:${escAttr((apt.clientPhone || '').replace(/[^\d+]/g, ''))}" style="color:var(--charcoal);text-decoration:none">${escHtml(apt.clientPhone)}</a></div>${apt.clientEmail ? `<div><i class="fas fa-envelope"></i> ${escHtml(apt.clientEmail)}</div>` : ''}${apt.comments ? `<div><i class="fas fa-comment"></i> ${escHtml(apt.comments)}</div>` : ''}${addonsHtml}</div><div class="appointment-actions">${waBtn}<button class="btn btn-secondary" onclick="resendApptMail('${apt.id}')" title="Reenviar el correo de la cita a la clienta"><i class="fas fa-envelope"></i></button><button class="btn btn-secondary" onclick="changePaymentType('${apt.id}')" title="Forma de pago (membresía, giftcard, cortesía)"><i class="fas fa-cash-register"></i></button><button class="btn btn-ghost" onclick="deleteAppointment('${apt.id}')" title="Eliminar la cita del registro" style="color:var(--danger);border-color:rgba(196,86,86,.3)"><i class="fas fa-trash"></i></button>${apt.status === 'pending' ? `<button class="btn btn-success" onclick="updateAppointmentStatus('${apt.id}','confirmed')"><i class="fas fa-check"></i> Confirmar</button><button class="btn btn-primary" onclick="updateAppointmentStatus('${apt.id}','completed')" title="Marcar como realizada"><i class="fas fa-star"></i> Completar</button>${rescheduleBtn}<button class="btn btn-danger" onclick="cancelAppointment('${apt.id}')"><i class="fas fa-times"></i> Cancelar</button>` : ''}${apt.status === 'confirmed' ? `<button class="btn btn-primary" onclick="updateAppointmentStatus('${apt.id}','completed')"><i class="fas fa-star"></i> Completar</button>${rescheduleBtn}<button class="btn btn-danger" onclick="cancelAppointment('${apt.id}')"><i class="fas fa-times"></i> Cancelar</button>` : ''}</div></div>` }
+        function renderAppointmentItem(apt) { const svc = allServices.find(s => s.id === apt.serviceId), sc = `status-${apt.status}`, st = { pending: 'Pendiente', confirmed: 'Confirmada', completed: 'Completada', cancelled: 'Cancelada' }, si = { pending: 'fa-hourglass-half', confirmed: 'fa-check-circle', completed: 'fa-star', cancelled: 'fa-times-circle' }; const addonsHtml = Array.isArray(apt.addons) && apt.addons.length ? `<div style="margin-top:6px;padding-top:6px;border-top:1px dashed rgba(35,48,44,.1)"><i class="fas fa-sparkles" style="color:var(--bronze);margin-right:4px"></i><strong style="font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--jade)">Adicionales:</strong> ${apt.addons.map(a => `<span class="addon-tag"><i class="fas fa-check" style="font-size:9px"></i> ${escHtml(a.name)}${a.duration > 0 ? ` · +${formatDuration(a.duration)}` : ''}${a.price > 0 ? ` · +$${a.price.toLocaleString('es-CL')}` : ''}</span>`).join('')}${apt.totalPrice ? `<div style="margin-top:4px;font-size:13px;color:var(--charcoal)"><strong>Total:</strong> <span style="color:var(--jade);font-weight:700">$${apt.totalPrice.toLocaleString('es-CL')}</span></div>` : ''}</div>` : ''; const canReschedule = apt.status === 'pending' || apt.status === 'confirmed'; const rescheduleBtn = canReschedule ? `<button class="btn btn-secondary" onclick="openRescheduleModal('${apt.id}')"><i class="fas fa-calendar-pen"></i> Reagendar</button>` : ''; const waBtn = waNumber(apt.clientPhone) ? `<a class="btn btn-success" href="https://wa.me/${waNumber(apt.clientPhone)}?text=${encodeURIComponent('Hola ' + ((apt.clientName || '').split(' ')[0] || '') + '! Te escribimos de Synea Studio Spa por tu hora ✨')}" target="_blank" rel="noopener" title="Escribir por WhatsApp"><i class="fab fa-whatsapp"></i></a>` : ''; return `<div class="appointment-item"><div class="appointment-header"><div class="appointment-time"><i class="fas fa-clock" style="color:var(--bronze);font-size:14px"></i> ${escHtml(apt.time)}</div><span class="appointment-status ${sc}"><i class="fas ${si[apt.status]}"></i> ${st[apt.status] || escHtml(apt.status)}</span>${apt.locationCity ? `<span class="trip-chip" style="margin-left:6px"><i class="fas fa-plane-departure" style="font-size:9px"></i> ${escHtml(apt.locationCity)}</span>` : ''}${apt.giftCode ? `<span class="gc-chip ${apt.giftStatus === 'redeemed' ? 'activa' : 'vencida'}" style="margin-left:6px" title="${apt.giftStatus === 'redeemed' ? 'Canje válido: no cobrar' : 'Revisar esta giftcard'}"><i class="fas fa-gift" style="font-size:9px"></i> ${escHtml(apt.giftCode)}</span>` : ''}${apt.paymentType && !apt.giftCode ? `<span class="gc-chip activa" style="margin-left:6px" title="Ya pagada: no se cobra en esta visita"><i class="fas fa-circle-check" style="font-size:9px"></i> ${escHtml(PAY_LABELS[apt.paymentType] || 'Pagada')}${apt.membershipSession ? ' · sesión ' + apt.membershipSession : ''}</span>` : ''}</div><div class="appointment-details"><div><i class="fas fa-user"></i> <strong>Cliente:</strong> ${escHtml(apt.clientName)}</div><div><i class="fas fa-gem"></i> <strong>Servicio:</strong> ${svc ? escHtml(svc.name) : 'N/A'}${Array.isArray(apt.extraServices) && apt.extraServices.length ? apt.extraServices.map(x => ` <span class="extra-chip" style="padding:2px 10px;font-size:11.5px">+ ${escHtml(x.name)}${Array.isArray(x.addons) && x.addons.length ? ` <span style="font-weight:500;color:var(--warm-gray)">· ${x.addons.map(a => escHtml(a.name)).join(', ')}</span>` : ''}</span>`).join('') : ''}${apt.totalDuration ? ` <span style="color:var(--warm-gray);font-size:12.5px">· ${formatDuration(apt.totalDuration)}</span>` : ''}</div><div><i class="fas fa-phone"></i> <strong>Tel:</strong> <a href="tel:${escAttr((apt.clientPhone || '').replace(/[^\d+]/g, ''))}" style="color:var(--charcoal);text-decoration:none">${escHtml(apt.clientPhone)}</a></div>${apt.clientEmail ? `<div><i class="fas fa-envelope"></i> ${escHtml(apt.clientEmail)}</div>` : ''}${apt.comments ? `<div><i class="fas fa-comment"></i> ${escHtml(apt.comments)}</div>` : ''}${addonsHtml}</div><div class="appointment-actions">${waBtn}<button class="btn btn-secondary" onclick="resendApptMail('${apt.id}')" title="Reenviar el correo de la cita a la clienta"><i class="fas fa-envelope"></i></button><button class="btn btn-secondary" onclick="changePaymentType('${apt.id}')" title="Forma de pago (membresía, giftcard, cortesía)"><i class="fas fa-cash-register"></i></button><button class="btn btn-ghost" onclick="deleteAppointment('${apt.id}')" title="Eliminar la cita del registro" style="color:var(--danger);border-color:rgba(196,86,86,.3)"><i class="fas fa-trash"></i></button>${apt.status === 'pending' ? `<button class="btn btn-success" onclick="updateAppointmentStatus('${apt.id}','confirmed')"><i class="fas fa-check"></i> Confirmar</button><button class="btn btn-primary" onclick="updateAppointmentStatus('${apt.id}','completed')" title="Marcar como realizada"><i class="fas fa-star"></i> Completar</button>${rescheduleBtn}<button class="btn btn-danger" onclick="cancelAppointment('${apt.id}')"><i class="fas fa-times"></i> Cancelar</button>` : ''}${apt.status === 'confirmed' ? `<button class="btn btn-primary" onclick="updateAppointmentStatus('${apt.id}','completed')"><i class="fas fa-star"></i> Completar</button>${rescheduleBtn}<button class="btn btn-danger" onclick="cancelAppointment('${apt.id}')"><i class="fas fa-times"></i> Cancelar</button>` : ''}</div></div>` }
 
         // Elimina la cita del registro. A diferencia de "Cancelar", no avisa a
         // la clienta: sirve para borrar pruebas o cargas equivocadas.
@@ -8438,7 +8665,7 @@
             document.getElementById('rescheduleContext').innerHTML = `
                 <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><i class="fas fa-user" style="color:var(--jade);font-size:12px"></i> <strong>${escHtml(apt.clientName)}</strong></div>
                 <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><i class="fas fa-gem" style="color:var(--jade);font-size:12px"></i> ${svc ? escHtml(svc.name) : 'N/A'}</div>
-                <div style="display:flex;align-items:center;gap:8px;color:var(--warm-gray)"><i class="fas fa-clock" style="color:var(--bronze);font-size:12px"></i> Cita actual: <strong style="color:var(--charcoal);text-transform:capitalize">${dateCurrentStr}</strong> a las <strong style="color:var(--charcoal)">${escHtml(apt.time)}</strong></div>
+                <div style="display:flex;align-items:center;gap:8px;color:var(--warm-gray)"><i class="fas fa-clock" style="color:var(--bronze);font-size:12px"></i> Cita actual: <strong style="color:var(--charcoal)">${ucfirst(dateCurrentStr)}</strong> a las <strong style="color:var(--charcoal)">${escHtml(apt.time)}</strong></div>
             `;
 
             // Set min date to today
@@ -8539,7 +8766,7 @@
                 s.style.display = 'block';
                 return;
             }
-            s.innerHTML = `<i class="fas fa-arrow-right" style="color:var(--jade)"></i> Nueva cita: <strong style="text-transform:capitalize">${newStr}</strong> a las <strong>${_rescheduleState.newTime}</strong>${apt.clientEmail ? '<br><i class="fas fa-envelope" style="color:var(--bronze);font-size:11px;margin-right:4px;margin-top:4px"></i> <small style="color:var(--warm-gray)">Se enviará un email a ' + escHtml(apt.clientEmail) + '</small>' : ''}`;
+            s.innerHTML = `<i class="fas fa-arrow-right" style="color:var(--jade)"></i> Nueva cita: <strong>${ucfirst(newStr)}</strong> a las <strong>${_rescheduleState.newTime}</strong>${apt.clientEmail ? '<br><i class="fas fa-envelope" style="color:var(--bronze);font-size:11px;margin-right:4px;margin-top:4px"></i> <small style="color:var(--warm-gray)">Se enviará un email a ' + escHtml(apt.clientEmail) + '</small>' : ''}`;
             s.style.display = 'block';
         }
 
@@ -8685,7 +8912,7 @@
             }
         }
 
-        function renderAdminCalendar() { const y = currentAdminMonth.getFullYear(), m = currentAdminMonth.getMonth(); document.getElementById('currentMonth').textContent = currentAdminMonth.toLocaleDateString('es-CL', { month: 'long', year: 'numeric' }); const fd = new Date(y, m, 1).getDay(), dim = new Date(y, m + 1, 0).getDate(), t = new Date(); t.setHours(0, 0, 0, 0); const cal = document.getElementById('adminCalendar'), dn = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']; let h = dn.map(d => `<div class="calendar-day">${d}</div>`).join(''); for (let i = 0; i < fd; i++)h += '<div class="calendar-date disabled"></div>'; for (let d = 1; d <= dim; d++) { const dt = new Date(y, m, d); dt.setHours(12, 0, 0, 0); const ds = dateToStr(dt), da = allAppointments.filter(a => a.date === ds && a.status !== 'cancelled'), it = dateToStr(t) === ds, fb = isFullyBlocked(ds), hb = hasAnyBlock(ds), id = dt < t || slotsForDateAdmin(ds).length === 0; h += `<div class="calendar-date ${it ? 'today' : ''} ${id && !hb ? 'disabled' : ''} ${fb ? 'blocked admin-blocked' : ''} ${hb && !fb ? 'partial-blocked admin-blocked' : ''}" onclick="${hb ? `toggleBlockDay('${ds}')` : (!id ? `selectAdminDate('${ds}')` : '')}" title="${hb ? getBlocksForDate(ds).map(b => getBlockLabel(b)).join(', ') : ''}"><div class="date-number">${d}</div>${fb ? '<div class="appointments-count" style="color:var(--danger)"><i class="fas fa-ban" style="font-size:9px"></i> Bloqueado</div>' : (hb ? `<div class="appointments-count" style="color:var(--warning)"><i class="fas fa-clock" style="font-size:9px"></i> Parcial${da.length > 0 ? ' · ' + da.length : ''}</div>` : (da.length > 0 ? `<div class="appointments-count">${da.length} cita${da.length > 1 ? 's' : ''}</div>` : ''))}</div>` } cal.innerHTML = h }
+        function renderAdminCalendar() { const y = currentAdminMonth.getFullYear(), m = currentAdminMonth.getMonth(); document.getElementById('currentMonth').textContent = ucfirst(currentAdminMonth.toLocaleDateString('es-CL', { month: 'long', year: 'numeric' })); const fd = new Date(y, m, 1).getDay(), dim = new Date(y, m + 1, 0).getDate(), t = new Date(); t.setHours(0, 0, 0, 0); const cal = document.getElementById('adminCalendar'), dn = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']; let h = dn.map(d => `<div class="calendar-day">${d}</div>`).join(''); for (let i = 0; i < fd; i++)h += '<div class="calendar-date disabled"></div>'; for (let d = 1; d <= dim; d++) { const dt = new Date(y, m, d); dt.setHours(12, 0, 0, 0); const ds = dateToStr(dt), da = allAppointments.filter(a => a.date === ds && a.status !== 'cancelled'), it = dateToStr(t) === ds, fb = isFullyBlocked(ds), hb = hasAnyBlock(ds), id = dt < t || slotsForDateAdmin(ds).length === 0; h += `<div class="calendar-date ${it ? 'today' : ''} ${id && !hb ? 'disabled' : ''} ${fb ? 'blocked admin-blocked' : ''} ${hb && !fb ? 'partial-blocked admin-blocked' : ''}" onclick="${hb ? `toggleBlockDay('${ds}')` : (!id ? `selectAdminDate('${ds}')` : '')}" title="${hb ? getBlocksForDate(ds).map(b => getBlockLabel(b)).join(', ') : ''}"><div class="date-number">${d}</div>${fb ? '<div class="appointments-count" style="color:var(--danger)"><i class="fas fa-ban" style="font-size:9px"></i> Bloqueado</div>' : (hb ? `<div class="appointments-count" style="color:var(--warning)"><i class="fas fa-clock" style="font-size:9px"></i> Parcial${da.length > 0 ? ' · ' + da.length : ''}</div>` : (da.length > 0 ? `<div class="appointments-count">${da.length} cita${da.length > 1 ? 's' : ''}</div>` : ''))}</div>` } cal.innerHTML = h }
 
         function selectAdminDate(ds) { lastSelectedAdminDate = ds; const ap = allAppointments.filter(a => a.date === ds && a.status !== 'cancelled').sort((a, b) => a.time.localeCompare(b.time)), c = document.getElementById('selectedDateAppointments'), dt = new Date(ds + 'T12:00:00'), fb = isFullyBlocked(ds), hb = hasAnyBlock(ds), blocks = getBlocksForDate(ds), blockInfo = blocks.map(b => getBlockLabel(b) + (b.reason ? ' (' + escHtml(b.reason) + ')' : '')).join(', '); c.innerHTML = `<div style="margin-top:30px"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:18px"><div class="section-title" style="margin-bottom:0"><i class="fas fa-calendar-day"></i><div><h2 style="font-size:19px">${dt.toLocaleDateString('es-CL', { day: 'numeric', month: 'long', year: 'numeric' })}</h2><p>${fb ? '<span style="color:var(--danger)"><i class="fas fa-ban"></i> Día bloqueado completamente</span>' : (hb ? '<span style="color:var(--warning)"><i class="fas fa-clock"></i> Bloqueo parcial: ' + blockInfo + '</span>' : (ap.length + ' cita' + (ap.length !== 1 ? 's' : '')))}</p></div></div><div style="display:flex;gap:8px;flex-wrap:wrap">${hb ? `<button class="btn btn-success" onclick="toggleBlockDay('${ds}')"><i class="fas fa-lock-open"></i> Desbloquear</button>` : ''}<button class="btn btn-danger" onclick="openBlockModal('${ds}')"><i class="fas fa-ban"></i> ${hb ? 'Agregar bloqueo' : 'Bloquear'}</button></div></div>${!fb && ap.length > 0 ? ap.map(a => renderAppointmentItem(a)).join('') : (!fb && !hb ? '<div class="empty-state"><i class="fas fa-calendar-xmark"></i><p>No hay citas</p></div>' : (fb ? '<div class="empty-state"><i class="fas fa-ban" style="color:var(--danger)"></i><p>Este día está bloqueado completamente</p></div>' : ''))}</div>` }
         function changeMonth(d) { currentAdminMonth.setMonth(currentAdminMonth.getMonth() + d); renderAdminCalendar() }
@@ -8709,7 +8936,7 @@
                 : `<div class="service-card-image svc-cover ${getServiceCoverClass(s.name, isSale)}"><i class="fas ${getServiceIcon(s.name)}"></i></div>`;
             const ribbon = ''; // Opción B: la sección destacada ya distingue; las tarjetas quedan limpias (solo la línea dorada superior del CSS).
             const iconColor = isSale ? 'var(--sale-bronze-deep)' : 'var(--jade)';
-            return `<div class="service-card" onclick="openServicePreview('${s.id}')" data-aos="fade-up" data-aos-delay="${Math.min(i * 60, 400)}">${ribbon}${cover}<div class="service-card-body"><h4><i class="fas ${getServiceIcon(s.name)}" style="color:${iconColor};margin-right:6px;font-size:14px"></i> ${escHtml(s.name)}</h4>${s.description ? `<p>${escHtml(s.description)}</p>` : ''}<div class="svc-meter" aria-hidden="true"><span style="width:${durationPct(s.duration)}%"></span></div><div class="service-info"><span class="service-duration"><i class="fas fa-clock"></i> ${s.duration} min</span><span class="service-price">${fmtPrice(s.price)}</span></div></div></div>`;
+            return `<div class="service-card" role="button" tabindex="0" aria-label="Ver ${escAttr(s.name)}" onclick="openServicePreview('${s.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openServicePreview('${s.id}')}" data-aos="fade-up" data-aos-delay="${Math.min(i * 60, 400)}">${ribbon}${cover}<div class="service-card-body"><h4><i class="fas ${getServiceIcon(s.name)}" style="color:${iconColor};margin-right:6px;font-size:14px"></i> ${escHtml(s.name)}</h4>${s.description ? `<p>${escHtml(s.description)}</p>` : ''}<div class="svc-meter" aria-hidden="true"><span style="width:${durationPct(s.duration)}%"></span></div><div class="service-info"><span class="service-duration"><i class="fas fa-clock"></i> ${formatDuration(s.duration)}</span><span class="service-price">${fmtPrice(s.price)}</span></div></div></div>`;
         }
 
         // Categoría elegida en el filtro ('all' = el catálogo completo).
@@ -8878,7 +9105,7 @@
                 addonsList.innerHTML = s.addons.map((a, i) => {
                     const priceLbl = a.price > 0 ? `+$${a.price.toLocaleString('es-CL')}` : 'Gratis';
                     const freeClass = a.price > 0 ? '' : 'free';
-                    const durLbl = a.duration > 0 ? `<span class="addon-dur"><i class="fas fa-clock"></i> +${a.duration} min</span>` : '';
+                    const durLbl = a.duration > 0 ? `<span class="addon-dur"><i class="fas fa-clock"></i> +${formatDuration(a.duration)}</span>` : '';
                     return `<div class="preview-addon-option" data-addon-idx="${i}" onclick="togglePreviewAddon(${i})" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();togglePreviewAddon(${i})}"><div class="addon-check"><i class="fas fa-check"></i></div><div class="addon-label">${escHtml(a.name)}${durLbl}</div><div class="addon-price-tag ${freeClass}">${priceLbl}</div></div>`;
                 }).join('');
                 addonsWrap.style.display = 'block';
@@ -8949,18 +9176,18 @@
             giftService = s;
             document.getElementById('clientStep1').style.display = 'none';
             document.getElementById('clientStep2').style.display = 'none';
-            document.getElementById('clientGift').style.display = 'block';
+            document.getElementById('clientGift').style.display = 'block'; setBookingMode(true);
             const thumb = s.thumbUrl || s.imageUrl;
             const img = thumb
                 ? `<div style="width:64px;height:64px;border-radius:var(--radius-sm);background-image:url('${escAttr(thumb)}');background-size:cover;background-position:center;flex-shrink:0"></div>`
-                : `<div style="width:64px;height:64px;background:var(--white);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;color:var(--jade);font-size:24px;flex-shrink:0"><i class="fas ${getServiceIcon(s.name)}"></i></div>`;
+                : `<div class="svc-cover ${getServiceCoverClass(s.name, false)}" style="width:64px;height:64px;border-radius:var(--radius-sm);flex-shrink:0;font-size:22px"><i class="fas ${getServiceIcon(s.name)}"></i></div>`;
             document.getElementById('giftServiceSummary').innerHTML = `<div style="padding:18px 22px;background:linear-gradient(135deg,var(--ivory) 0%,rgba(176,139,87,.08) 100%);border-radius:var(--radius-md);border:1.5px solid rgba(176,139,87,.25)">
                 <div style="display:flex;align-items:center;gap:16px">${img}
                     <div style="flex:1;min-width:0">
                         <div style="font-size:11px;color:var(--bronze-text);text-transform:uppercase;letter-spacing:.5px;font-weight:700;margin-bottom:2px">Vas a regalar</div>
                         <h3 style="font-family:var(--serif);font-size:18px;color:var(--charcoal);margin-bottom:4px">${escHtml(s.name)}</h3>
                         <div style="display:flex;gap:14px;align-items:center;font-size:13px;flex-wrap:wrap">
-                            <span style="color:var(--warm-gray)"><i class="fas fa-clock" style="color:var(--bronze-text);margin-right:4px"></i>${s.duration} min</span>
+                            <span style="color:var(--warm-gray)"><i class="fas fa-clock" style="color:var(--bronze-text);margin-right:4px"></i>${formatDuration(s.duration)}</span>
                             <span class="service-price" style="font-size:17px">$${(s.price || 0).toLocaleString('es-CL')}</span>
                         </div>
                     </div>
@@ -8983,7 +9210,7 @@
             const abc = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // sin caracteres confusos
             let c = '';
             for (let i = 0; i < 6; i++) c += abc[Math.floor(Math.random() * abc.length)];
-            return 'PP-' + c;
+            return 'SY-' + c;
         }
 
         async function confirmGift() {
@@ -9063,17 +9290,33 @@
 
         function formatDuration(mins) {
             if (!mins) return '';
+            mins = parseInt(mins) || 0;
             if (mins < 60) return mins + ' min';
             const h = Math.floor(mins / 60), m = mins % 60;
-            if (m === 0) return h === 1 ? '1 hora' : `${h} horas`;
-            return h === 1 ? `1h ${m}min` : `${h}h ${m}min`;
+            return m === 0 ? `${h} h` : `${h} h ${m} min`;
         }
+
+        // Mientras la clienta reserva, la burbuja de WhatsApp tapaba controles
+        // (la flecha del mes, el total del formulario) y el hero ocupaba media
+        // pantalla en cada paso. El modo reserva esconde una y compacta el otro.
+        function toggleGiftRedeem(force) {
+            const f = document.getElementById('giftRedeemFields'), t = document.getElementById('giftRedeemToggle');
+            if (!f || !t) return;
+            const open = typeof force === 'boolean' ? force : f.style.display === 'none';
+            f.style.display = open ? '' : 'none';
+            t.setAttribute('aria-expanded', String(open));
+            if (open) setTimeout(() => document.getElementById('clientGiftCode')?.focus(), 50);
+        }
+
+        function setBookingMode(on) { document.body.classList.toggle('is-booking', !!on) }
 
         function selectClientService(sid) {
             selectedService = allServices.find(s => s.id === sid);
             document.getElementById('clientStep1').style.display = 'none';
             document.getElementById('clientStep2').style.display = 'block';
             setStep(2);
+            setBookingMode(true);
+            setTimeout(() => document.getElementById('clientStep2').scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
             // Read pending addons from preview (may be empty)
             const selectedAddons = Array.isArray(window.pendingBookingAddons) ? window.pendingBookingAddons : [];
             window.currentBookingAddons = selectedAddons;
@@ -9095,9 +9338,9 @@
             const ss = document.getElementById('selectedServiceSummary');
             if (!ss) return;
             const summaryThumb = selectedService.thumbUrl || selectedService.imageUrl;
-            const thumb = summaryThumb ? `<div style="width:64px;height:64px;border-radius:var(--radius-sm);background-image:url('${escAttr(summaryThumb)}');background-size:cover;background-position:center;flex-shrink:0"></div>` : `<div style="width:64px;height:64px;background:var(--white);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;color:var(--jade);font-size:24px;flex-shrink:0"><i class="fas ${getServiceIcon(selectedService.name)}"></i></div>`;
-            const addonTags = selectedAddons.length ? `<div style="margin-top:10px;padding-top:10px;border-top:1px dashed rgba(35,48,44,.12)"><div style="font-size:11px;color:var(--warm-gray);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;font-weight:600"><i class="fas fa-sparkles" style="color:var(--bronze)"></i> Adicionales</div>${selectedAddons.map(a => `<span class="addon-tag"><i class="fas fa-check" style="font-size:9px"></i> ${escHtml(a.name)}${a.duration > 0 ? ` · +${a.duration} min` : ''}${a.price > 0 ? ` · +$${a.price.toLocaleString('es-CL')}` : ''}</span>`).join('')}</div>` : '';
-            ss.innerHTML =`<div style="padding:18px 22px;background:linear-gradient(135deg,var(--ivory) 0%,rgba(47,93,80,.04) 100%);border-radius:var(--radius-md);border:1.5px solid rgba(47,93,80,.12)"><div style="display:flex;align-items:center;gap:16px">${thumb}<div style="flex:1;min-width:0"><div style="font-size:11px;color:var(--jade);text-transform:uppercase;letter-spacing:.5px;font-weight:600;margin-bottom:2px">Servicio seleccionado</div><h3 style="font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--charcoal);margin-bottom:4px;overflow:hidden;text-overflow:ellipsis">${escHtml(selectedService.name)}</h3><div style="display:flex;gap:14px;align-items:center;font-size:13px;flex-wrap:wrap"><span style="color:var(--warm-gray)"><i class="fas fa-clock" style="color:var(--bronze);margin-right:4px"></i>${bookingDuration()} min${extraServices.length ? ' en total' : ''}</span><span class="service-price" style="font-size:17px">$${totalPrice.toLocaleString('es-CL')}</span></div></div></div>${extraServices.length ? `<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;padding-top:12px;border-top:1px dashed rgba(35,48,44,.12)">${extraServices.map(e => `<span class="extra-chip" style="flex-direction:column;align-items:flex-start;border-radius:14px;padding:7px 8px 7px 13px"><span style="display:flex;align-items:center;gap:7px">${escHtml(e.name)} · $${((e.price || 0) + extraAddonsTotal(e)).toLocaleString('es-CL')}<button type="button" onclick="removeExtraService('${e.id}')" title="Quitar"><i class="fas fa-times"></i></button></span>${Array.isArray(e.addons) && e.addons.length ? `<span style="font-size:11px;font-weight:500;color:var(--warm-gray)"><i class="fas fa-sparkles" style="color:var(--bronze-text)"></i> ${e.addons.map(a => escHtml(a.name)).join(', ')}</span>` : ''}</span>`).join('')}</div>` : ''}<button type="button" class="btn btn-ghost" onclick="openExtraPicker()" style="width:100%;justify-content:center;margin-top:12px;font-size:13.5px"><i class="fas fa-plus"></i> Agregar otro servicio</button>${addonTags}</div>`;
+            const thumb = summaryThumb ? `<div style="width:64px;height:64px;border-radius:var(--radius-sm);background-image:url('${escAttr(summaryThumb)}');background-size:cover;background-position:center;flex-shrink:0"></div>` : `<div class="svc-cover ${getServiceCoverClass(selectedService.name, false)}" style="width:64px;height:64px;border-radius:var(--radius-sm);flex-shrink:0;font-size:22px"><i class="fas ${getServiceIcon(selectedService.name)}"></i></div>`;
+            const addonTags = selectedAddons.length ? `<div style="margin-top:10px;padding-top:10px;border-top:1px dashed rgba(35,48,44,.12)"><div style="font-size:11px;color:var(--warm-gray);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;font-weight:600"><i class="fas fa-sparkles" style="color:var(--bronze)"></i> Adicionales</div>${selectedAddons.map(a => `<span class="addon-tag"><i class="fas fa-check" style="font-size:9px"></i> ${escHtml(a.name)}${a.duration > 0 ? ` · +${formatDuration(a.duration)}` : ''}${a.price > 0 ? ` · +$${a.price.toLocaleString('es-CL')}` : ''}</span>`).join('')}</div>` : '';
+            ss.innerHTML =`<div style="padding:18px 22px;background:linear-gradient(135deg,var(--ivory) 0%,rgba(47,93,80,.04) 100%);border-radius:var(--radius-md);border:1.5px solid rgba(47,93,80,.12)"><div style="display:flex;align-items:center;gap:16px">${thumb}<div style="flex:1;min-width:0"><div style="font-size:11px;color:var(--jade);text-transform:uppercase;letter-spacing:.5px;font-weight:600;margin-bottom:2px">Servicio seleccionado</div><h3 style="font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--charcoal);margin-bottom:4px;overflow:hidden;text-overflow:ellipsis">${escHtml(selectedService.name)}</h3><div style="display:flex;gap:14px;align-items:center;font-size:13px;flex-wrap:wrap"><span style="color:var(--warm-gray)"><i class="fas fa-clock" style="color:var(--bronze);margin-right:4px"></i>${formatDuration(bookingDuration())}${extraServices.length ? ' en total' : ''}</span><span class="service-price" style="font-size:17px">$${totalPrice.toLocaleString('es-CL')}</span></div></div></div>${extraServices.length ? `<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;padding-top:12px;border-top:1px dashed rgba(35,48,44,.12)">${extraServices.map(e => `<span class="extra-chip" style="flex-direction:column;align-items:flex-start;border-radius:14px;padding:7px 8px 7px 13px"><span style="display:flex;align-items:center;gap:7px">${escHtml(e.name)} · $${((e.price || 0) + extraAddonsTotal(e)).toLocaleString('es-CL')}<button type="button" onclick="removeExtraService('${e.id}')" title="Quitar"><i class="fas fa-times"></i></button></span>${Array.isArray(e.addons) && e.addons.length ? `<span style="font-size:11px;font-weight:500;color:var(--warm-gray)"><i class="fas fa-sparkles" style="color:var(--bronze-text)"></i> ${e.addons.map(a => escHtml(a.name)).join(', ')}</span>` : ''}</span>`).join('')}</div>` : ''}<button type="button" class="btn btn-ghost" onclick="openExtraPicker()" style="margin-top:12px;font-size:13px;padding:8px 14px;min-height:40px"><i class="fas fa-plus"></i> Agregar otro servicio</button>${addonTags}</div>`;
         }
 
         // Si el mes visible del calendario no tiene ningún día con cupo, avanza
@@ -9124,7 +9367,7 @@
             }
         }
 
-        function backToServices() { selectedService = null; selectedDate = null; selectedTime = null; document.getElementById('clientStep1').style.display = 'block'; document.getElementById('clientStep2').style.display = 'none'; document.getElementById('clientTimeSlots').innerHTML = ''; document.getElementById('clientBookingForm').style.display = 'none'; window.scrollTo({ top: 0, behavior: 'smooth' }) }
+        function backToServices() { setBookingMode(false); selectedService = null; selectedDate = null; selectedTime = null; document.getElementById('clientStep1').style.display = 'block'; document.getElementById('clientStep2').style.display = 'none'; document.getElementById('clientTimeSlots').innerHTML = ''; document.getElementById('clientBookingForm').style.display = 'none'; window.scrollTo({ top: 0, behavior: 'smooth' }) }
 
         function dateToStr(dt) { const yy = dt.getFullYear(), mm = String(dt.getMonth() + 1).padStart(2, '0'), dd = String(dt.getDate()).padStart(2, '0'); return `${yy}-${mm}-${dd}` }
 
@@ -9143,7 +9386,7 @@
 
         function renderClientCalendar() {
             const y = currentClientMonth.getFullYear(), m = currentClientMonth.getMonth();
-            document.getElementById('clientCurrentMonth').textContent = currentClientMonth.toLocaleDateString('es-CL', { month: 'long', year: 'numeric' });
+            document.getElementById('clientCurrentMonth').textContent = ucfirst(currentClientMonth.toLocaleDateString('es-CL', { month: 'long', year: 'numeric' }));
             const fd = new Date(y, m, 1).getDay(), dim = new Date(y, m + 1, 0).getDate(), t = new Date(); t.setHours(0, 0, 0, 0);
             const now = new Date(), advMs = config.minAdvanceEnabled ? (config.minAdvanceHours || 4) * 3600000 : 0;
             const cal = document.getElementById('clientCalendar'), dn = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
@@ -9158,14 +9401,19 @@
                 // sin click, para que la clienta no descubra el "lleno" a ciegas.
                 let full = false;
                 if (!id && !dayHasFreeSlot(ds, dt.getDay(), now, advMs)) { full = true; id = true; }
+                const closed = !((config.schedule || {})[dt.getDay()] || []).length;
                 const is = selectedDate === ds;
                 const onclick = !id ? `selectClientDate('${ds}')` : (full ? `toast('Ese día no tiene horas libres, prueba otro','info')` : (fb ? `toast('Ese día no está disponible','info')` : ''));
-                h += `<div class="calendar-date ${it ? 'today' : ''} ${id ? 'disabled' : ''} ${fb ? 'blocked' : ''} ${hb && !fb ? 'partial-blocked' : ''} ${is && !id ? 'selected' : ''}" onclick="${onclick}" ${full ? 'title="Sin horarios disponibles"' : ''}><div class="date-number">${d}</div>${full ? '<div class="appointments-count" style="color:var(--warm-gray);font-weight:600">lleno</div>' : ''}</div>`;
+                h += `<div class="calendar-date ${it ? 'today' : ''} ${id ? 'disabled' : ''} ${fb ? 'blocked' : ''} ${hb && !fb ? 'partial-blocked' : ''} ${closed ? 'closed' : ''} ${is && !id ? 'selected' : ''}" onclick="${onclick}" ${full ? 'title="Sin horarios disponibles"' : ''}><div class="date-number">${d}</div>${full ? '<div class="appointments-count" style="color:var(--warm-gray);font-weight:600">lleno</div>' : ''}</div>`;
             }
             cal.innerHTML = h;
+            const closedNames = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado']
+                .filter((_, d) => !((config.schedule || {})[d] || []).length);
+            const lc = document.getElementById('legendClosed');
+            if (lc) { lc.style.display = closedNames.length ? 'flex' : 'none'; lc.querySelector('b').textContent = ucfirst(closedNames.join(', ')) + (closedNames.length === 1 ? ' cerrado' : ' cerrados'); }
         }
 
-        function selectClientDate(ds) { selectedDate = ds; selectedTime = null; renderClientCalendar(); renderClientTimeSlots(); document.getElementById('clientBookingForm').style.display = 'none' }
+        function selectClientDate(ds) { selectedDate = ds; selectedTime = null; renderClientCalendar(); renderClientTimeSlots(); document.getElementById('clientBookingForm').style.display = 'none'; document.getElementById('clientTimeSlots').scrollIntoView({ behavior: 'smooth', block: 'start' }) }
 
         function renderClientTimeSlots() {
             const c = document.getElementById('clientTimeSlots'); if (!selectedDate) { c.innerHTML = ''; return }
@@ -9192,7 +9440,7 @@
             let notices = '';
             if (hasAnyBlock(selectedDate) && !isFullyBlocked(selectedDate)) notices += '<div style="margin-bottom:14px;padding:10px 14px;background:rgba(212,168,83,.08);border:1px solid rgba(212,168,83,.2);border-radius:var(--radius-sm);font-size:12px;color:var(--warning);display:flex;align-items:center;gap:8px"><i class="fas fa-info-circle"></i> Algunos horarios están bloqueados</div>';
             const renderSlot = s => {
-                const motivo = s.tooSoon ? 'Muy próximo, elige una hora más adelante' : (s.blocked ? 'Ese horario no está disponible' : (s.noRoom ? `No alcanza el tiempo para ${bookingDuration()} min` : (s.occupied ? 'Ese horario ya está reservado' : '')));
+                const motivo = s.tooSoon ? 'Muy próximo, elige una hora más adelante' : (s.blocked ? 'Ese horario no está disponible' : (s.noRoom ? `No alcanza el tiempo para ${formatDuration(bookingDuration())}` : (s.occupied ? 'Ese horario ya está reservado' : '')));
                 const click = !s.occupied ? `selectClientTime('${s.time}')` : `toast('${motivo}','info')`;
                 return `<div class="time-slot ${s.occupied ? 'occupied' : ''} ${selectedTime === s.time ? 'selected' : ''}" onclick="${click}" title="${motivo}">${s.time}</div>`;
             };
@@ -9252,8 +9500,8 @@
                 <div style="font-size:14px;line-height:1.9;color:var(--charcoal)">
                     <div><i class="fas fa-gem" style="color:var(--jade);width:20px"></i> <strong>${escHtml(selectedService.name)}</strong>${addons.length ? ` <span style="font-size:12.5px;color:var(--warm-gray)">· ${addons.map(a => escHtml(a.name)).join(', ')}</span>` : ''}</div>
                     ${extrasLines()}
-                    <div style="text-transform:capitalize"><i class="fas fa-calendar" style="color:var(--bronze-text);width:20px"></i> ${escHtml(fd)}</div>
-                    <div><i class="fas fa-clock" style="color:var(--bronze-text);width:20px"></i> ${escHtml(selectedTime)} hrs · ${bookingDuration()} min${extraServices.length ? ' en total' : ''}</div>
+                    <div><i class="fas fa-calendar" style="color:var(--bronze-text);width:20px"></i> ${escHtml(ucfirst(fd))}</div>
+                    <div><i class="fas fa-clock" style="color:var(--bronze-text);width:20px"></i> ${escHtml(selectedTime)} hrs · ${formatDuration(bookingDuration())}${extraServices.length ? ' en total' : ''}</div>
                     ${giftRedeem
                     ? `<div><i class="fas fa-gift" style="color:var(--bronze-text);width:20px"></i> <strong>Pagado con giftcard</strong> <span style="font-family:'Manrope',monospace;letter-spacing:1px;color:var(--jade-dark)">${escHtml(giftRedeem.code)}</span></div>`
                     : `<div><i class="fas fa-tag" style="color:var(--success);width:20px"></i> <strong>$${total.toLocaleString('es-CL')}</strong></div>`}
@@ -9502,7 +9750,7 @@
                 // automáticamente al crearse la cita. Ver functions/index.js.
                 btn.innerHTML = origHTML; btn.disabled = false; btn.style.opacity = '1';
                 const fd = new Date(selectedDate + 'T12:00:00').toLocaleDateString('es-CL', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-                const addonsSummary = bookingAddons.length ? `<div style="margin-top:8px;padding-top:8px;border-top:1px dashed rgba(35,48,44,.12)"><div style="font-size:11px;color:var(--jade);text-transform:uppercase;letter-spacing:.5px;font-weight:600;margin-bottom:4px"><i class="fas fa-sparkles" style="color:var(--bronze)"></i> Adicionales</div>${bookingAddons.map(a => `<div style="padding:2px 0;font-size:13px"><i class="fas fa-plus" style="color:var(--jade);font-size:10px;width:16px"></i> ${escHtml(a.name)}${a.duration > 0 ? ` · +${a.duration} min` : ''}${a.price > 0 ? ` · +${a.price.toLocaleString('es-CL')}` : ''}</div>`).join('')}</div>` : '';
+                const addonsSummary = bookingAddons.length ? `<div style="margin-top:8px;padding-top:8px;border-top:1px dashed rgba(35,48,44,.12)"><div style="font-size:11px;color:var(--jade);text-transform:uppercase;letter-spacing:.5px;font-weight:600;margin-bottom:4px"><i class="fas fa-sparkles" style="color:var(--bronze)"></i> Adicionales</div>${bookingAddons.map(a => `<div style="padding:2px 0;font-size:13px"><i class="fas fa-plus" style="color:var(--jade);font-size:10px;width:16px"></i> ${escHtml(a.name)}${a.duration > 0 ? ` · +${formatDuration(a.duration)}` : ''}${a.price > 0 ? ` · +${a.price.toLocaleString('es-CL')}` : ''}</div>`).join('')}</div>` : '';
                 document.getElementById('bookingSummary').innerHTML = `<div style="font-size:14px;color:var(--charcoal);line-height:2"><div><i class="fas fa-gem" style="color:var(--jade);width:20px"></i> <strong>${escHtml(selectedService.name)}</strong></div>${extrasLines()}<div><i class="fas fa-calendar" style="color:var(--bronze);width:20px"></i> ${fd}</div><div><i class="fas fa-clock" style="color:var(--bronze);width:20px"></i> ${selectedTime} hrs · ${apt.totalDuration || selectedService.duration} min</div>${giftRedeem ? `<div><i class="fas fa-gift" style="color:var(--bronze-text);width:20px"></i> <strong>Pagado con giftcard</strong> ${escHtml(giftRedeem.code)}</div>` : `<div><i class="fas fa-tag" style="color:var(--success);width:20px"></i> $${finalPrice.toLocaleString('es-CL')}</div>`}${_trip ? `<div style="margin-top:6px;padding-top:8px;border-top:1px dashed rgba(35,48,44,.12)"><i class="fas fa-location-dot" style="color:var(--jade);width:20px"></i> <strong>${escHtml(_trip.city || '')}</strong>${_trip.address ? `<br><span style="font-size:13px;color:var(--warm-gray);margin-left:20px">${escHtml(_trip.address)}</span>` : ''}</div>` : ''}</div>${addonsSummary}`;
                 if (config.webpayUrl && !giftRedeem) { document.getElementById('paymentSection').style.display = 'block'; document.getElementById('webpayBtn').href = config.webpayUrl } else { document.getElementById('paymentSection').style.display = 'none' }
                 // Generate Google Calendar link
@@ -9533,7 +9781,7 @@
             }
         }
 
-        function resetClientBooking() { selectedService = null; selectedDate = null; selectedTime = null; window.currentBookingAddons = null; window.pendingBookingAddons = null;document.getElementById('clientStep1').style.display = 'block'; document.getElementById('clientStep2').style.display = 'none'; document.getElementById('clientSuccess').style.display = 'none'; document.getElementById('clientGift').style.display = 'none'; document.getElementById('clientGiftSuccess').style.display = 'none'; giftService = null; giftRedeem = null; extraServices = []; const gcf = document.getElementById('clientGiftCode'); if (gcf) gcf.value = ''; const gcr = document.getElementById('giftCodeResult'); if (gcr) gcr.innerHTML = ''; document.getElementById('clientName').value = ''; document.getElementById('clientPhone').value = ''; document.getElementById('clientEmail').value = ''; document.getElementById('clientComments').value = ''; document.getElementById('clientBookingForm').style.display = 'none'; const si = document.getElementById('serviceSearchInput'); if (si) { si.value = ''; filterServices() } const cb = document.querySelector('#clientBookingForm .confirm-btn'); if (cb) { cb.innerHTML = '<i class="fas fa-check-circle"></i> Confirmar reserva'; cb.disabled = false; cb.style.opacity = '1' } bookingTripId = null; renderTripContextBar(); renderTripBanner(); loadClientServices(); renderClientCalendar(); window.scrollTo({ top: 0, behavior: 'smooth' }) }
+        function resetClientBooking() { setBookingMode(false); toggleGiftRedeem(false); selectedService = null; selectedDate = null; selectedTime = null; window.currentBookingAddons = null; window.pendingBookingAddons = null;document.getElementById('clientStep1').style.display = 'block'; document.getElementById('clientStep2').style.display = 'none'; document.getElementById('clientSuccess').style.display = 'none'; document.getElementById('clientGift').style.display = 'none'; document.getElementById('clientGiftSuccess').style.display = 'none'; giftService = null; giftRedeem = null; extraServices = []; const gcf = document.getElementById('clientGiftCode'); if (gcf) gcf.value = ''; const gcr = document.getElementById('giftCodeResult'); if (gcr) gcr.innerHTML = ''; document.getElementById('clientName').value = ''; document.getElementById('clientPhone').value = ''; document.getElementById('clientEmail').value = ''; document.getElementById('clientComments').value = ''; document.getElementById('clientBookingForm').style.display = 'none'; const si = document.getElementById('serviceSearchInput'); if (si) { si.value = ''; filterServices() } const cb = document.querySelector('#clientBookingForm .confirm-btn'); if (cb) { cb.innerHTML = '<i class="fas fa-check-circle"></i> Confirmar reserva'; cb.disabled = false; cb.style.opacity = '1' } bookingTripId = null; renderTripContextBar(); renderTripBanner(); loadClientServices(); renderClientCalendar(); window.scrollTo({ top: 0, behavior: 'smooth' }) }
         function clientChangeMonth(d) { const now = new Date(), proposed = new Date(currentClientMonth); proposed.setMonth(proposed.getMonth() + d); if (d < 0 && proposed.getFullYear() === now.getFullYear() && proposed.getMonth() < now.getMonth()) return; if (d < 0 && proposed.getFullYear() < now.getFullYear()) return; currentClientMonth.setMonth(currentClientMonth.getMonth() + d); renderClientCalendar() }
 
         // Wait for Firebase module to load, then initialize

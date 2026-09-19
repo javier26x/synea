@@ -263,7 +263,7 @@ function pendingEmail(config, apt, svc) {
   const fd = fmtLong(apt.date);
   return emailTemplate(config, 'Reserva recibida', `
     <p>Hola <strong>${escHtml(apt.clientName)}</strong>,</p>
-    <p>Recibimos tu solicitud de reserva. En breve te confirmaremos tu cita:</p>
+    <p>Recibimos tu reserva. En breve te confirmamos la hora:</p>
     <div style="background:#fef6e0;border-left:3px solid #d4a853;padding:12px 16px;margin:16px 0;border-radius:6px">
       <p style="margin:0;font-size:13px;color:#7c5f2f"><i>⏳ Estado: Pendiente de confirmación</i></p>
     </div>
@@ -276,7 +276,7 @@ function pendingEmail(config, apt, svc) {
     </table>
     ${emailExtraServices(apt)}${emailAddonsSection(apt, svc)}
     ${emailLocationSection(config, apt)}
-    <p style="font-size:13px;color:#6d7a75;margin-top:20px">Recibirás otro correo cuando tu cita sea confirmada. Si necesitas modificar o cancelar, escríbenos${config.phone ? ' al ' + escHtml(config.phone) : ''}.</p>
+    <p style="font-size:13px;color:#6d7a75;margin-top:20px">Recibirás otro correo cuando tu hora quede confirmada. Si necesitas modificar o cancelar, escríbenos${config.phone ? ' al ' + escHtml(config.phone) : ''}.</p>
     ${config.webpayUrl ? `<div style="text-align:center;margin-top:20px;padding-top:20px;border-top:1px solid #ece6dc">
       <p style="font-size:14px;color:#23302c;margin-bottom:12px"><strong>Asegura tu hora con el pago</strong></p>
       <a href="${escAttr(config.webpayUrl)}" style="display:inline-block;padding:14px 32px;background:linear-gradient(135deg,#b08b57,#b8944f);color:#fff;text-decoration:none;border-radius:8px;font-weight:600;font-size:14px">💳 Pagar con Webpay</a>
@@ -287,9 +287,9 @@ function pendingEmail(config, apt, svc) {
 
 function confirmedEmail(config, apt, svc) {
   const fd = fmtLong(apt.date);
-  return emailTemplate(config, '¡Cita Confirmada! ✓', `
+  return emailTemplate(config, '¡Hora confirmada! ✓', `
     <p>Hola <strong>${escHtml(apt.clientName)}</strong>,</p>
-    <p>¡Buenas noticias! Tu cita ha sido <strong style="color:#2d6e3f">confirmada</strong>. Te esperamos:</p>
+    <p>¡Buenas noticias! Tu hora quedó <strong style="color:#2d6e3f">confirmada</strong>. Te esperamos:</p>
     <div style="background:#e3f5e8;border-left:3px solid #5a9e6f;padding:12px 16px;margin:16px 0;border-radius:6px">
       <p style="margin:0;font-size:13px;color:#2d6e3f"><i>✓ Estado: Confirmada</i></p>
     </div>
@@ -301,15 +301,15 @@ function confirmedEmail(config, apt, svc) {
     </table>
     ${emailExtraServices(apt)}${emailAddonsSection(apt, svc)}
     ${emailLocationSection(config, apt)}
-    <p style="font-size:13px;color:#6d7a75;margin-top:20px">¿Necesitas cancelar o cambiar tu cita? Escríbenos${config.phone ? ' al ' + escHtml(config.phone) : ''}.</p>
+    <p style="font-size:13px;color:#6d7a75;margin-top:20px">¿Necesitas cancelar o cambiar tu hora? Escríbenos${config.phone ? ' al ' + escHtml(config.phone) : ''}.</p>
   `);
 }
 
 function rescheduledEmail(config, apt, svc, oldDate, oldTime) {
   const fdOld = fmtLong(oldDate), fdNew = fmtLong(apt.date);
-  return emailTemplate(config, 'Tu cita fue reagendada 📅', `
+  return emailTemplate(config, 'Tu hora fue reagendada 📅', `
     <p>Hola <strong>${escHtml(apt.clientName)}</strong>,</p>
-    <p>Te informamos que tu cita ha sido <strong>reagendada</strong>. Estos son los nuevos detalles:</p>
+    <p>Tu hora fue <strong>reagendada</strong>. Estos son los nuevos detalles:</p>
     <div style="background:#f3f7f5;border-left:3px solid #2f5d50;padding:14px 18px;margin:16px 0;border-radius:6px">
       <p style="margin:0 0 8px 0;font-size:12px;color:#6d7a75;text-transform:uppercase;letter-spacing:1px"><i>Antes</i></p>
       <p style="margin:0;font-size:14px;color:#414f4a;text-decoration:line-through;opacity:.7">${fdOld} a las ${escHtml(oldTime)} hrs</p>
@@ -330,9 +330,9 @@ function rescheduledEmail(config, apt, svc, oldDate, oldTime) {
 
 function reminderEmail(config, apt, svc) {
   const fd = fmtLong(apt.date);
-  return emailTemplate(config, 'Recordatorio de tu cita 🔔', `
+  return emailTemplate(config, 'Recordatorio de tu hora 🔔', `
     <p>Hola <strong>${escHtml(apt.clientName)}</strong>,</p>
-    <p>Te recordamos que tienes una cita agendada <strong>mañana</strong>:</p>
+    <p>Te recordamos que tienes hora <strong>mañana</strong>:</p>
     <table style="width:100%;border-collapse:collapse;margin:16px 0">
       <tr><td style="padding:8px 0;color:#6d7a75;width:100px">Servicio</td><td style="padding:8px 0;font-weight:600">${escHtml(svc.name)}</td></tr>
       <tr><td style="padding:8px 0;color:#6d7a75">Fecha</td><td style="padding:8px 0;font-weight:600">${fd}</td></tr>
@@ -350,9 +350,9 @@ function reminderEmail(config, apt, svc) {
 
 function cancellationEmail(config, apt, svc) {
   const fd = fmtLong(apt.date);
-  return emailTemplate(config, 'Cita Cancelada', `
+  return emailTemplate(config, 'Hora cancelada', `
     <p>Hola <strong>${escHtml(apt.clientName)}</strong>,</p>
-    <p>Lamentamos informarte que tu cita ha sido cancelada:</p>
+    <p>Lamentamos informarte que tu hora fue cancelada:</p>
     <table style="width:100%;border-collapse:collapse;margin:16px 0">
       <tr><td style="padding:8px 0;color:#6d7a75;width:100px">Servicio</td><td style="padding:8px 0;font-weight:600">${escHtml(svc.name)}</td></tr>
       <tr><td style="padding:8px 0;color:#6d7a75">Fecha</td><td style="padding:8px 0">${fd}</td></tr>
@@ -562,7 +562,7 @@ exports.dailyReminders = onSchedule(
         const svc = await getService(apt.serviceId);
         if (!svc) continue;
         try {
-          await sendMail(apt.clientEmail, 'Recordatorio: tu cita es mañana — ' + (config.businessName || 'Synea Studio Spa'), reminderEmail(config, apt, svc), config.email || undefined);
+          await sendMail(apt.clientEmail, 'Recordatorio: tu hora es mañana — ' + (config.businessName || 'Synea Studio Spa'), reminderEmail(config, apt, svc), config.email || undefined);
           await db().ref('appointments/' + id + '/reminderSent').set(true);
         } catch (e) { logger.error('Recordatorio falló', { id, err: e.message }); }
       }
